@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 16:57:15 by talibert          #+#    #+#             */
-/*   Updated: 2024/05/21 17:01:53 by talibert         ###   ########.fr       */
+/*   Updated: 2024/05/21 17:49:43 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,8 @@
 
 int	main(void)
 {
-	int
+
+	printf("Hello\n");
+	return (0);
 }
+
