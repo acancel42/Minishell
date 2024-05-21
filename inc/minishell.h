@@ -3,7 +3,7 @@
 # define MINISHELL_H
 
 # include <stdbool.h>
-
+# include "libft/libft.h"
 # include <stdio.h>
 
 typedef struct s_file
