@@ -43,9 +43,11 @@ void	parse_command(t_commands *commands, char *line)
 			i++;
 			while (is_wspace(line[i]) == 1)
 				i++;
-			if (line[i])
+			if (line[i] != '\0')
 			{
 				commands->input.name = worddup(line, i);
+				ft_printf("%s", commands->input.name);
+				ft_printf("%d\n", 1);
 				i++;
 			}
 			while (is_wspace(line[i]) == 1)
@@ -58,7 +60,9 @@ void	parse_command(t_commands *commands, char *line)
 				i++;
 			if (line[i])
 			{
-				commands->input.name = worddup(line, i);
+				commands->output.name = worddup(line, i);
+				ft_printf("%s", commands->output.name);
+				ft_printf("%d\n", 2);
 				i++;
 			}
 			while (is_wspace(line[i]) == 1)
@@ -72,6 +76,9 @@ int	main(int argc, char **argv)
 {
 	t_commands	commands;
 
+	commands.input.name = NULL;
+	commands.output.name = NULL;
+	(void)(argc);
 	parse_command(&commands, argv[1]);
 	ft_printf("%s", commands.input.name);
 	ft_printf("%s", commands.output.name);

@@ -1,26 +1,26 @@
 LIBFT_DIR = inc/libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-NAME = minishell 
+NAME = minishell
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3
 
-CLEAN = rm -rf 
+CLEAN = rm -rf
 
 #OBJS = $(SRCS:%.c=.objects/%.o)
-#SRCS = 					
+#SRCS =
 
 SRCS = $(wildcard src/*.c)
 
 OBJS = $(patsubst src/%.c, .objects/%.o, $(SRCS))
 
-all : $(NAME) 
+all : $(NAME)
 
 $(LIBFT) : FORCE
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(NAME): $(OBJS) 
-	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME) 
+$(NAME): $(OBJS)
+	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
 
 .objects/%.o: src/%.c inc/minishell.h $(LIBFT)
 	@mkdir -p $(@D)
