@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_dprint_nbrs.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 16:39:13 by acancel           #+#    #+#             */
-/*   Updated: 2024/01/20 14:44:26 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/05/21 19:18:51 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libft.h"
 
 int	ft_dprint_add(unsigned long nbr, char *base, int ox, int *pl)
 {

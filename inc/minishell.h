@@ -3,8 +3,9 @@
 # define MINISHELL_H
 
 # include <stdbool.h>
-
+# include "libft/libft.h"
 # include <stdio.h>
+# include "lexer.h"
 
 typedef struct s_file
 {

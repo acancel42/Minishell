@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 14:51:19 by Acancel           #+#    #+#             */
-/*   Updated: 2023/11/27 15:01:05 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/05/21 19:18:51 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libft.h"
 #include <stdio.h>
 
 int	ft_check_int_overflow(int nbr, int sign, size_t i, const char *str);
