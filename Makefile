@@ -3,7 +3,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 NAME = minishell 
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror 
 
 CLEAN = rm -rf 
 
@@ -20,7 +20,7 @@ $(LIBFT) : FORCE
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS) 
-	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME) 
+	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME) 
 
 .objects/%.o: src/%.c inc/minishell.h $(LIBFT)
 	@mkdir -p $(@D)

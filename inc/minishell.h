@@ -3,8 +3,12 @@
 # define MINISHELL_H
 
 # include <stdbool.h>
-
 # include <stdio.h>
+# include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "../inc/libft/libft.h"
+
 
 typedef struct s_file
 {
