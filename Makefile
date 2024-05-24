@@ -22,7 +22,7 @@ $(LIBFT) : FORCE
 $(NAME): $(OBJS)
 	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
 
-.objects/%.o: src/%.c inc/minishell.h $(LIBFT)
+.objects/%.o: src/%.c inc/minishell.h inc/lexer.h $(LIBFT)
 	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -I./ -I$(LIBFT_DIR) -c -o $@ $<
 
