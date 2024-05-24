@@ -5,6 +5,9 @@
 # include <stdbool.h>
 # include "libft/libft.h"
 # include <stdio.h>
+# include <stdlib.h>
+# include <ctype.h>
+# include <string.h>
 # include "lexer.h"
 
 typedef struct s_file
