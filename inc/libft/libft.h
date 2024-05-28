@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 16:56:37 by Acancel           #+#    #+#             */
-/*   Updated: 2024/01/27 15:37:20 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/05/28 17:34:29 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ char	**ft_split(char const *s, char c);
 char	*ft_itoa(int n);
 char	*ft_strchr(const char *str, int c);
 char	*ft_strdup(const char *s);
+char	*ft_chardup(const char c);
 char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_charjoin(char const *s1, char const s2);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strrchr(const char *str, int c);
