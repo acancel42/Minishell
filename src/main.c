@@ -39,35 +39,25 @@ int	main(void)
 	struct passwd	*pw;
 	char			*username;
 	char			hostname[42];
-	char			*name;
 
 	pw = getpwuid(getuid());
 	if (pw == NULL)
-	{
-		perror("getpwuid");
-		return (-2);
-	}
+		return (perror("getpwuid"), -2);
 	username = pw->pw_name;
 	if (gethostname(hostname, sizeof(hostname)) != 0)
-	{
-		perror("gethostname");
-		return (-3);
-	}
-	printf("Nom de l'utilisateur : %s\n", username);
-	printf("Nom de l'hôte : %s\n", hostname);
-	name = ft_strjoin_name(username, hostname);
-	if (name == NULL)
+		return (perror("gethostname"), -3);
+	username = ft_strjoin_name(username, hostname);
+	if (username == NULL)
 		return (-1);
 	while (1) 
 	{
-		line = readline(name); // Lire une ligne de texte avec readline
+		line = readline(username); // Lire une ligne de texte avec readline
 		if (!line) // Vérifier si la ligne est NULL (fin de fichier)
 			break ;
 		if (*line) // Si la ligne n'est pas vide, l'ajouter à l'historique
 			add_history(line);
-		printf("Vous avez entré : %s\n", line);
 		free(line);
 	}
+	free(username);
 	return (0);
 }
-
