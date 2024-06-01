@@ -29,4 +29,6 @@ typedef struct s_commands
 	struct s_commands	*next;
 }				t_commands;
 
+char	*get_user(char **env);
+
 #endif
