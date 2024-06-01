@@ -24,8 +24,8 @@ typedef struct s_commands
 	char				**flags;
 	int					index;
 	void				(*f)(void*);
-	t_file				input;
-	t_file				output;
+	t_file				*input;
+	t_file				*output;
 	struct s_commands	*next;
 }				t_commands;
 
