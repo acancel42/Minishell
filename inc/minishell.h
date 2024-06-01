@@ -19,11 +19,10 @@ typedef struct s_file
 
 typedef struct s_commands
 {
-	char				*cmd;
+	char				*name;
 	char				**paths;
 	bool				valid_path;
 	char				**flags;
-	int					index;
 	void				(*f)(void*);
 	t_file				*input;
 	t_file				*output;
