@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   ft_is_charset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 16:58:02 by acancel           #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/05/28 19:35:32 by acancel          ###   ########lyon.fr   */
+=======
+/*   Updated: 2024/05/21 19:18:51 by talibert         ###   ########.fr       */
+>>>>>>> main
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../libft.h"
 
 int	ft_is_charset(char c, char const *set)
 {
