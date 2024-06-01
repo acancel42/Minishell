@@ -19,8 +19,9 @@ typedef struct s_file
 
 typedef struct s_commands
 {
-	char				*name;
+	char				*cmd;
 	char				**paths;
+	bool				valid_path;
 	char				**flags;
 	int					index;
 	void				(*f)(void*);

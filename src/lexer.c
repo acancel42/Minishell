@@ -108,7 +108,7 @@ int token_init(char *src, t_token **token) {
 	{
 		temp = ft_toknew(0, ARRAY);
 		ft_tokadd_back(token, temp);
-		while (!ft_iswspace(src[i]) && (src [i] != '<' && src [i] != '>' && src [i] != '|' && src [i] != '-'))
+		while (src[i] && !ft_iswspace(src[i]) && (src [i] != '<' && src [i] != '>' && src [i] != '|' && src [i] != '-'))
 		{
 			c = src[i];
 			temp->value = ft_charjoin(temp->value, c);
@@ -180,12 +180,6 @@ int token_init(char *src, t_token **token) {
 		}
 		return (i);
 	}
-	else if (src[i] == '|')
-	{
-		temp = ft_toknew('|', PIPE);
-		ft_tokadd_back(token, temp);
-		return (1);
-	}
 	else if (src[i] == '-')
 	{
 		temp = ft_toknew('-', SCO);
@@ -202,7 +196,15 @@ int token_init(char *src, t_token **token) {
 	{
 		temp = ft_toknew('=', EQUAL);
 		ft_tokadd_back(token, temp);
-		return (1);
+		i++;
+		return (i);
+	}
+	else if (src[i] == '|')
+	{
+		temp = ft_toknew('|', PIPE);
+		ft_tokadd_back(token, temp);
+		i++;
+		return (i);
 	}
 	else
 	{
@@ -227,6 +229,8 @@ void print_type(t_token_types type)
 		printf("%s : ", "SCO");
 	if (type == FLAG)
 		printf("%s : ", "FLAG");
+	if (type == INT)
+		printf("%s : ", "INT");
 	if (type == LSQUO)
 		printf("%s : ", "LSQUO");
 	if (type == RSQUO)
@@ -249,6 +253,8 @@ void print_type(t_token_types type)
 		printf("%s : ", "IFILE");
 	if (type == OFILE)
 		printf("%s : ", "OFILE");
+	if (type == PIPE)
+		printf("%s : ", "PIPE");
 }
 
 // Afficher les tokens
@@ -271,6 +277,7 @@ void	print_cmds(t_commands *cmds)
 	}
 }
 
+
 void	lexer_to_cmd(t_commands **cmds, t_token *token)
 {
 	t_commands	*temp;
@@ -291,7 +298,7 @@ void	lexer_to_cmd(t_commands **cmds, t_token *token)
 int main(int argc, char **argv)
 {
 	t_token 	*token = NULL;
-	t_commands	*cmds = NULL;
+	//t_commands	*cmds = NULL;
 
 	if (argc != 2)
 	{
@@ -299,10 +306,10 @@ int main(int argc, char **argv)
 		return (1);
 	}
 	lexer_init(&token, argv[1]);
-	//print_lst(token);
+	print_lst(token);
 	// Free allocated memory (tokens list)
-	lexer_to_cmd(&cmds, token);
-	print_cmds(cmds);
+	//lexer_to_cmd(&cmds, token);
+	//print_cmds(cmds);
 	t_token *temp;
 	while (token)
 	{
