@@ -3,12 +3,21 @@
 # define MINISHELL_H
 
 # include <stdbool.h>
+<<<<<<< HEAD
+# include <stdio.h>
+# include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "../inc/libft/libft.h"
+
+=======
 # include "libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <ctype.h>
 # include <string.h>
 # include "lexer.h"
+>>>>>>> main
 
 typedef struct s_file
 {
@@ -28,5 +37,7 @@ typedef struct s_commands
 	t_file				*output;
 	struct s_commands	*next;
 }				t_commands;
+
+char	*get_user(char **env);
 
 #endif
