@@ -10,6 +10,7 @@ SRCS = \
 
 CHAR_STR_DIR = char_str/
 SRCS_CHAR_STR = \
+		ft_iswspace.c \
 		ft_isalnum.c \
 		ft_isalpha.c \
 		ft_isascii.c \
@@ -58,7 +59,7 @@ SRCS_INT = \
 GNL_DIR = gnl/
 SRCS_GNL = \
 		get_next_line.c \
-		get_next_line_utils.c 
+		get_next_line_utils.c
 
 FT_PRINTF_DIR = ft_printf/
 SRCS_FT_PRINTF = \

@@ -13,95 +13,11 @@ char *ft_strjoin(char const *s1, char const *s2) {
 	return joined;
 }*/
 
-// Création d'un nouveau token
-t_commands *ft_cmdnew(void)
-{
-	t_commands *new = ft_calloc(1, sizeof(t_commands));
-	new->next = NULL;
-	new->path = NULL;
-	new->flags = NULL;
-	new->valid_path = 0;
-	new->name = NULL;
-	return (new);
-}
-
-t_file *ft_filenew(char *content)
-{
-	t_file *new = ft_calloc(1, sizeof(t_file));
-	new->next = NULL;
-	new->fd = 0;
-	new->state = false;
-	new->name = ft_strdup(content);
-	return (new);
-}
-
-t_token *ft_toknew(char content, t_token_types type) {
-	t_token *new = ft_calloc(1, sizeof(t_token));
-	new->next = NULL;
-	new->value = ft_chardup(content);
-	new->type = type;
-	return (new);
-}
-
-// Trouver le dernier token de la liste
-t_file *ft_filelast(t_file *lst) {
-	while (lst && lst->next != NULL)
-		lst = lst->next;
-	return (lst);
-}
-
-t_token *ft_toklast(t_token *lst) {
-	while (lst && lst->next != NULL)
-		lst = lst->next;
-	return (lst);
-}
-
-t_commands *ft_cmdlast(t_commands *lst)
-{
-	while (lst && lst->next != NULL)
-		lst = lst->next;
-	return (lst);
-}
-
 int	ft_iswspace(char c)
 {
 	if (c == ' ' || (c >= 9 && c <= 13))
 		return (1);
 	return (0);
-}
-
-// Ajouter un token à la fin de la liste
-void ft_tokadd_back(t_token **lst, t_token *new)
-{
-	if (!lst || !new)
-		return;
-	t_token *temp = ft_toklast(*lst);
-	if (temp != NULL)
-		temp->next = new;
-	else
-		*lst = new;
-}
-
-void ft_cmdadd_back(t_commands **lst, t_commands *new)
-{
-	if (!lst || !new)
-		return;
-	t_commands *temp = ft_cmdlast(*lst);
-	if (temp != NULL)
-		temp->next = new;
-	else
-		*lst = new;
-}
-
-void ft_fileadd_back(t_file **lst, t_file *new)
-{
-	if (!lst || !new)
-		return;
-	t_file *temp = ft_filelast(*lst);
-	if (temp != NULL)
-		temp->next = new;
-	else
-		*lst = new;
 }
 
 // Initialiser un token à partir d'une chaîne
@@ -261,9 +177,7 @@ int token_init(char *src, t_token **token) {
 		return (i);
 	}
 	else
-	{
 		exit(EXIT_FAILURE);
-	}
 }
 
 // Initialiser le lexer avec une chaîne
@@ -272,81 +186,6 @@ void lexer_init(t_token **token, char *src)
 	int i = 0;
 	while (src[i]) {
 		i += token_init(&src[i], token);
-	}
-}
-
-void print_type(t_token_types type)
-{
-	if (type == ARRAY)
-		printf("%s : ", "ARRAY");
-	if (type == SCO)
-		printf("%s : ", "SCO");
-	if (type == FLAG)
-		printf("%s : ", "FLAG");
-	if (type == INT)
-		printf("%s : ", "INT");
-	if (type == LSQUO)
-		printf("%s : ", "LSQUO");
-	if (type == RSQUO)
-		printf("%s : ", "RSQUO");
-	if (type == RDQUO)
-		printf("%s : ", "RDQUO");
-	if (type == LDQUO)
-		printf("%s : ", "LDQUO");
-	if (type == EQUAL)
-		printf("%s : ", "EQUAL");
-	if (type == IRED)
-		printf("%s : ", "IRED");
-	if (type == ORED)
-		printf("%s : ", "ORED");
-	if (type == IAPP)
-		printf("%s : ", "IAPP");
-	if (type == OAPP)
-		printf("%s : ", "OAPP");
-	if (type == IFILE)
-		printf("%s : ", "IFILE");
-	if (type == OFILE)
-		printf("%s : ", "OFILE");
-	if (type == PIPE)
-		printf("%s : ", "PIPE");
-}
-
-// Afficher les tokens
-void	print_lst(t_token *token)
-{
-	while (token)
-	{
-		print_type(token->type);
-		printf("%s\n", token->value);
-		token = token->next;
-	}
-}
-
-void	print_file(t_file *file, t_token_types type)
-{
-	while (file)
-	{
-		if (type == ARRAY)
-			printf("arg : %s\n", file->name);
-		if (type == IRED)
-			printf("input : %s\n", file->name);
-		if (type == ORED)
-			printf("output : %s\n", file->name);
-		file = file->next;
-	}
-}
-
-void	print_cmds(t_commands *cmds)
-{
-	while (cmds)
-	{
-		printf("command : %s\n", cmds->name);
-		printf("flags : %s\n", cmds->flags);
-		print_file(cmds->args, ARRAY);
-		print_file(cmds->input, IRED);
-		print_file(cmds->output, ORED);
-		printf("%c", '\n');
-		cmds = cmds->next;
 	}
 }
 
@@ -408,18 +247,6 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 			cmds = &(*cmds)->next;
 		}
 		token = token->next;
-	}
-}
-
-void	ft_pathfinder(t_commands *cmds, char **env)
-{
-	while(cmds)
-	{
-		cmds->valid_path = access(cmds->name, F_OK);
-		cmd_path(cmds, env);
-		if (cmds->path)
-			printf("path : %s\n", cmds->path);
-		cmds = cmds->next;
 	}
 }
 

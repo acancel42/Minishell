@@ -133,3 +133,15 @@ void	free_all(t_commands *cmds, void *data)
 	}
 	free(cmds);
 }
+
+void	ft_pathfinder(t_commands *cmds, char **env)
+{
+	while(cmds)
+	{
+		cmds->valid_path = access(cmds->name, F_OK);
+		cmd_path(cmds, env);
+		if (cmds->path)
+			printf("path : %s\n", cmds->path);
+		cmds = cmds->next;
+	}
+}
