@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_is_charset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 16:58:02 by acancel           #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/05/28 19:35:32 by acancel          ###   ########lyon.fr   */
-=======
-/*   Updated: 2024/05/21 19:18:51 by talibert         ###   ########.fr       */
->>>>>>> main
+/*   Updated: 2024/06/01 22:59:52 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
