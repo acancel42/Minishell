@@ -6,7 +6,7 @@
 /*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 08:57:53 by acancel           #+#    #+#             */
-/*   Updated: 2024/05/21 19:17:58 by talibert         ###   ########.fr       */
+/*   Updated: 2024/06/02 02:11:14 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ size_t	ft_strlen(const char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i] && str)
+	while (str && str[i])
 		i++;
 	return (i);
 }

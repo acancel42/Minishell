@@ -17,17 +17,19 @@ typedef struct s_file
 	char	*name;
 	int		fd;
 	bool	state;
+	struct s_file	*next;
 }				t_file;
 
 typedef struct s_commands
 {
 	char				*name;
 	char				*path;
-	int				valid_path;
-	char				**flags;
+	int					valid_path;
+	char				*flags;
 	void				(*f)(void*);
 	t_file				*input;
 	t_file				*output;
+	t_file				*args;
 	struct s_commands	*next;
 }				t_commands;
 

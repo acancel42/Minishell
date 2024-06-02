@@ -19,7 +19,18 @@ t_commands *ft_cmdnew(char *content)
 	t_commands *new = ft_calloc(1, sizeof(t_commands));
 	new->next = NULL;
 	new->path = NULL;
+	new->flags = NULL;
 	new->valid_path = 0;
+	new->name = ft_strdup(content);
+	return (new);
+}
+
+t_file *ft_filenew(char *content)
+{
+	t_file *new = ft_calloc(1, sizeof(t_file));
+	new->next = NULL;
+	new->fd = 0;
+	new->state = false;
 	new->name = ft_strdup(content);
 	return (new);
 }
@@ -33,6 +44,12 @@ t_token *ft_toknew(char content, t_token_types type) {
 }
 
 // Trouver le dernier token de la liste
+t_file *ft_filelast(t_file *lst) {
+	while (lst && lst->next != NULL)
+		lst = lst->next;
+	return (lst);
+}
+
 t_token *ft_toklast(t_token *lst) {
 	while (lst && lst->next != NULL)
 		lst = lst->next;
@@ -76,6 +93,17 @@ void ft_cmdadd_back(t_commands **lst, t_commands *new)
 		*lst = new;
 }
 
+void ft_fileadd_back(t_file **lst, t_file *new)
+{
+	if (!lst || !new)
+		return;
+	t_file *temp = ft_filelast(*lst);
+	if (temp != NULL)
+		temp->next = new;
+	else
+		*lst = new;
+}
+
 // Initialiser un token à partir d'une chaîne
 int token_init(char *src, t_token **token) {
 	int i = 0;
@@ -83,7 +111,7 @@ int token_init(char *src, t_token **token) {
 	t_token *temp;
 
 	while (ft_iswspace(src[i]))
-		i++;
+			i++;
 	if (src[i] == '>')
 	{
 		temp = ft_toknew('>', ORED);
@@ -97,6 +125,28 @@ int token_init(char *src, t_token **token) {
 		while (ft_iswspace(src[i]))
 			i++;
 		temp = ft_toknew(0, OFILE);
+		ft_tokadd_back(token, temp);
+		while (src[i] && !ft_iswspace(src[i]))
+		{
+			c = src[i];
+			temp->value = ft_charjoin(temp->value, c);
+			i++;
+		}
+		return (i);
+	}
+	if (src[i] == '<')
+	{
+		temp = ft_toknew('<', IRED);
+		if (src[++i] == '<')
+		{
+			temp->value = ft_charjoin(temp->value, '<');
+			temp->type = IAPP;
+		}
+		ft_tokadd_back(token, temp);
+		i++;
+		while (ft_iswspace(src[i]))
+			i++;
+		temp = ft_toknew(0, IFILE);
 		ft_tokadd_back(token, temp);
 		while (src[i] && !ft_iswspace(src[i]))
 		{
@@ -209,7 +259,9 @@ int token_init(char *src, t_token **token) {
 		return (i);
 	}
 	else
+	{
 		exit(EXIT_FAILURE);
+	}
 }
 
 // Initialiser le lexer avec une chaîne
@@ -268,22 +320,39 @@ void	print_lst(t_token *token)
 	}
 }
 
+void	print_file(t_file *file, t_token_types type)
+{
+	while (file)
+	{
+		if (type == ARRAY)
+			printf("arg : %s\n", file->name);
+		if (type == IRED)
+			printf("input : %s\n", file->name);
+		if (type == ORED)
+			printf("output : %s\n", file->name);
+		file = file->next;
+	}
+}
+
 void	print_cmds(t_commands *cmds)
 {
 	while (cmds)
 	{
-		printf("%s\n", cmds->name);
+		printf("command : %s\n", cmds->name);
+		printf("flags : %s\n", cmds->flags);
+		print_file(cmds->args, ARRAY);
+		print_file(cmds->input, IRED);
+		print_file(cmds->output, ORED);
+		printf("%c", '\n');
 		cmds = cmds->next;
 	}
 }
 
 
-void	lexer_to_cmd(t_commands **cmds, t_token *token)
+void	init_cmd(t_commands **cmds, t_token *token)
 {
 	t_commands	*temp;
-	int	flag;
 
-	flag = 0;
 	while (token)
 	{
 		while (token && token->type != ARRAY)
@@ -292,6 +361,50 @@ void	lexer_to_cmd(t_commands **cmds, t_token *token)
 		ft_cmdadd_back(cmds, temp);
 		while (token && token->type != PIPE)
 			token = token->next;
+	}
+}
+
+void	fill_cmd(t_commands **cmds, t_token *token)
+{
+	t_file	*temp1;
+	int	array_count;
+	int	i;
+
+	i = 0;
+	array_count = 0;
+	while (token)
+	{
+		if (token->type == ARRAY)
+		{
+			if (array_count >=1)
+			{
+				temp1 = ft_filenew(token->value);
+				ft_fileadd_back(&(*cmds)->input, temp1);
+			}
+			array_count++;
+		}
+		else if (token->type == FLAG)
+		{
+			(*cmds)->flags = ft_strjoin((*cmds)->flags, token->value);
+		}
+		else if (token->type == ORED)
+		{
+			token = token->next;
+			temp1 = ft_filenew(token->value);
+			ft_fileadd_back(&(*cmds)->output, temp1);
+		}
+		else if (token->type == IRED)
+		{
+			token = token->next;
+			temp1 = ft_filenew(token->value);
+			ft_fileadd_back(&(*cmds)->input, temp1);
+		}
+		else if (token->type == PIPE)
+		{
+			array_count = 0;
+			cmds = &(*cmds)->next;
+		}
+		token = token->next;
 	}
 }
 
@@ -310,7 +423,8 @@ int main(int argc, char **argv, char **env)
 	lexer_init(&token, argv[1]);
 	//print_lst(token);
 	// Free allocated memory (tokens list)
-	lexer_to_cmd(&cmds, token);
+	init_cmd(&cmds, token);
+	fill_cmd(&cmds, token);
 	print_cmds(cmds);
 	//head = &cmds;
 	while (cmds)
