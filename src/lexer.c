@@ -115,14 +115,15 @@ int token_init(char *src, t_token **token) {
 	if (src[i] == '>')
 	{
 		temp = ft_toknew('>', ORED);
-		if (src[++i] == '>')
+		if (src && src[i + 1] == '>')
 		{
 			temp->value = ft_charjoin(temp->value, '>');
 			temp->type = OAPP;
+			i++;
 		}
-		ft_tokadd_back(token, temp);
 		i++;
-		while (ft_iswspace(src[i]))
+		ft_tokadd_back(token, temp);
+		while (src && ft_iswspace(src[i]))
 			i++;
 		temp = ft_toknew(0, OFILE);
 		ft_tokadd_back(token, temp);
@@ -137,14 +138,15 @@ int token_init(char *src, t_token **token) {
 	if (src[i] == '<')
 	{
 		temp = ft_toknew('<', IRED);
-		if (src[++i] == '<')
+		if (src && src[i + 1] == '<')
 		{
 			temp->value = ft_charjoin(temp->value, '<');
 			temp->type = IAPP;
+			i++;
 		}
 		ft_tokadd_back(token, temp);
 		i++;
-		while (ft_iswspace(src[i]))
+		while (src && ft_iswspace(src[i]))
 			i++;
 		temp = ft_toknew(0, IFILE);
 		ft_tokadd_back(token, temp);
@@ -348,14 +350,13 @@ void	print_cmds(t_commands *cmds)
 	}
 }
 
-
 void	init_cmd(t_commands **cmds, t_token *token)
 {
 	t_commands	*temp;
 
 	while (token)
 	{
-		while (token && token->type != ARRAY)
+		while (token && (token->type != ARRAY))
 			token = token->next;
 		temp = ft_cmdnew(token->value);
 		ft_cmdadd_back(cmds, temp);
@@ -379,7 +380,7 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 			if (array_count >=1)
 			{
 				temp1 = ft_filenew(token->value);
-				ft_fileadd_back(&(*cmds)->input, temp1);
+				ft_fileadd_back(&(*cmds)->args, temp1);
 			}
 			array_count++;
 		}

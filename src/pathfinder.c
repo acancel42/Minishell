@@ -102,14 +102,34 @@ void	cmd_path(t_commands *cmds, char **env)
 // 	free_all(NULL, all_paths);
 // }
 
+void	free_file(t_file *file)
+{
+	while (file)
+	{
+		free(file->name);
+		file = file->next;
+	}
+}
+
 void	free_all(t_commands *cmds, void *data)
 {
 	if (data)
 		free(data);
-	if (cmds->name)
-		free(cmds->name);
-	if (cmds->path)
-		free(cmds->path);
-	
-
+	while (cmds)
+	{
+		if (cmds->name)
+			free(cmds->name);
+		if (cmds->path)
+			free(cmds->path);
+		if (cmds->flags)
+			free(cmds->flags);
+		if (cmds->input)
+			free_file(cmds->input);
+		if (cmds->output)
+			free_file(cmds->output);
+		if (cmds->args)
+			free_file(cmds->args);
+		cmds = cmds->next;
+	}
+	free(cmds);
 }
