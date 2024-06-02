@@ -16,7 +16,7 @@ char	*ft_strjoin_name(char *s1, char *s2)
 		i++;
 	len = ft_strlen(s1) + 1 + i + 1 +1;
 	i = -1;
-	dest = malloc(sizeof(char) * len);
+	dest = ft_calloc(len, sizeof(char));
 	if (dest == NULL)
 		return (NULL);
 	while (s1[++i])

@@ -3,21 +3,14 @@
 # define MINISHELL_H
 
 # include <stdbool.h>
-<<<<<<< HEAD
-# include <stdio.h>
-# include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../inc/libft/libft.h"
-
-=======
-# include "libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
-# include <ctype.h>
+// # include <ctype.h>
 # include <string.h>
 # include "lexer.h"
->>>>>>> main
 
 typedef struct s_file
 {
@@ -29,8 +22,8 @@ typedef struct s_file
 typedef struct s_commands
 {
 	char				*name;
-	char				**paths;
-	bool				valid_path;
+	char				*path;
+	int				valid_path;
 	char				**flags;
 	void				(*f)(void*);
 	t_file				*input;
@@ -39,5 +32,7 @@ typedef struct s_commands
 }				t_commands;
 
 char	*get_user(char **env);
+void	cmd_path(t_commands *cmds, char **env);
+
 
 #endif
