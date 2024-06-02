@@ -8,15 +8,14 @@
 # include "../inc/libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
-// # include <ctype.h>
 # include <string.h>
 # include "lexer.h"
 
 typedef struct s_file
 {
-	char	*name;
-	int		fd;
-	bool	state;
+	char			*name;
+	int				fd;
+	bool			state;
 	struct s_file	*next;
 }				t_file;
 
