@@ -18,6 +18,8 @@ t_commands *ft_cmdnew(char *content)
 {
 	t_commands *new = ft_calloc(1, sizeof(t_commands));
 	new->next = NULL;
+	new->path = NULL;
+	new->valid_path = 0;
 	new->name = ft_strdup(content);
 	return (new);
 }
@@ -81,7 +83,7 @@ int token_init(char *src, t_token **token) {
 	t_token *temp;
 
 	while (ft_iswspace(src[i]))
-			i++;
+		i++;
 	if (src[i] == '>')
 	{
 		temp = ft_toknew('>', ORED);
@@ -207,9 +209,7 @@ int token_init(char *src, t_token **token) {
 		return (i);
 	}
 	else
-	{
 		exit(EXIT_FAILURE);
-	}
 }
 
 // Initialiser le lexer avec une chaîne
@@ -295,22 +295,33 @@ void	lexer_to_cmd(t_commands **cmds, t_token *token)
 	}
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
 	t_token 	*token = NULL;
-	//t_commands	*cmds = NULL;
+	t_token 	*temp;
+	t_commands	*cmds = NULL;
+	//t_commands	**head = NULL;
 
 	if (argc != 2)
 	{
-		fprintf(stderr, "Usage: %s <string>\n", argv[0]);
+		printf("Usage: %s <string>\n", argv[0]);
 		return (1);
 	}
 	lexer_init(&token, argv[1]);
-	print_lst(token);
+	//print_lst(token);
 	// Free allocated memory (tokens list)
-	//lexer_to_cmd(&cmds, token);
-	//print_cmds(cmds);
-	t_token *temp;
+	lexer_to_cmd(&cmds, token);
+	print_cmds(cmds);
+	//head = &cmds;
+	while (cmds)
+	{
+		cmds->valid_path = access(cmds->name, F_OK);
+		cmd_path(cmds, env);
+		if (cmds->path)
+			printf("path : %s\n", cmds->path);
+		cmds = cmds->next;
+	}
+	//cmds = *head;
 	while (token)
 	{
 		temp = token;

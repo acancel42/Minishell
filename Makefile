@@ -3,11 +3,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 NAME = minishell
 
-<<<<<<< HEAD
-CFLAGS = -Wall -Wextra -Werror 
-=======
 CFLAGS = -Wall -Wextra -Werror -g3
->>>>>>> main
 
 CLEAN = rm -rf
 
@@ -23,13 +19,8 @@ all : $(NAME)
 $(LIBFT) : FORCE
 	$(MAKE) -C $(LIBFT_DIR)
 
-<<<<<<< HEAD
 $(NAME): $(OBJS) 
 	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME) 
-=======
-$(NAME): $(OBJS)
-	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
->>>>>>> main
 
 .objects/%.o: src/%.c inc/minishell.h inc/lexer.h $(LIBFT)
 	@mkdir -p $(@D)
