@@ -14,14 +14,14 @@ char *ft_strjoin(char const *s1, char const *s2) {
 }*/
 
 // Création d'un nouveau token
-t_commands *ft_cmdnew(char *content)
+t_commands *ft_cmdnew(void)
 {
 	t_commands *new = ft_calloc(1, sizeof(t_commands));
 	new->next = NULL;
 	new->path = NULL;
 	new->flags = NULL;
 	new->valid_path = 0;
-	new->name = ft_strdup(content);
+	new->name = NULL;
 	return (new);
 }
 
@@ -356,9 +356,9 @@ void	init_cmd(t_commands **cmds, t_token *token)
 
 	while (token)
 	{
-		while (token && (token->type != ARRAY))
+		while (token && token->type != ARRAY && token->type != OFILE)
 			token = token->next;
-		temp = ft_cmdnew(token->value);
+		temp = ft_cmdnew();
 		ft_cmdadd_back(cmds, temp);
 		while (token && token->type != PIPE)
 			token = token->next;
@@ -382,6 +382,8 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 				temp1 = ft_filenew(token->value);
 				ft_fileadd_back(&(*cmds)->args, temp1);
 			}
+			else
+				(*cmds)->name = ft_strdup(token->value);
 			array_count++;
 		}
 		else if (token->type == FLAG)
@@ -409,26 +411,9 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 	}
 }
 
-int main(int argc, char **argv, char **env)
+void	ft_pathfinder(t_commands *cmds, char **env)
 {
-	t_token 	*token = NULL;
-	t_token 	*temp;
-	t_commands	*cmds = NULL;
-	//t_commands	**head = NULL;
-
-	if (argc != 2)
-	{
-		printf("Usage: %s <string>\n", argv[0]);
-		return (1);
-	}
-	lexer_init(&token, argv[1]);
-	//print_lst(token);
-	// Free allocated memory (tokens list)
-	init_cmd(&cmds, token);
-	fill_cmd(&cmds, token);
-	print_cmds(cmds);
-	//head = &cmds;
-	while (cmds)
+	while(cmds)
 	{
 		cmds->valid_path = access(cmds->name, F_OK);
 		cmd_path(cmds, env);
@@ -436,6 +421,50 @@ int main(int argc, char **argv, char **env)
 			printf("path : %s\n", cmds->path);
 		cmds = cmds->next;
 	}
+}
+
+int main(int argc, char **argv, char **env)
+{
+	t_token 	*token;
+	t_token 	*temp;
+	t_commands	*cmds;
+	char	*line;
+	char	*user;
+
+	(void)argc;
+	(void)argv;
+	user = get_user(env);
+	if (user == NULL)
+		return (-1);
+	while (1)
+	{
+		token = NULL;
+		cmds = NULL;
+		line = readline(user);
+		if (!line)
+			break ;
+		//if (*line)
+		//	add_history(line);
+		lexer_init(&token, line);
+		//print_lst(token);
+		// Free allocated memory (tokens list)
+		init_cmd(&cmds, token);
+		fill_cmd(&cmds, token);
+		print_cmds(cmds);
+		ft_pathfinder(cmds, env);
+		free_all(cmds, NULL);
+		while (token)
+		{
+			temp = token;
+			token = token->next;
+			free(temp->value);
+			free(temp);
+		}
+		//print_cmds(cmds);
+		free(line);
+	}
+	free(user);
+	//t_commands	**head = NULL;
 	//cmds = *head;
 	while (token)
 	{
@@ -444,6 +473,6 @@ int main(int argc, char **argv, char **env)
 		free(temp->value);
 		free(temp);
 	}
-
+	//free_all(cmds, NULL);
 	return (0);
 }

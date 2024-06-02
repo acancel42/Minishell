@@ -34,6 +34,7 @@ typedef struct s_commands
 
 char	*get_user(char **env);
 void	cmd_path(t_commands *cmds, char **env);
+void	free_all(t_commands *cmds, void *data);
 
 
 #endif
