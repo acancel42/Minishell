@@ -156,7 +156,7 @@ int token_init(char *src, t_token **token) {
 		}
 		return (i);
 	}
-	else if (isalpha(src[i]))
+	else if (isalpha(src[i]) || src[i] == '_')
 	{
 		temp = ft_toknew(0, ARRAY);
 		ft_tokadd_back(token, temp);
