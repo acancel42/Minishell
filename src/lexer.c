@@ -272,7 +272,7 @@ int main(int argc, char **argv, char **env)
 		fill_cmd(&cmds, token);
 		print_cmds(cmds);
 		ft_pathfinder(cmds, env);
-		free_all(cmds, NULL);
+		ft_cmdsclear(&cmds);
 		while (token)
 		{
 			temp = token;

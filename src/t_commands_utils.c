@@ -28,3 +28,31 @@ void ft_cmdadd_back(t_commands **lst, t_commands *new)
 	else
 		*lst = new;
 }
+
+void	ft_cmdsdelone(t_commands *cmds)
+{
+	if (cmds->name)
+		free(cmds->name);
+	if (cmds->path)
+		free(cmds->path);
+	if (cmds->flags)
+		free(cmds->flags);
+	if (cmds->redirections)
+		ft_fileclear(&cmds->redirections);
+	if (cmds->args)
+		ft_fileclear(&cmds->args);
+	free(cmds);
+}
+
+void	ft_cmdsclear(t_commands **lst)
+{
+	t_commands	*temp;
+
+	temp = NULL;
+	while (*lst)
+	{
+		temp = (*lst)->next;
+		ft_cmdsdelone(*lst);
+		*lst = temp;
+	}
+}

@@ -34,11 +34,11 @@
 // {
 // 	char	*line;
 //	char	*user;
-// 
+//
 // 	(void)ac;
 // (void)av;
 //	user = get_user(env);
-// 	while (1) 
+// 	while (1)
 // 	{
 // 		line = readline(username); // Lire une ligne de texte avec readline
 // 		if (!line) // Vérifier si la ligne est NULL (fin de fichier)
@@ -54,6 +54,6 @@
 
 /*VALGRIND :
 
-valgrind --suppressions=valgrind_ignore_leaks.txt --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --show-mismatched-frees=yes --read-var-info=yes
+valgrind --suppressions=debug/valgrind_ignore_leaks.txt --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --show-mismatched-frees=yes --read-var-info=yes
 
 */

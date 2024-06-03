@@ -26,3 +26,23 @@ void	ft_fileadd_back(t_file **lst, t_file *new)
 	else
 		*lst = new;
 }
+
+void	ft_filedelone(t_file *file)
+{
+	if (file->name)
+		free(file->name);
+	free(file);
+}
+
+void	ft_fileclear(t_file **file)
+{
+	t_file	*temp;
+
+	temp = NULL;
+	while (*file)
+	{
+		temp = (*file)->next;
+		ft_filedelone(*file);
+		*file = temp;
+	}
+}

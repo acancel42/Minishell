@@ -58,7 +58,7 @@ void	cmd_path(t_commands *cmds, char **env)
 	if (all_paths == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		// clean_all(cmds, all_paths);
+		//free_all(cmds, all_paths);
 	}
 	i = 0;
 	build_path(cmds, all_paths[i], cmds->name);
@@ -70,7 +70,7 @@ void	cmd_path(t_commands *cmds, char **env)
 	if (cmds->path == NULL)
 	{
 		cmd_not_found(cmds); //, all_paths
-	// free_all(NULL, all_paths);
+	//free_all(NULL, all_paths);
 	}
 	return ;
 }
@@ -109,27 +109,6 @@ void	free_file(t_file *file)
 		free(file->name);
 		file = file->next;
 	}
-}
-
-void	free_all(t_commands *cmds, void *data)
-{
-	if (data)
-		free(data);
-	while (cmds)
-	{
-		if (cmds->name)
-			free(cmds->name);
-		if (cmds->path)
-			free(cmds->path);
-		if (cmds->flags)
-			free(cmds->flags);
-		if (cmds->redirections)
-			free_file(cmds->redirections);
-		if (cmds->args)
-			free_file(cmds->args);
-		cmds = cmds->next;
-	}
-	free(cmds);
 }
 
 void	ft_pathfinder(t_commands *cmds, char **env)
