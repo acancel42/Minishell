@@ -42,6 +42,7 @@ int token_init(char *src, t_token **token) {
 			temp->value = ft_charjoin(temp->value, c);
 			i++;
 		}
+		//free(temp);
 		return (i);
 	}
 	if (src[i] == '<')
@@ -65,6 +66,7 @@ int token_init(char *src, t_token **token) {
 			temp->value = ft_charjoin(temp->value, c);
 			i++;
 		}
+		//free(temp);
 		return (i);
 	}
 	else if (isalpha(src[i]) || src[i] == '_')
@@ -77,6 +79,7 @@ int token_init(char *src, t_token **token) {
 			temp->value = ft_charjoin(temp->value, c);
 			i++;
 		}
+		//free(temp);
 		return (i);
 	}
 	if (src[i] == '"')
@@ -103,6 +106,7 @@ int token_init(char *src, t_token **token) {
 			printf("%s\n", "Interractive mode");
 			exit(EXIT_FAILURE);
 		}
+		//free(temp);
 		return (i);
 	}
 	if (src[i] == '\'')
@@ -129,6 +133,7 @@ int token_init(char *src, t_token **token) {
 			printf("%s\n", "Interractive mode");
 			exit(EXIT_FAILURE);
 		}
+		//free(temp);
 		return (i);
 	}
 	else if (isdigit(src[i]))
@@ -141,6 +146,7 @@ int token_init(char *src, t_token **token) {
 			temp->value = ft_charjoin(temp->value, c);
 			i++;
 		}
+		//free(temp);
 		return (i);
 	}
 	else if (src[i] == '-')
@@ -153,6 +159,7 @@ int token_init(char *src, t_token **token) {
 			temp = ft_toknew(c, FLAG);
 			ft_tokadd_back(token, temp);
 		}
+		//free(temp);
 		return (i);
 	}
 	else if (src[i] == '=')
@@ -160,6 +167,7 @@ int token_init(char *src, t_token **token) {
 		temp = ft_toknew('=', EQUAL);
 		ft_tokadd_back(token, temp);
 		i++;
+		//free(temp);
 		return (i);
 	}
 	else if (src[i] == '|')
@@ -167,6 +175,7 @@ int token_init(char *src, t_token **token) {
 		temp = ft_toknew('|', PIPE);
 		ft_tokadd_back(token, temp);
 		i++;
+		//free(temp);
 		return (i);
 	}
 	else
@@ -243,13 +252,21 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 	}
 }
 
+void exit_minishell(t_token **token, t_commands **cmds, char **user)
+{
+	ft_cmdsclear(cmds);
+	ft_tokenclear(token);
+	free(*user);
+	printf("%s\n", "exit");
+	exit(EXIT_SUCCESS);
+}
+
 int main(int argc, char **argv, char **env)
 {
-	t_token 	*token;
-	t_token 	*temp;
-	t_commands	*cmds;
-	char	*line;
-	char	*user;
+	t_token 			*token;
+	t_commands			*cmds;
+	char				*line;
+	char				*user;
 
 	(void)argc;
 	(void)argv;
@@ -262,7 +279,7 @@ int main(int argc, char **argv, char **env)
 		cmds = NULL;
 		line = readline(user);
 		if (!line)
-			break ;
+			exit_minishell(&token, &cmds, &user);
 		//if (*line)
 		//	add_history(line);
 		lexer_init(&token, line);
@@ -273,26 +290,8 @@ int main(int argc, char **argv, char **env)
 		print_cmds(cmds);
 		ft_pathfinder(cmds, env);
 		ft_cmdsclear(&cmds);
-		while (token)
-		{
-			temp = token;
-			token = token->next;
-			free(temp->value);
-			free(temp);
-		}
-		//print_cmds(cmds);
+		ft_tokenclear(&token);
 		free(line);
 	}
-	free(user);
-	//t_commands	**head = NULL;
-	//cmds = *head;
-	while (token)
-	{
-		temp = token;
-		token = token->next;
-		free(temp->value);
-		free(temp);
-	}
-	//free_all(cmds, NULL);
 	return (0);
 }

@@ -6,13 +6,13 @@
 /*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:51:48 by acancel           #+#    #+#             */
-/*   Updated: 2024/06/02 02:11:38 by talibert         ###   ########.fr       */
+/*   Updated: 2024/06/03 19:19:26 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft.h"
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	int			i;
 	int			j;
@@ -36,11 +36,13 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		dest[i + j] = s2[j];
 		j++;
 	}
+	free(s1);
 	return (dest);
 }
+//redirection not malloc'd, so free problem
 
 
-char	*ft_charjoin(char const *s1, char const s2)
+char	*ft_charjoin(char *s1, char const s2)
 {
 	char		*dest;
 	size_t		len_s1;
@@ -53,5 +55,6 @@ char	*ft_charjoin(char const *s1, char const s2)
 		return (NULL);
 	ft_memcpy(dest, s1, len_s1);
 	ft_memcpy(dest + len_s1, &s2, 1);
+	free(s1);
 	return (dest);
 }

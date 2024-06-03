@@ -7,6 +7,7 @@ t_file	*ft_filenew(char *content, char *type)
 	new->fd = 0;
 	new->state = false;
 	new->name = ft_strjoin(type, content);
+	//free(content);
 	return (new);
 }
 

@@ -8,6 +8,7 @@
 # include "../inc/libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
+# include <signal.h>
 # include <string.h>
 # include "lexer.h"
 
@@ -49,5 +50,6 @@ void		ft_fileadd_back(t_file **lst, t_file *new);
 void		ft_fileclear(t_file **file);
 t_token		*ft_toknew(char content, t_token_types type);
 void		ft_tokadd_back(t_token **lst, t_token *new);
+void		ft_tokenclear(t_token **token);
 
 #endif

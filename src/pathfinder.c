@@ -45,6 +45,16 @@ void	build_path(t_commands *cmds, char *s1, char *s2)
 	return ;
 }
 
+void	free_tab(char **tab)
+{
+	int	i;
+
+	i = -1;
+	while(tab[++i])
+		free(tab[i]);
+	free(tab);
+}
+
 void	cmd_path(t_commands *cmds, char **env)
 {
 	char	**all_paths;
@@ -58,7 +68,7 @@ void	cmd_path(t_commands *cmds, char **env)
 	if (all_paths == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		//free_all(cmds, all_paths);
+		exit(EXIT_FAILURE);
 	}
 	i = 0;
 	build_path(cmds, all_paths[i], cmds->name);
@@ -68,10 +78,8 @@ void	cmd_path(t_commands *cmds, char **env)
 		build_path(cmds, all_paths[i++], cmds->name);
 	}
 	if (cmds->path == NULL)
-	{
 		cmd_not_found(cmds); //, all_paths
-	//free_all(NULL, all_paths);
-	}
+	free_tab(all_paths);
 	return ;
 }
 
