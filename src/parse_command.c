@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "minishell.h"
 /*
 t_token	token_init(char	*src)
 {

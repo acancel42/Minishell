@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "minishell.h"
 /*
 char *ft_strjoin(char const *s1, char const *s2) {
 	size_t len1 = ft_strlen(s1);

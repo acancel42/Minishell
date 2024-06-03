@@ -1,5 +1,5 @@
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 // void	clean_all(t_commands *cmds, char **all_paths)
 // {

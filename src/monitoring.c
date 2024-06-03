@@ -1,5 +1,5 @@
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 #include <unistd.h>
 
