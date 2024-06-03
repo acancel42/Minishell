@@ -1,12 +1,12 @@
 #include "minishell.h"
 
-t_file	*ft_filenew(char *content)
+t_file	*ft_filenew(char *content, char *type)
 {
 	t_file *new = ft_calloc(1, sizeof(t_file));
 	new->next = NULL;
 	new->fd = 0;
 	new->state = false;
-	new->name = ft_strdup(content);
+	new->name = ft_strjoin(type, content);
 	return (new);
 }
 

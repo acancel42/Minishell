@@ -123,10 +123,8 @@ void	free_all(t_commands *cmds, void *data)
 			free(cmds->path);
 		if (cmds->flags)
 			free(cmds->flags);
-		if (cmds->input)
-			free_file(cmds->input);
-		if (cmds->output)
-			free_file(cmds->output);
+		if (cmds->redirections)
+			free_file(cmds->redirections);
 		if (cmds->args)
 			free_file(cmds->args);
 		cmds = cmds->next;

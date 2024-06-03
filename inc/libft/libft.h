@@ -6,7 +6,7 @@
 /*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 16:56:37 by Acancel           #+#    #+#             */
-/*   Updated: 2024/06/02 04:16:58 by talibert         ###   ########.fr       */
+/*   Updated: 2024/06/03 15:47:46 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_list
 
 char	**ft_split(char const *s, char c);
 int		ft_iswspace(char c);
+int		ft_isoperator(char c);
 char	*ft_itoa(int n);
 char	*ft_strchr(const char *str, int c);
 char	*ft_strdup(const char *s);
