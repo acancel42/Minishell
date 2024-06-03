@@ -54,9 +54,7 @@ void	print_file(t_file *file, t_token_types type)
 		if (type == ARRAY)
 			printf("arg : %s\n", file->name);
 		if (type == IRED)
-			printf("input : %s\n", file->name);
-		if (type == ORED)
-			printf("output : %s\n", file->name);
+			printf("redirection : %s\n", file->name);
 		file = file->next;
 	}
 }
@@ -68,8 +66,7 @@ void	print_cmds(t_commands *cmds)
 		printf("command : %s\n", cmds->name);
 		printf("flags : %s\n", cmds->flags);
 		print_file(cmds->args, ARRAY);
-		print_file(cmds->input, IRED);
-		print_file(cmds->output, ORED);
+		print_file(cmds->redirections, IRED);
 		printf("%c", '\n');
 		cmds = cmds->next;
 	}

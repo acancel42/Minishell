@@ -36,7 +36,7 @@ int token_init(char *src, t_token **token) {
 			i++;
 		temp = ft_toknew(0, OFILE);
 		ft_tokadd_back(token, temp);
-		while (src[i] && !ft_iswspace(src[i]))
+		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
 		{
 			c = src[i];
 			temp->value = ft_charjoin(temp->value, c);
@@ -59,7 +59,7 @@ int token_init(char *src, t_token **token) {
 			i++;
 		temp = ft_toknew(0, IFILE);
 		ft_tokadd_back(token, temp);
-		while (src[i] && !ft_iswspace(src[i]))
+		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
 		{
 			c = src[i];
 			temp->value = ft_charjoin(temp->value, c);
@@ -211,7 +211,7 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 		{
 			if (array_count >=1)
 			{
-				temp1 = ft_filenew(token->value);
+				temp1 = ft_filenew(token->value, NULL);
 				ft_fileadd_back(&(*cmds)->args, temp1);
 			}
 			else
@@ -225,14 +225,14 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 		else if (token->type == ORED)
 		{
 			token = token->next;
-			temp1 = ft_filenew(token->value);
-			ft_fileadd_back(&(*cmds)->output, temp1);
+			temp1 = ft_filenew(token->value, ">");
+			ft_fileadd_back(&(*cmds)->redirections, temp1);
 		}
 		else if (token->type == IRED)
 		{
 			token = token->next;
-			temp1 = ft_filenew(token->value);
-			ft_fileadd_back(&(*cmds)->input, temp1);
+			temp1 = ft_filenew(token->value, "<");
+			ft_fileadd_back(&(*cmds)->redirections, temp1);
 		}
 		else if (token->type == PIPE)
 		{
