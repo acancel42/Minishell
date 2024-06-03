@@ -13,13 +13,6 @@ char *ft_strjoin(char const *s1, char const *s2) {
 	return joined;
 }*/
 
-int	ft_iswspace(char c)
-{
-	if (c == ' ' || (c >= 9 && c <= 13))
-		return (1);
-	return (0);
-}
-
 // Initialiser un token à partir d'une chaîne
 int token_init(char *src, t_token **token) {
 	int i = 0;
