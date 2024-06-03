@@ -1,5 +1,6 @@
 LIBFT_DIR = inc/libft
 LIBFT = $(LIBFT_DIR)/libft.a
+IFLAG = -I inc -I$(LIBFT_DIR)
 
 NAME = minishell
 
@@ -24,7 +25,7 @@ $(NAME): $(OBJS)
 
 .objects/%.o: src/%.c inc/minishell.h inc/lexer.h $(LIBFT)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -I./ -I$(LIBFT_DIR) -c -o $@ $<
+	$(CC) $(CFLAGS) $(IFLAG) -c -o $@ $<
 
 FORCE :
 
