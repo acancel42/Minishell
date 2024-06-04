@@ -25,3 +25,23 @@ void	ft_tokadd_back(t_token **lst, t_token *new)
 	else
 		*lst = new;
 }
+
+void	ft_tokendelone(t_token *token)
+{
+	if (token->value)
+		free(token->value);
+	free(token);
+}
+
+void	ft_tokenclear(t_token **token)
+{
+	t_token	*temp;
+
+	temp = NULL;
+	while (*token)
+	{
+		temp = (*token)->next;
+		ft_tokendelone(*token);
+		*token = temp;
+	}
+}

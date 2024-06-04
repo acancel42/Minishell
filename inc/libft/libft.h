@@ -6,7 +6,7 @@
 /*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 16:56:37 by Acancel           #+#    #+#             */
-/*   Updated: 2024/06/02 04:16:58 by talibert         ###   ########.fr       */
+/*   Updated: 2024/06/04 18:41:16 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,13 @@ typedef struct s_list
 
 char	**ft_split(char const *s, char c);
 int		ft_iswspace(char c);
+int		ft_isoperator(char c);
 char	*ft_itoa(int n);
 char	*ft_strchr(const char *str, int c);
 char	*ft_strdup(const char *s);
 char	*ft_chardup(const char c);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_charjoin(char const *s1, char const s2);
+char	*ft_strjoin(char *s1, char *s2, int flag);
+char	*ft_charjoin(char *s1, char const s2);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strrchr(const char *str, int c);
