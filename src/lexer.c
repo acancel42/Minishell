@@ -229,7 +229,7 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 		}
 		else if (token->type == FLAG)
 		{
-			(*cmds)->flags = ft_strjoin((*cmds)->flags, token->value);
+			(*cmds)->flags = ft_strjoin((*cmds)->flags, token->value, 1);
 		}
 		else if (token->type == ORED)
 		{

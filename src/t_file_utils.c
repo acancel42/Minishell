@@ -2,12 +2,15 @@
 
 t_file	*ft_filenew(char *content, char *type)
 {
-	t_file *new = ft_calloc(1, sizeof(t_file));
+	char	*temp;
+	t_file *new;
+
+	new = ft_calloc(1, sizeof(t_file));
+	temp = ft_strdup(type);
 	new->next = NULL;
 	new->fd = 0;
 	new->state = false;
-	new->name = ft_strjoin(type, content);
-	//free(content);
+	new->name = ft_strjoin(temp, content, 1);
 	return (new);
 }
 

@@ -12,10 +12,11 @@ void	cmd_not_found(t_commands *cmds)	//, char **all_paths)
 {
 	char	*cmd_n_found;
 
-	cmd_n_found = ft_strjoin(cmds->name, " : command not found\n");
+	cmd_n_found = ft_strjoin(cmds->name, " : command not found\n", 0);
 	// if (cmd_n_found == NULL)
 		// clean_all(cmds, all_paths);
 	ft_putstr_fd(cmd_n_found, 1);
+	//printf("%s : command not found\n", cmds->name);
 	free(cmd_n_found);
 	// clean_all(cmds, all_paths);
 }
@@ -36,7 +37,7 @@ void	build_path(t_commands *cmds, char *s1, char *s2)
 	if (cmds->path == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		// free_all(NULL, cmds->path);
+		//free_all(NULL, cmds->path);
 		exit(EXIT_FAILURE);
 	}
 	ft_memcpy(cmds->path, s1, len_s1);
@@ -72,7 +73,8 @@ void	cmd_path(t_commands *cmds, char **env)
 	}
 	i = 0;
 	build_path(cmds, all_paths[i], cmds->name);
-	while (access(cmds->path, F_OK) != 0 && cmds->path != NULL)
+	printf("%s\n", cmds->path);
+	while (cmds->path != NULL && access(cmds->path, F_OK))
 	{
 		free(cmds->path);
 		build_path(cmds, all_paths[i++], cmds->name);
