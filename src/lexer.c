@@ -243,56 +243,66 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 	}
 }
 
-int main(int argc, char **argv, char **env)
-{
-	t_token 	*token;
-	t_token 	*temp;
-	t_commands	*cmds;
-	char	*line;
-	char	*user;
+// int main(int argc, char **argv, char **env)
+// {
+// 	t_token 	*token;
+// 	t_token 	*temp;
+// 	t_commands	*cmds;
+// 	char		*line;
+// 	char		*user;
+// 	char		*pwd;
 
-	(void)argc;
-	(void)argv;
-	user = get_user(env);
-	if (user == NULL)
-		return (-1);
-	while (1)
-	{
-		token = NULL;
-		cmds = NULL;
-		line = readline(user);
-		if (!line)
-			break ;
-		//if (*line)
-		//	add_history(line);
-		lexer_init(&token, line);
-		//print_lst(token);
-		// Free allocated memory (tokens list)
-		init_cmd(&cmds, token);
-		fill_cmd(&cmds, token);
-		print_cmds(cmds);
-		ft_pathfinder(cmds, env);
-		free_all(cmds, NULL);
-		while (token)
-		{
-			temp = token;
-			token = token->next;
-			free(temp->value);
-			free(temp);
-		}
-		//print_cmds(cmds);
-		free(line);
-	}
-	free(user);
-	//t_commands	**head = NULL;
-	//cmds = *head;
-	while (token)
-	{
-		temp = token;
-		token = token->next;
-		free(temp->value);
-		free(temp);
-	}
-	//free_all(cmds, NULL);
-	return (0);
-}
+// 	(void)argc;
+// 	(void)argv;
+// 	pwd = NULL;
+// 	user = get_user(env);
+// 	if (user == NULL)
+// 		return (-1);
+// 	while (1)
+// 	{
+// 		token = NULL;
+// 		cmds = NULL;
+// 		if (get_pwd(&pwd) == 2)
+// 			return (-2);
+// 		user = ft_strjoin(user, pwd);
+// 		if (!user)
+// 			return (-1);
+// 		user = ft_strjoin(user, "$");
+// 		if (!user)
+// 			return (-1);
+// 		line = readline(user);
+// 		if (!line)
+// 			break ;
+// 		//if (*line)
+// 		//	add_history(line);
+// 		lexer_init(&token, line);
+// 		//print_lst(token);
+// 		// Free allocated memory (tokens list)
+// 		init_cmd(&cmds, token);
+// 		fill_cmd(&cmds, token);
+// 		print_cmds(cmds);
+// 		ft_pathfinder(cmds, env);
+// 		free_all(cmds, NULL);
+// 		while (token)
+// 		{
+// 			temp = token;
+// 			token = token->next;
+// 			free(temp->value);
+// 			free(temp);
+// 		}
+// 		//print_cmds(cmds);
+// 		free(line);
+// 	}
+// 	free(user);
+// 	//t_commands	**head = NULL;
+// 	//cmds = *head;
+// 	while (token)
+// 	{
+// 		temp = token;
+// 		token = token->next;
+// 		free(temp->value);
+// 		free(temp);
+// 	}
+// 	//free_all(cmds, NULL);
+// 	return (0);
+// }

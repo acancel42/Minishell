@@ -1,14 +1,10 @@
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include "minishell.h"
 
-int	main(void)
+int	get_pwd(char **pwd)
 {
-	char	*pwd;
-
-	getcwd(pwd, 0);
-	printf("%s", pwd);
-	free(pwd);
+	*pwd = getcwd(NULL, 0);
+	if (!*pwd)
+		return (-2);
 	return (0);
 }
