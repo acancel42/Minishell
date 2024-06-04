@@ -50,6 +50,9 @@ void		ft_fileadd_back(t_file **lst, t_file *new);
 void		ft_fileclear(t_file **file);
 t_token		*ft_toknew(char content, t_token_types type);
 void		ft_tokadd_back(t_token **lst, t_token *new);
+int			get_pwd(char **pwd);
+void		ft_free_tab(char **arr, int j);
 void		ft_tokenclear(t_token **token);
+
 
 #endif
