@@ -1,11 +1,14 @@
 # include "minishell.h"
 
-void	ft_free_tab(char **arr, int j)
+void	ft_free_tab(char **arr)
 {
-	while (j >= 0)
+	size_t	j;
+
+	j = 0;
+	while (arr[j])
 	{
 		free(arr[j]);
-		j--;
+		j++;
 	}
 	free(arr);
 }

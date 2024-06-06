@@ -17,7 +17,7 @@ char	**ft_get_env(char **env)
 		my_env[i] = ft_strdup(env[i]);
 		if (!my_env[i])
 		{
-			ft_free_tab(my_env, i);
+			ft_free_tab(my_env);
 			return (NULL);
 		}
 		i++;

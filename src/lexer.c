@@ -229,7 +229,10 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 		}
 		else if (token->type == FLAG)
 		{
+			if (!(*cmds)->flags)
+				(*cmds)->flags = ft_strjoin("-", (*cmds)->flags, 0);
 			(*cmds)->flags = ft_strjoin((*cmds)->flags, token->value, 1);
+	
 		}
 		else if (token->type == ORED)
 		{
@@ -267,9 +270,12 @@ int main(int argc, char **argv, char **env)
 	t_commands			*cmds;
 	char				*line;
 	char				*user;
+	char				**my_env;
+	size_t				i;
 
 	(void)argc;
 	(void)argv;
+	i = 0;
 	user = get_user(env);
 	if (user == NULL)
 		return (-1);
@@ -280,8 +286,8 @@ int main(int argc, char **argv, char **env)
 		line = readline(user);
 		if (!line)
 			exit_minishell(&token, &cmds, &user);
-		//if (*line)
-		//	add_history(line);
+		if (*line)
+			add_history(line);
 		lexer_init(&token, line);
 		//print_lst(token);
 		// Free allocated memory (tokens list)
@@ -289,6 +295,13 @@ int main(int argc, char **argv, char **env)
 		fill_cmd(&cmds, token);
 		print_cmds(cmds);
 		ft_pathfinder(cmds, env);
+		my_env = ft_get_env(env);
+		if (!my_env)
+			printf("no env\n");
+		
+		if (!ft_exec_v1(&cmds, my_env))
+			printf("execve failed\n");
+		ft_free_tab(my_env);
 		ft_cmdsclear(&cmds);
 		ft_tokenclear(&token);
 		free(line);
