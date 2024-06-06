@@ -11,6 +11,7 @@ t_file	*ft_filenew(char *content, char *type)
 	new->fd = 0;
 	new->state = false;
 	new->name = ft_strjoin(temp, content, 1);
+	printf("icicicicicicicic %s\n", new->name);
 	return (new);
 }
 

@@ -232,7 +232,6 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 			if (!(*cmds)->flags)
 				(*cmds)->flags = ft_strjoin("-", (*cmds)->flags, 0);
 			(*cmds)->flags = ft_strjoin((*cmds)->flags, token->value, 1);
-	
 		}
 		else if (token->type == ORED)
 		{
@@ -298,8 +297,8 @@ int main(int argc, char **argv, char **env)
 		my_env = ft_get_env(env);
 		if (!my_env)
 			printf("no env\n");
-		
-		if (!ft_exec_v1(&cmds, my_env))
+		printf("args %p\n", cmds->args);
+		if (ft_exec_v1(cmds, my_env) == -1)
 			printf("execve failed\n");
 		ft_free_tab(my_env);
 		ft_cmdsclear(&cmds);

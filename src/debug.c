@@ -52,7 +52,10 @@ void	print_file(t_file *file, t_token_types type)
 	while (file)
 	{
 		if (type == ARRAY)
+		{
 			printf("arg : %s\n", file->name);
+
+		}
 		if (type == IRED)
 			printf("redirection : %s\n", file->name);
 		file = file->next;
