@@ -17,8 +17,6 @@ typedef struct s_file
 	char			*name;
 	int				fd;
 	bool			state;
-	int				squoted;
-	int				dquoted;
 	struct s_file	*next;
 }				t_file;
 
@@ -27,10 +25,9 @@ typedef struct s_commands
 	char				*name;
 	char				*path;
 	int					valid_path;
-	char				*flags;
 	void				(*f)(void*);
 	t_file				*redirections;
-	t_file				*args;
+	char				**args;
 	struct s_commands	*next;
 }				t_commands;
 
@@ -39,7 +36,7 @@ void		cmd_path(t_commands *cmds, char **env);
 void		free_all(t_commands **cmds, void *data);
 void		print_type(t_token_types type);
 void		print_lst(t_token *token);
-void		print_file(t_file *file, t_token_types type);
+void		print_file(t_file *file);
 void		print_cmds(t_commands *cmds);
 void		ft_pathfinder(t_commands *cmds, char **env);
 t_commands	*ft_cmdnew(void);

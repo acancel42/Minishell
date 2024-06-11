@@ -5,7 +5,6 @@ t_commands *ft_cmdnew(void)
 	t_commands *new = ft_calloc(1, sizeof(t_commands));
 	new->next = NULL;
 	new->path = NULL;
-	new->flags = NULL;
 	new->valid_path = 0;
 	new->name = NULL;
 	return (new);
@@ -35,12 +34,10 @@ void	ft_cmdsdelone(t_commands *cmds)
 		free(cmds->name);
 	if (cmds->path)
 		free(cmds->path);
-	if (cmds->flags)
-		free(cmds->flags);
 	if (cmds->redirections)
 		ft_fileclear(&cmds->redirections);
 	if (cmds->args)
-		ft_fileclear(&cmds->args);
+		ft_free_tab(cmds->args);
 	free(cmds);
 }
 

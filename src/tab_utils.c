@@ -2,13 +2,10 @@
 
 void	ft_free_tab(char **arr)
 {
-	size_t	j;
+	int	i;
 
-	j = 0;
-	while (arr[j])
-	{
-		free(arr[j]);
-		j++;
-	}
+	i = -1;
+	while (arr[++i])
+		free(arr[i]);
 	free(arr);
 }
