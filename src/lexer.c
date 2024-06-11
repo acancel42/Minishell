@@ -267,7 +267,7 @@ int main(int argc, char **argv, char **env)
 		init_cmd(&cmds, token);
 		fill_cmd(&cmds, token);
 		print_cmds(cmds);
-		ft_pathfinder(cmds, env);
+		ft_pathfinder(token, cmds, user, env);
 		my_env = ft_get_env(env);
 		if (!my_env)
 			printf("no env\n");

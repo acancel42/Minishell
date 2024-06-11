@@ -3,7 +3,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-int			ft_exec_v1(t_commands *cmds, char **my_env)
+int	ft_exec_v1(t_commands *cmds, char **my_env)
 {
 	int		i;
 
@@ -15,8 +15,10 @@ int			ft_exec_v1(t_commands *cmds, char **my_env)
 	if (cmds->pid == 0)
 	{
 		if (execve(cmds->path, cmds->args, my_env) == -1)
+		{
 			printf("execve failed\n");
-					return (-1);
+			return (-1);
+		}
 	}
 	if (cmds->pid == -1)
 	{

@@ -15,7 +15,7 @@ void	cmd_not_found(t_commands *cmds)	//, char **all_paths)
 	// clean_all(cmds, all_paths);
 }
 
-void	build_path(t_commands *cmds, char *s1, char *s2)
+void	build_path(t_token *token, t_commands *cmds, char *s1, char *s2, char *user)
 {
 	size_t		len_s1;
 	size_t		len_s2;
@@ -31,8 +31,7 @@ void	build_path(t_commands *cmds, char *s1, char *s2)
 	if (cmds->path == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		//free_all(NULL, cmds->path);
-		exit(EXIT_FAILURE);
+		exit_minishell(&token, &cmds, &user);
 	}
 	ft_memcpy(cmds->path, s1, len_s1);
 	ft_memcpy(cmds->path + len_s1, "/", 1);
@@ -45,12 +44,12 @@ void	free_tab(char **tab)
 	int	i;
 
 	i = -1;
-	while(tab[++i])
+	while (tab[++i])
 		free(tab[i]);
 	free(tab);
 }
 
-void	cmd_path(t_commands *cmds, char **env)
+void	cmd_path(t_token *token, t_commands *cmds, char *user, char **env)
 {
 	char	**all_paths;
 	int		i;
@@ -66,12 +65,11 @@ void	cmd_path(t_commands *cmds, char **env)
 		exit(EXIT_FAILURE);
 	}
 	i = 0;
-	build_path(cmds, all_paths[i], cmds->name);
-	printf("%s\n", cmds->path);
+	build_path(token, cmds, all_paths[i], cmds->name, user);
 	while (cmds->path != NULL && access(cmds->path, F_OK))
 	{
 		free(cmds->path);
-		build_path(cmds, all_paths[i++], cmds->name);
+		build_path(token, cmds, all_paths[i++], cmds->name, user);
 	}
 	if (cmds->path == NULL)
 		cmd_not_found(cmds); //, all_paths
@@ -79,22 +77,16 @@ void	cmd_path(t_commands *cmds, char **env)
 	return ;
 }
 
-void	free_file(t_file *file)
-{
-	while (file)
-	{
-		free(file->name);
-		file = file->next;
-	}
-}
 
-void	ft_pathfinder(t_commands *cmds, char **env)
+void	ft_pathfinder(t_token *token, t_commands *cmds, char *user, char **env)
 {
 	while(cmds)
 	{
 		cmds->valid_path = access(cmds->name, F_OK);
-		if (cmds->valid_path == -1 && ft_strchr_b(cmds->args[0], '/'))
-			cmd_path(cmds, env);
+		printf("HHHHHH\n");
+		if (cmds->valid_path == -1 && ft_strchr_b(cmds->name, '/'))
+			cmd_path(token, cmds, user, env);
+		printf("HHHHHH\n");
 		if (cmds->path)
 			printf("path : %s\n", cmds->path);
 		cmds = cmds->next;
