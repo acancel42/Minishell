@@ -270,6 +270,13 @@ int main(int argc, char **argv, char **env)
 		fill_cmd(&cmds, token);
 		print_cmds(cmds);
 		ft_pathfinder(cmds, env);
+		my_env = ft_get_env(env);
+		if (!my_env)
+			printf("no env\n");
+		printf("args %p\n", cmds->args);
+		if (ft_exec_v1(cmds, my_env) == -1)
+			printf("execve failed\n");
+		ft_free_tab(my_env);
 		ft_cmdsclear(&cmds);
 		ft_tokenclear(&token);
 		free(line);

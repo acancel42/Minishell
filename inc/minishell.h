@@ -27,9 +27,10 @@ typedef struct s_commands
 	int					valid_path;
 	void				(*f)(void*);
 	t_file				*redirections;
+	pid_t				pid;
 	char				**args;
 	struct s_commands	*next;
-}				t_commands;
+}			              t_commands;
 
 char		*get_user(char **env);
 void		cmd_path(t_commands *cmds, char **env);
@@ -50,6 +51,8 @@ void		ft_tokadd_back(t_token **lst, t_token *new);
 int			get_pwd(char **pwd);
 void		ft_free_tab(char **arr);
 void		ft_tokenclear(t_token **token);
+int			ft_exec_v1(t_commands *cmds, char **my_env);
+char		**ft_get_env(char **env);
 
 
 #endif

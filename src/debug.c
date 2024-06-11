@@ -35,6 +35,7 @@ void	print_file(t_file *file)
 {
 	while (file)
 	{
+
 		printf("redirection : %s\n", file->name);
 		file = file->next;
 	}
