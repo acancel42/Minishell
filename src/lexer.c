@@ -15,171 +15,139 @@ char *ft_strjoin(char const *s1, char const *s2) {
 
 // Initialiser un token à partir d'une chaîne
 int token_init(char *src, t_token **token) {
-	int i = 0;
-	char c;
+	int		i;
+	int		j;
+	char	c;
 	t_token *temp;
 
+	i = 0;
+	j = 0;
 	while (ft_iswspace(src[i]))
 			i++;
-	if (src[i] == '>')
-	{
-		temp = ft_toknew('>', ORED);
-		if (src && src[i + 1] == '>')
-		{
-			temp->value = ft_charjoin(temp->value, '>');
-			temp->type = OAPP;
-			i++;
-		}
-		i++;
-		ft_tokadd_back(token, temp);
-		while (src && ft_iswspace(src[i]))
-			i++;
-		temp = ft_toknew(0, OFILE);
-		ft_tokadd_back(token, temp);
-		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-		{
-			c = src[i];
-			temp->value = ft_charjoin(temp->value, c);
-			i++;
-		}
-		//free(temp);
-		return (i);
-	}
-	if (src[i] == '<')
-	{
-		temp = ft_toknew('<', IRED);
-		if (src && src[i + 1] == '<')
-		{
-			temp->value = ft_charjoin(temp->value, '<');
-			temp->type = IAPP;
-			i++;
-		}
-		ft_tokadd_back(token, temp);
-		i++;
-		while (src && ft_iswspace(src[i]))
-			i++;
-		temp = ft_toknew(0, IFILE);
-		ft_tokadd_back(token, temp);
-		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-		{
-			c = src[i];
-			temp->value = ft_charjoin(temp->value, c);
-			i++;
-		}
-		//free(temp);
-		return (i);
-	}
-	else if (isalpha(src[i]) || src[i] == '_')
-	{
-		temp = ft_toknew(0, ARRAY);
-		ft_tokadd_back(token, temp);
-		while (src[i] && !ft_iswspace(src[i]) && (src [i] != '<' && src [i] != '>' && src [i] != '|' && src [i] != '-'))
-		{
-			c = src[i];
-			temp->value = ft_charjoin(temp->value, c);
-			i++;
-		}
-		//free(temp);
-		return (i);
-	}
 	if (src[i] == '"')
 	{
-		temp = ft_toknew('"', LDQUO);
+		i++;
+		temp = ft_toknew(src[i], T_D_QUOTED_WORD);
 		ft_tokadd_back(token, temp);
 		i++;
-		temp = ft_toknew(0, ARRAY);
-		ft_tokadd_back(token, temp);
 		while (src[i] && src[i] != '"')
 		{
 			c = src[i];
 			temp->value = ft_charjoin(temp->value, c);
 			i++;
 		}
-		if (src[i] == '"')
-		{
-			temp = ft_toknew('"', RDQUO);
-			ft_tokadd_back(token, temp);
-			i++;
-		}
-		else
+		if (src[i] != '"')
 		{
 			printf("%s\n", "Interractive mode");
 			exit(EXIT_FAILURE);
 		}
-		//free(temp);
+		else
+		{
+			i++;
+			if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+				temp->is_separated = 1;
+		}
 		return (i);
 	}
-	if (src[i] == '\'')
+	else if (src[i] == '\'')
 	{
-		temp = ft_toknew('\'', LSQUO);
+		i++;
+		temp = ft_toknew(src[i], T_S_QUOTED_WORD);
 		ft_tokadd_back(token, temp);
 		i++;
-		temp = ft_toknew(0, ARRAY);
-		ft_tokadd_back(token, temp);
 		while (src[i] && src[i] != '\'')
 		{
 			c = src[i];
 			temp->value = ft_charjoin(temp->value, c);
 			i++;
 		}
-		if (src[i] == '\'')
-		{
-			temp = ft_toknew('\'', RSQUO);
-			ft_tokadd_back(token, temp);
-			i++;
-		}
-		else
+		if (src[i] != '\'')
 		{
 			printf("%s\n", "Interractive mode");
 			exit(EXIT_FAILURE);
 		}
-		//free(temp);
+		else
+		{
+			i++;
+			if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+				temp->is_separated = 1;
+		}
 		return (i);
 	}
-	else if (isdigit(src[i]))
+	else if (src[i] == '>')
 	{
-		temp = ft_toknew(0, INT);
-		ft_tokadd_back(token, temp);
-		while (isdigit(src[i]))
+		if (src && src[i + 1] == '>')
+		{
+			j++;
+			i++;
+		}
+		i++;
+		while (src[i] && ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+			i++;
+		temp = ft_toknew(src[i++], T_REDIR_OUT);
+		if (j > 0)
+			temp->type = T_APPEND_OUT;
+		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
 		{
 			c = src[i];
 			temp->value = ft_charjoin(temp->value, c);
 			i++;
 		}
-		//free(temp);
+		ft_tokadd_back(token, temp);
+		printf("%s\n", temp->value);
 		return (i);
 	}
-	else if (src[i] == '-')
+	else if (src[i] == '<')
 	{
-		temp = ft_toknew('-', SCO);
-		ft_tokadd_back(token, temp);
-		while (isalpha(src[++i]))
+		if (src && src[i + 1] == '<')
+		{
+			j++;
+			i++;
+		}
+		i++;
+		while (src[i] && ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+			i++;
+		temp = ft_toknew(src[i++], T_REDIR_IN);
+		if (j > 0)
+			temp->type = T_HEREDOC;
+		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
 		{
 			c = src[i];
-			temp = ft_toknew(c, FLAG);
-			ft_tokadd_back(token, temp);
+			temp->value = ft_charjoin(temp->value, c);
+			i++;
 		}
-		//free(temp);
-		return (i);
-	}
-	else if (src[i] == '=')
-	{
-		temp = ft_toknew('=', EQUAL);
 		ft_tokadd_back(token, temp);
-		i++;
-		//free(temp);
+		printf("%s\n", temp->value);
 		return (i);
 	}
 	else if (src[i] == '|')
 	{
-		temp = ft_toknew('|', PIPE);
+		temp = ft_toknew('|', T_PIPE);
 		ft_tokadd_back(token, temp);
 		i++;
-		//free(temp);
 		return (i);
 	}
 	else
-		exit(EXIT_FAILURE);
+	{
+		temp = ft_toknew(src[i++], T_WORD);
+		ft_tokadd_back(token, temp);
+		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]) && !ft_isquote(src[i]))
+		{
+			c = src[i];
+			temp->value = ft_charjoin(temp->value, c);
+			i++;
+		}
+		if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+			temp->is_separated = 1;
+		return(i);
+	}
+}
+
+int	ft_isword(t_token *token)
+{
+	if (token->type == T_D_QUOTED_WORD || token->type == T_S_QUOTED_WORD || token->type == T_WORD)
+		return (1);
+	return (0);
 }
 
 // Initialiser le lexer avec une chaîne
@@ -187,7 +155,7 @@ void lexer_init(t_token **token, char *src)
 {
 	int i = 0;
 	while (src[i]) {
-		i += token_init(&src[i], token);
+		i += token_init(src + i, token);
 	}
 }
 
@@ -197,57 +165,67 @@ void	init_cmd(t_commands **cmds, t_token *token)
 
 	while (token)
 	{
-		while (token && token->type != ARRAY && token->type != OFILE)
-			token = token->next;
 		temp = ft_cmdnew();
 		ft_cmdadd_back(cmds, temp);
-		while (token && token->type != PIPE)
+		while (token && token->type != T_PIPE)
 			token = token->next;
 	}
+}
+
+int	count_type_until_pipe(t_token *token, t_token_types type)
+{
+	int	count;
+
+	count = 0;
+	while (token && token->type != T_PIPE)
+	{
+		if (token->type == type)
+			count++;
+		token = token->next;
+	}
+	return (count);
 }
 
 void	fill_cmd(t_commands **cmds, t_token *token)
 {
 	t_file	*temp1;
-	int	array_count;
 	int	i;
 
 	i = 0;
-	array_count = 0;
 	while (token)
 	{
-		if (token->type == ARRAY)
+		if (!(*cmds)->args)
+			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + 1, sizeof(char *));
+		if (ft_isword(token))
 		{
-			if (array_count >=1)
-			{
-				temp1 = ft_filenew(token->value, NULL);
-				ft_fileadd_back(&(*cmds)->args, temp1);
-			}
-			else
+			if (i == 0)
 				(*cmds)->name = ft_strdup(token->value);
-			array_count++;
+			(*cmds)->args[i++] = ft_strdup(token->value);
 		}
-		else if (token->type == FLAG)
+		else if (token->type == T_REDIR_OUT)
 		{
-			if (!(*cmds)->flags)
-				(*cmds)->flags = ft_strjoin("-", (*cmds)->flags, 0);
-			(*cmds)->flags = ft_strjoin((*cmds)->flags, token->value, 1);
-		}
-		else if (token->type == ORED)
-		{
-			token = token->next;
 			temp1 = ft_filenew(token->value, ">");
 			ft_fileadd_back(&(*cmds)->redirections, temp1);
 		}
-		else if (token->type == IRED)
+		else if (token->type == T_REDIR_IN)
 		{
-			token = token->next;
 			temp1 = ft_filenew(token->value, "<");
 			ft_fileadd_back(&(*cmds)->redirections, temp1);
 		}
-		else if (token->type == PIPE)
+		else if (token->type == T_APPEND_OUT)
 		{
-			array_count = 0;
+			temp1 = ft_filenew(token->value, "+");
+			ft_fileadd_back(&(*cmds)->redirections, temp1);
+		}
+		else if (token->type == T_HEREDOC)
+		{
+			temp1 = ft_filenew(token->value, "-");
+			ft_fileadd_back(&(*cmds)->redirections, temp1);
+		}
+		else if (token->type == T_PIPE)
+		{
+			i = 0;
+			printf("debug\n");
 			cmds = &(*cmds)->next;
 		}
 		token = token->next;
@@ -269,12 +247,9 @@ int main(int argc, char **argv, char **env)
 	t_commands			*cmds;
 	char				*line;
 	char				*user;
-	char				**my_env;
-	size_t				i;
 
 	(void)argc;
 	(void)argv;
-	i = 0;
 	user = get_user(env);
 	if (user == NULL)
 		return (-1);
@@ -285,9 +260,10 @@ int main(int argc, char **argv, char **env)
 		line = readline(user);
 		if (!line)
 			exit_minishell(&token, &cmds, &user);
-		if (*line)
-			add_history(line);
+		//if (*line)
+		//	add_history(line);
 		lexer_init(&token, line);
+
 		//print_lst(token);
 		// Free allocated memory (tokens list)
 		init_cmd(&cmds, token);
