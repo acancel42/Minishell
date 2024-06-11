@@ -24,6 +24,8 @@ int token_init(char *src, t_token **token) {
 	j = 0;
 	while (ft_iswspace(src[i]))
 			i++;
+	if (!src[i])
+		return (i);
 	if (src[i] == '"')
 	{
 		i++;
