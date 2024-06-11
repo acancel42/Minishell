@@ -167,6 +167,8 @@ void	init_cmd(t_commands **cmds, t_token *token, char *user)
 
 	while (token)
 	{
+		if (token->type == T_PIPE)
+			token = token->next;
 		temp = ft_cmdnew(user);
 		ft_cmdadd_back(cmds, temp);
 		while (token && token->type != T_PIPE)
