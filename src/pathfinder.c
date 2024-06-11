@@ -1,12 +1,6 @@
 
 #include "minishell.h"
 
-// void	clean_all(t_commands *cmds, char **all_paths)
-// {
-// 	free_all(NULL, all_paths);
-// 	free_all(NULL, cmds->name);
-// 	exit(EXIT_FAILURE);
-// }
 
 void	cmd_not_found(t_commands *cmds)	//, char **all_paths)
 {
@@ -85,33 +79,6 @@ void	cmd_path(t_commands *cmds, char **env)
 	return ;
 }
 
-// void	cmd2_path(t_commands *cmds, char *cmd, char **envp)
-// {
-// 	char	**all_paths;
-
-// 	px->i = 0;
-// 	while (ft_strncmp(envp[px->i], "PATH=", 5) != 0)
-// 		px->i++;
-// 	px->path = envp[px->i];
-// 	all_paths = ft_split(px->path + 5, ':');
-// 	if (all_paths == NULL)
-// 	{
-// 		ft_putstr_fd("malloc failed\n", 2);
-// 		clean_all(px, all_paths, 0);
-// 	}
-// 	px->i = 0;
-// 	build_path(px, all_paths[px->i], cmd);
-// 	errno = 0;
-// 	while (px->path != NULL && access(px->path, F_OK | X_OK) != 0)
-// 	{
-// 		free(px->path);
-// 		build_path(px, all_paths[px->i++], cmd);
-// 	}
-// 	if (px->path == NULL)
-// 		cmd_not_found(px, all_paths, 1);
-// 	free_all(NULL, all_paths);
-// }
-
 void	free_file(t_file *file)
 {
 	while (file)
@@ -126,7 +93,8 @@ void	ft_pathfinder(t_commands *cmds, char **env)
 	while(cmds)
 	{
 		cmds->valid_path = access(cmds->name, F_OK);
-		cmd_path(cmds, env);
+		if (cmds->valid_path == -1 && ft_strchr_b(cmds->args[0], '/'))
+			cmd_path(cmds, env);
 		if (cmds->path)
 			printf("path : %s\n", cmds->path);
 		cmds = cmds->next;

@@ -14,10 +14,6 @@ int			ft_exec_v1(t_commands *cmds, char **my_env)
 	cmds->pid = fork();
 	if (cmds->pid == 0)
 	{
-		cmds->infile_fd = open("../Makefile", O_RDONLY);
-		if (cmds->infile_fd == -1)
-			printf("error read\n");
-		close(cmds->infile_fd);
 		if (execve(cmds->path, cmds->args, my_env) == -1)
 			printf("execve failed\n");
 					return (-1);
@@ -28,6 +24,5 @@ int			ft_exec_v1(t_commands *cmds, char **my_env)
 		return (-1);
 	}
 	wait(NULL);
-	printf("coucou\n");
 	return (0);
 }

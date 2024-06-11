@@ -25,18 +25,3 @@ char	**ft_get_env(char **env)
 	return (my_env);
 }
 
-// int	main(int ac, char **av, char **env)
-// {
-// 	int		i;
-// 	char	**my_env;
-
-// 	(void) ac, (void)av;
-// 	i = -1;
-// 	my_env = ft_get_env(env);
-// 	if (!my_env)
-// 		return (-1);
-// 	while (my_env[++i])
-// 		printf("%s\n", my_env[i]);
-// 	ft_free_tab(my_env, i);
-// 	return (0);
-// }
