@@ -8,3 +8,10 @@ int	get_pwd(char **pwd)
 		return (-2);
 	return (0);
 }
+
+int	get_cd(char *path)
+{
+	if (chdir(path) == -1)
+		return (-2);
+	return (0);
+}

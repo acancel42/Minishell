@@ -9,8 +9,10 @@ void	cmd_not_found(t_token *token, t_commands *cmds)
 	cmd_n_found = ft_strjoin(cmds->name, " : command not found\n", 0);
 	if (cmd_n_found == NULL)
 		exit_minishell(&token, &cmds, NULL);
-	printf("%s : command not found\n", cmds->name);
+	printf("ici %s\n", cmds->name);
 	free(cmd_n_found);
+	return ;
+
 }
 
 void	build_path(t_token *token, t_commands *cmds, char *s1, \
@@ -70,7 +72,7 @@ void	cmd_path(t_token *token, t_commands *cmds, char **env)
 		free(cmds->path);
 		build_path(token, cmds, all_paths[i++], cmds->name);
 	}
-	if (cmds->path == NULL)
+	if (cmds->path == NULL && ft_strncmp(cmds->name, "cd", 3) != 0)
 		cmd_not_found(token, cmds);
 	free_tab(all_paths);
 	return ;

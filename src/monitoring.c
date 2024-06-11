@@ -56,11 +56,11 @@ char	*get_user(char **env)
 	free(username);
 	free(host);
 	if (!user)
-		return(NULL);
+		return (NULL);
 	get_pwd(&pwd);
 	user = ft_strjoin_name(user, pwd);
 	free(pwd);
 	if (!user)
-		return(NULL);
+		return (NULL);
 	return (user);
 }

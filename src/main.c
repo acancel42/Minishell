@@ -3,54 +3,53 @@
 
 #include <unistd.h>
 
-// int	main(int ac, char **av, char **env)
-// {
-// 	char	*line;
-// 	char	*user;
+int main(int argc, char **argv, char **env)
+{
+	t_token				*token;
+	t_commands			*cmds;
+	char				*user;
+	char				*line;
+	char				**my_env;
 
-// 	(void)ac;
-// 	(void)av;
-// 	user = get_user(env);
-// 	if (user == NULL)
-// 		return (-1);
-// 	while (1)
-// 	{
-// 		line = readline(user);
-// 		if (!line)
-// 			break ;
-// 		if (*line)
-// 			add_history(line);
-// 		free(line);
-// 	}
-// 	free(user);
-// }
-
-
-
-
-
-
-// int	main(int ac, char **av, char **env)
-// {
-// 	char	*line;
-//	char	*user;
-//
-// 	(void)ac;
-// (void)av;
-//	user = get_user(env);
-// 	while (1)
-// 	{
-// 		line = readline(username); // Lire une ligne de texte avec readline
-// 		if (!line) // Vérifier si la ligne est NULL (fin de fichier)
-// 			break ;
-// 		if (*line) // Si la ligne n'est pas vide, l'ajouter à l'historique
-// 			add_history(line);
-// 		free(line);
-// 	}
-// 	free(username);
-// 	return (0);
-// }
-
+	(void)argc;
+	(void)argv;
+	user = get_user(env);
+	if (user == NULL)
+		return (-1);
+	while (1)
+	{
+		token = NULL;
+		cmds = NULL;
+		user = get_user(env);
+		if (user == NULL)
+		return (-1);
+		line = readline(user);
+		if (!line)
+			exit_minishell(&token, &cmds, &user);
+		if (*line)
+			add_history(line);
+		lexer_init(&token, line);
+		init_cmd(&cmds, token, user);
+		fill_cmd(&cmds, token);
+		if (ft_strncmp(cmds->name, "cd", 2) == 0)
+		{
+			get_cd(ft_substr(line, 3, ft_strlen(line) - 3));
+			continue;
+		}
+		print_cmds(cmds);
+		my_env = ft_get_env(env);
+		if (!my_env)
+			printf("no env\n");
+		ft_pathfinder(token, cmds, env);
+		if (ft_exec_v1(cmds, my_env) == -1)
+			printf("execve failed\n");
+		ft_free_tab(my_env);
+		ft_cmdsclear(&cmds);
+		ft_tokenclear(&token);
+		free(line);
+	}
+	return (0);
+}
 
 /*VALGRIND :
 

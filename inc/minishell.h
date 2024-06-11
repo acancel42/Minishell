@@ -56,5 +56,9 @@ void		print_file(t_file *file);
 void		print_lst(t_token *token);
 void		print_type(t_token_types type);
 void 		exit_minishell(t_token **token, t_commands **cmds, char **user);
+void		fill_cmd(t_commands **cmds, t_token *token);
+void		init_cmd(t_commands **cmds, t_token *token, char *user);
+void		lexer_init(t_token **token, char *src);
+int			get_cd(char *path);
 
 #endif
