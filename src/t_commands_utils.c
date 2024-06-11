@@ -1,12 +1,13 @@
 #include "minishell.h"
 
-t_commands *ft_cmdnew(void)
+t_commands *ft_cmdnew(char *user)
 {
 	t_commands *new = ft_calloc(1, sizeof(t_commands));
 	new->next = NULL;
 	new->path = NULL;
 	new->valid_path = 0;
 	new->name = NULL;
+	new->user = ft_strdup(user);
 	return (new);
 }
 
@@ -38,6 +39,8 @@ void	ft_cmdsdelone(t_commands *cmds)
 		ft_fileclear(&cmds->redirections);
 	if (cmds->args)
 		ft_free_tab(cmds->args);
+	if(cmds->user)
+		free(cmds->user);
 	free(cmds);
 }
 

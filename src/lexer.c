@@ -159,13 +159,13 @@ void lexer_init(t_token **token, char *src)
 	}
 }
 
-void	init_cmd(t_commands **cmds, t_token *token)
+void	init_cmd(t_commands **cmds, t_token *token, char *user)
 {
 	t_commands	*temp;
 
 	while (token)
 	{
-		temp = ft_cmdnew();
+		temp = ft_cmdnew(user);
 		ft_cmdadd_back(cmds, temp);
 		while (token && token->type != T_PIPE)
 			token = token->next;
@@ -236,7 +236,8 @@ void exit_minishell(t_token **token, t_commands **cmds, char **user)
 {
 	ft_cmdsclear(cmds);
 	ft_tokenclear(token);
-	free(*user);
+	if (user)
+		free(*user);
 	printf("%s\n", "exit");
 	exit(EXIT_SUCCESS);
 }
@@ -245,8 +246,8 @@ int main(int argc, char **argv, char **env)
 {
 	t_token 			*token;
 	t_commands			*cmds;
-	char				*line;
 	char				*user;
+	char				*line;
 	char				**my_env;
 
 	(void)argc;
@@ -264,10 +265,10 @@ int main(int argc, char **argv, char **env)
 		if (*line)
 			add_history(line);
 		lexer_init(&token, line);
-		init_cmd(&cmds, token);
+		init_cmd(&cmds, token, user);
 		fill_cmd(&cmds, token);
 		print_cmds(cmds);
-		ft_pathfinder(token, cmds, user, env);
+		ft_pathfinder(token, cmds, env);
 		my_env = ft_get_env(env);
 		if (!my_env)
 			printf("no env\n");

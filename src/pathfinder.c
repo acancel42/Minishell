@@ -2,20 +2,19 @@
 #include "minishell.h"
 
 
-void	cmd_not_found(t_commands *cmds)	//, char **all_paths)
+void	cmd_not_found(t_token *token, t_commands *cmds)
 {
 	char	*cmd_n_found;
 
 	cmd_n_found = ft_strjoin(cmds->name, " : command not found\n", 0);
-	// if (cmd_n_found == NULL)
-		// clean_all(cmds, all_paths);
-	ft_putstr_fd(cmd_n_found, 1);
-	//printf("%s : command not found\n", cmds->name);
+	if (cmd_n_found == NULL)
+		exit_minishell(&token, &cmds, NULL);
+	printf("%s : command not found\n", cmds->name);
 	free(cmd_n_found);
-	// clean_all(cmds, all_paths);
 }
 
-void	build_path(t_token *token, t_commands *cmds, char *s1, char *s2, char *user)
+void	build_path(t_token *token, t_commands *cmds, char *s1, \
+					char *s2)
 {
 	size_t		len_s1;
 	size_t		len_s2;
@@ -31,7 +30,7 @@ void	build_path(t_token *token, t_commands *cmds, char *s1, char *s2, char *user
 	if (cmds->path == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		exit_minishell(&token, &cmds, &user);
+		exit_minishell(&token, &cmds, NULL);
 	}
 	ft_memcpy(cmds->path, s1, len_s1);
 	ft_memcpy(cmds->path + len_s1, "/", 1);
@@ -49,7 +48,7 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-void	cmd_path(t_token *token, t_commands *cmds, char *user, char **env)
+void	cmd_path(t_token *token, t_commands *cmds, char **env)
 {
 	char	**all_paths;
 	int		i;
@@ -62,30 +61,32 @@ void	cmd_path(t_token *token, t_commands *cmds, char *user, char **env)
 	if (all_paths == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		exit(EXIT_FAILURE);
+		exit_minishell(&token, &cmds, NULL);
+
+
 	}
 	i = 0;
-	build_path(token, cmds, all_paths[i], cmds->name, user);
+	build_path(token, cmds, all_paths[i], cmds->name);
 	while (cmds->path != NULL && access(cmds->path, F_OK))
 	{
 		free(cmds->path);
-		build_path(token, cmds, all_paths[i++], cmds->name, user);
+		build_path(token, cmds, all_paths[i++], cmds->name);
 	}
 	if (cmds->path == NULL)
-		cmd_not_found(cmds); //, all_paths
+		cmd_not_found(token, cmds);
 	free_tab(all_paths);
 	return ;
 }
 
 
-void	ft_pathfinder(t_token *token, t_commands *cmds, char *user, char **env)
+void	ft_pathfinder(t_token *token, t_commands *cmds, char **env)
 {
-	while(cmds)
+	while (cmds)
 	{
 		cmds->valid_path = access(cmds->name, F_OK);
 		printf("HHHHHH\n");
 		if (cmds->valid_path == -1 && ft_strchr_b(cmds->name, '/'))
-			cmd_path(token, cmds, user, env);
+			cmd_path(token, cmds, env);
 		printf("HHHHHH\n");
 		if (cmds->path)
 			printf("path : %s\n", cmds->path);
