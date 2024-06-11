@@ -35,6 +35,7 @@ char	*get_user(char **env)
 	char	*host;
 	char	*username;
 	char	*user;
+	char	*pwd;
 
 	i = 0;
 	while (ft_strncmp(env[i], "SESSION_MANAGER=", 16) != 0)
@@ -54,5 +55,12 @@ char	*get_user(char **env)
 	user = ft_strjoin_name(username, host);
 	free(username);
 	free(host);
+	if (!user)
+		return(NULL);
+	get_pwd(&pwd);
+	user = ft_strjoin_name(user, pwd);
+	free(pwd);
+	if (!user)
+		return(NULL);
 	return (user);
 }

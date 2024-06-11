@@ -25,6 +25,7 @@ int	ft_exec_v1(t_commands *cmds, char **my_env)
 		printf("fork error\n");
 		return (-1);
 	}
-	wait(NULL);
+	while (wait(NULL) > 0)
+		;
 	return (0);
 }

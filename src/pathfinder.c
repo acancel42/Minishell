@@ -62,8 +62,6 @@ void	cmd_path(t_token *token, t_commands *cmds, char **env)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
 		exit_minishell(&token, &cmds, NULL);
-
-
 	}
 	i = 0;
 	build_path(token, cmds, all_paths[i], cmds->name);
@@ -83,13 +81,12 @@ void	ft_pathfinder(t_token *token, t_commands *cmds, char **env)
 {
 	while (cmds)
 	{
-		cmds->valid_path = access(cmds->name, F_OK);
-		printf("HHHHHH\n");
+		cmds->valid_path = access(cmds->args[0], F_OK);
 		if (cmds->valid_path == -1 && ft_strchr_b(cmds->name, '/'))
 			cmd_path(token, cmds, env);
-		printf("HHHHHH\n");
+		else
+			cmds->path = ft_strdup(cmds->args[0]);
 		if (cmds->path)
-			printf("path : %s\n", cmds->path);
 		cmds = cmds->next;
 	}
 }

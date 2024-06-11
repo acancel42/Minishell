@@ -26,7 +26,7 @@ void	print_lst(t_token *token)
 	while (token)
 	{
 		print_type(token->type);
-		printf("%s\n", token->value);
+		// printf("%s\n", token->value);
 		token = token->next;
 	}
 }
@@ -49,8 +49,6 @@ void	print_cmds(t_commands *cmds)
 	{
 		i = -1;
 		printf("command : %s\n", cmds->name);
-		while (cmds->args[++i])
-			printf("args : %s\n", cmds->args[i]);
 		print_file(cmds->redirections);
 		printf("%c", '\n');
 		cmds = cmds->next;

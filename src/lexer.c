@@ -242,6 +242,7 @@ void exit_minishell(t_token **token, t_commands **cmds, char **user)
 	ft_tokenclear(token);
 	if (user)
 		free(*user);
+	
 	printf("%s\n", "exit");
 	exit(EXIT_SUCCESS);
 }
@@ -272,17 +273,17 @@ int main(int argc, char **argv, char **env)
 		init_cmd(&cmds, token, user);
 		fill_cmd(&cmds, token);
 		print_cmds(cmds);
-		ft_pathfinder(token, cmds, env);
 		my_env = ft_get_env(env);
 		if (!my_env)
 			printf("no env\n");
-		printf("args %p\n", cmds->args);
+		ft_pathfinder(token, cmds, env);
 		if (ft_exec_v1(cmds, my_env) == -1)
 			printf("execve failed\n");
 		ft_free_tab(my_env);
 		ft_cmdsclear(&cmds);
 		ft_tokenclear(&token);
 		free(line);
+		// free(user);
 	}
 	return (0);
 }
