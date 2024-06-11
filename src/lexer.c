@@ -1,29 +1,17 @@
 #include "minishell.h"
-/*
-char *ft_strjoin(char const *s1, char const *s2) {
-	size_t len1 = ft_strlen(s1);
-	size_t len2 = ft_strlen(s2);
-	char *joined = malloc(len1 + len2 + 1);
-	if (!joined) {
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	ft_strlcpy(joined, s1, len1);
-	ft_strlcat(joined, s2, len2);
-	return joined;
-}*/
 
 // Initialiser un token à partir d'une chaîne
-int token_init(char *src, t_token **token) {
+int	token_init(char *src, t_token **token)
+{
 	int		i;
 	int		j;
 	char	c;
-	t_token *temp;
+	t_token	*temp;
 
 	i = 0;
 	j = 0;
 	while (ft_iswspace(src[i]))
-			i++;
+		i++;
 	if (!src[i])
 		return (i);
 	if (src[i] == '"')
@@ -133,7 +121,8 @@ int token_init(char *src, t_token **token) {
 	{
 		temp = ft_toknew(src[i++], T_WORD);
 		ft_tokadd_back(token, temp);
-		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]) && !ft_isquote(src[i]))
+		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]) \
+			&& !ft_isquote(src[i]))
 		{
 			c = src[i];
 			temp->value = ft_charjoin(temp->value, c);
@@ -141,7 +130,7 @@ int token_init(char *src, t_token **token) {
 		}
 		if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
 			temp->is_separated = 1;
-		return(i);
+		return (i);
 	}
 }
 
@@ -152,13 +141,14 @@ int	ft_isword(t_token *token)
 	return (0);
 }
 
-// Initialiser le lexer avec une chaîne
-void lexer_init(t_token **token, char *src)
+
+void	lexer_init(t_token **token, char *src)
 {
-	int i = 0;
-	while (src[i]) {
+	int	i;
+
+	i = 0;
+	while (src[i])
 		i += token_init(src + i, token);
-	}
 }
 
 void	init_cmd(t_commands **cmds, t_token *token, char *user)
@@ -242,14 +232,13 @@ void exit_minishell(t_token **token, t_commands **cmds, char **user)
 	ft_tokenclear(token);
 	if (user)
 		free(*user);
-	
 	printf("%s\n", "exit");
 	exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char **argv, char **env)
 {
-	t_token 			*token;
+	t_token				*token;
 	t_commands			*cmds;
 	char				*user;
 	char				*line;
@@ -283,7 +272,6 @@ int main(int argc, char **argv, char **env)
 		ft_cmdsclear(&cmds);
 		ft_tokenclear(&token);
 		free(line);
-		// free(user);
 	}
 	return (0);
 }
