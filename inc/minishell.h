@@ -28,6 +28,8 @@ typedef struct s_commands
 	void				(*f)(void*);
 	t_file				*redirections;
 	pid_t				pid;
+	int					infile_fd;
+	int					outfile_fd;
 	char				**args;
 	struct s_commands	*next;
 }			              t_commands;

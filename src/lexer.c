@@ -247,6 +247,7 @@ int main(int argc, char **argv, char **env)
 	t_commands			*cmds;
 	char				*line;
 	char				*user;
+	char				**my_env;
 
 	(void)argc;
 	(void)argv;
@@ -260,12 +261,9 @@ int main(int argc, char **argv, char **env)
 		line = readline(user);
 		if (!line)
 			exit_minishell(&token, &cmds, &user);
-		//if (*line)
-		//	add_history(line);
+		if (*line)
+			add_history(line);
 		lexer_init(&token, line);
-
-		//print_lst(token);
-		// Free allocated memory (tokens list)
 		init_cmd(&cmds, token);
 		fill_cmd(&cmds, token);
 		print_cmds(cmds);
