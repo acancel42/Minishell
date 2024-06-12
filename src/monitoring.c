@@ -53,12 +53,14 @@ char	*get_user(char **env)
 		return (NULL);
 	}
 	user = ft_strjoin_name(username, host, '@', ':');
-	free(username);
 	free(host);
 	if (!user)
 		return (NULL);
 	get_pwd(&pwd);
-	user = ft_strjoin_name(user,pwd, '~', '$');
+	pwd = ft_substr(pwd, ft_strlen(username) + 6, ft_strlen(username) + 6 - ft_strlen(pwd));
+	printf("%s, %s\n", username, pwd);
+	free(username);
+	user = ft_strjoin_name(user, pwd, '~', '$');
 	user = ft_strjoin(user, " ", 0);
 	free(pwd);
 	if (!user)

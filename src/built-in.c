@@ -23,7 +23,6 @@ char	*get_home(char **env)
 	char	*name;
 	int		i = 0;
 
-
 	home = ft_strdup("/home/");
 	i = 0;
 	while (ft_strncmp(env[i], "LOGNAME=", 8) != 0)
