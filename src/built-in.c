@@ -11,6 +11,7 @@ int	get_pwd(char **pwd)
 
 int	get_cd(char *path)
 {
+	printf("%s\n", path);
 	if (chdir(path) == -1)
 		return (-2);
 	return (0);

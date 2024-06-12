@@ -3,7 +3,7 @@
 
 #include <unistd.h>
 
-char	*ft_strjoin_name(char *s1, char *s2)
+char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 {
 	int		len;
 	int		i;
@@ -16,15 +16,16 @@ char	*ft_strjoin_name(char *s1, char *s2)
 		i++;
 	len = ft_strlen(s1) + 1 + i + 1 +1;
 	i = -1;
-	dest = ft_calloc(len, sizeof(char));
+	dest = ft_calloc(len + 1, sizeof(char));
 	if (dest == NULL)
 		return (NULL);
 	while (s1[++i])
 		dest[i] = s1[i];
-	dest[i++] = '@';
+	dest[i++] = c1;
 	while (s2[j] != '.' && s2[j] != '\0')
 		dest[i++] = s2[j++];
-	dest[i++] = ':';
+	dest[i++] = c2;
+	dest[i++] = ' ';
 	dest[i] = '\0';
 	return (dest);
 }
@@ -40,7 +41,7 @@ char	*get_user(char **env)
 	i = 0;
 	while (ft_strncmp(env[i], "SESSION_MANAGER=", 16) != 0)
 		i++;
-	host = ft_substr(env[i], 22, 6);
+	host = ft_substr(env[i], 22, 7);
 	if (host == NULL)
 		return (NULL);
 	i = 0;
@@ -52,14 +53,13 @@ char	*get_user(char **env)
 		free(host);
 		return (NULL);
 	}
-	user = ft_strjoin_name(username, host);
+	user = ft_strjoin_name(username, host, '@', ':');
 	free(username);
 	free(host);
 	if (!user)
 		return (NULL);
 	get_pwd(&pwd);
-	user = ft_strjoin(user, pwd, 1);
-	user = ft_strjoin(user, "$ ", 1);
+	user = ft_strjoin_name(user,pwd, '~', '$');
 	free(pwd);
 	if (!user)
 		return (NULL);

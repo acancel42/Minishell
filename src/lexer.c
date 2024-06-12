@@ -1,139 +1,5 @@
 #include "minishell.h"
 
-// Initialiser un token à partir d'une chaîne
-int	token_init(char *src, t_token **token)
-{
-	int		i;
-	int		j;
-	char	c;
-	t_token	*temp;
-
-	i = 0;
-	j = 0;
-	while (ft_iswspace(src[i]))
-		i++;
-	if (!src[i])
-		return (i);
-	if (src[i] == '"')
-	{
-		i++;
-		temp = ft_toknew(src[i], T_D_QUOTED_WORD);
-		ft_tokadd_back(token, temp);
-		i++;
-		while (src[i] && src[i] != '"')
-		{
-			c = src[i];
-			temp->value = ft_charjoin(temp->value, c);
-			i++;
-		}
-		if (src[i] != '"')
-		{
-			printf("%s\n", "Interractive mode");
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			i++;
-			if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-				temp->is_separated = 1;
-		}
-		return (i);
-	}
-	else if (src[i] == '\'')
-	{
-		i++;
-		temp = ft_toknew(src[i], T_S_QUOTED_WORD);
-		ft_tokadd_back(token, temp);
-		i++;
-		while (src[i] && src[i] != '\'')
-		{
-			c = src[i];
-			temp->value = ft_charjoin(temp->value, c);
-			i++;
-		}
-		if (src[i] != '\'')
-		{
-			printf("%s\n", "Interractive mode");
-			exit(EXIT_FAILURE);
-		}
-		else
-		{
-			i++;
-			if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-				temp->is_separated = 1;
-		}
-		return (i);
-	}
-	else if (src[i] == '>')
-	{
-		if (src && src[i + 1] == '>')
-		{
-			j++;
-			i++;
-		}
-		i++;
-		while (src[i] && ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-			i++;
-		temp = ft_toknew(src[i++], T_REDIR_OUT);
-		if (j > 0)
-			temp->type = T_APPEND_OUT;
-		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-		{
-			c = src[i];
-			temp->value = ft_charjoin(temp->value, c);
-			i++;
-		}
-		ft_tokadd_back(token, temp);
-		printf("%s\n", temp->value);
-		return (i);
-	}
-	else if (src[i] == '<')
-	{
-		if (src && src[i + 1] == '<')
-		{
-			j++;
-			i++;
-		}
-		i++;
-		while (src[i] && ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-			i++;
-		temp = ft_toknew(src[i++], T_REDIR_IN);
-		if (j > 0)
-			temp->type = T_HEREDOC;
-		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-		{
-			c = src[i];
-			temp->value = ft_charjoin(temp->value, c);
-			i++;
-		}
-		ft_tokadd_back(token, temp);
-		printf("%s\n", temp->value);
-		return (i);
-	}
-	else if (src[i] == '|')
-	{
-		temp = ft_toknew('|', T_PIPE);
-		ft_tokadd_back(token, temp);
-		i++;
-		return (i);
-	}
-	else
-	{
-		temp = ft_toknew(src[i++], T_WORD);
-		ft_tokadd_back(token, temp);
-		while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]) \
-			&& !ft_isquote(src[i]))
-		{
-			c = src[i];
-			temp->value = ft_charjoin(temp->value, c);
-			i++;
-		}
-		if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-			temp->is_separated = 1;
-		return (i);
-	}
-}
-
 int	ft_isword(t_token *token)
 {
 	if (token->type == T_D_QUOTED_WORD || token->type == T_S_QUOTED_WORD || token->type == T_WORD)
@@ -180,9 +46,46 @@ int	count_type_until_pipe(t_token *token, t_token_types type)
 	return (count);
 }
 
+void	handle_word(t_commands **cmds, t_token *token)
+{
+	t_file	*temp1;
+	int	i;
+
+	i = 0;
+	if (!(*cmds)->args)
+		(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + 1, sizeof(char *));
+	if (ft_isword(token))
+	{
+		if (i == 0)
+			(*cmds)->name = ft_strdup(token->value);
+		(*cmds)->args[i++] = ft_strdup(token->value);
+	}
+	else if (token->type == T_REDIR_OUT)
+	{
+		temp1 = ft_filenew(token->value, ">");
+		ft_fileadd_back(&(*cmds)->redirections, temp1);
+	}
+	else if (token->type == T_REDIR_IN)
+	{
+		temp1 = ft_filenew(token->value, "<");
+		ft_fileadd_back(&(*cmds)->redirections, temp1);
+	}
+	else if (token->type == T_APPEND_OUT)
+	{
+		temp1 = ft_filenew(token->value, "+");
+		ft_fileadd_back(&(*cmds)->redirections, temp1);
+	}
+	else if (token->type == T_HEREDOC)
+	{
+		temp1 = ft_filenew(token->value, "-");
+		ft_fileadd_back(&(*cmds)->redirections, temp1);
+	}
+}
+
 void	fill_cmd(t_commands **cmds, t_token *token)
 {
 	t_file	*temp1;
+	char 	*temp2;
 	int	i;
 
 	i = 0;
@@ -192,9 +95,16 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + 1, sizeof(char *));
 		if (ft_isword(token))
 		{
+			temp2 = ft_strdup(token->value);
+			while (token->next && token->is_separated == 1)
+			{
+				token = token->next;
+                temp2 = ft_strjoin(temp2, token->value, 0);
+            }
 			if (i == 0)
-				(*cmds)->name = ft_strdup(token->value);
-			(*cmds)->args[i++] = ft_strdup(token->value);
+				(*cmds)->name = ft_strdup(temp2);
+			(*cmds)->args[i++] = ft_strdup(temp2);
+			free(temp2);
 		}
 		else if (token->type == T_REDIR_OUT)
 		{
@@ -232,7 +142,7 @@ void exit_minishell(t_token **token, t_commands **cmds, char **user)
 	ft_tokenclear(token);
 	if (user)
 		free(*user);
-	printf("%s\n", "exit");
+	printf("%s\n", get_color("exit", RED));
 	exit(EXIT_SUCCESS);
 }
 
