@@ -18,20 +18,22 @@ OBJS = $(patsubst src/%.c, .objects/%.o, $(SRCS))
 all : $(NAME)
 
 $(LIBFT) : FORCE
-	$(MAKE) -C $(LIBFT_DIR)
+	@$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS) 
-	$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME) 
+	@$(CC) $(OBJS) -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
+	@echo "\033[0;32m./minishell is built\033[0m" 
 
 .objects/%.o: src/%.c inc/minishell.h inc/lexer.h $(LIBFT)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) $(IFLAG) -c -o $@ $<
+	@echo "Compiling $<"
+	@$(CC) $(CFLAGS) $(IFLAG) -c -o $@ $<
 
 FORCE :
 
 clean:
-	rm -rf .objects
-	$(MAKE) clean -C $(LIBFT_DIR)
+	@rm -rf .objects
+	@$(MAKE) clean -C $(LIBFT_DIR)
 
 fclean: clean
 	$(RM) $(NAME)

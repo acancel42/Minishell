@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_iswspace.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 16:46:56 by acancel           #+#    #+#             */
-/*   Updated: 2024/06/10 17:15:34 by talibert         ###   ########.fr       */
+/*   Updated: 2024/06/12 21:33:01 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../libft.h"
 
 int	ft_iswspace(char c)
 {
