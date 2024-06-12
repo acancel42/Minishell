@@ -58,7 +58,8 @@ char	*get_user(char **env)
 	if (!user)
 		return (NULL);
 	get_pwd(&pwd);
-	user = ft_strjoin_name(user, pwd);
+	user = ft_strjoin(user, pwd, 1);
+	user = ft_strjoin(user, "$ ", 1);
 	free(pwd);
 	if (!user)
 		return (NULL);
