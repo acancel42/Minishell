@@ -46,43 +46,7 @@ int	count_type_until_pipe(t_token *token, t_token_types type)
 	return (count);
 }
 
-void	handle_word(t_commands **cmds, t_token *token)
-{
-	t_file	*temp1;
-	int	i;
-
-	i = 0;
-	if (!(*cmds)->args)
-		(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + 1, sizeof(char *));
-	if (ft_isword(token))
-	{
-		if (i == 0)
-			(*cmds)->name = ft_strdup(token->value);
-		(*cmds)->args[i++] = ft_strdup(token->value);
-	}
-	else if (token->type == T_REDIR_OUT)
-	{
-		temp1 = ft_filenew(token->value, ">");
-		ft_fileadd_back(&(*cmds)->redirections, temp1);
-	}
-	else if (token->type == T_REDIR_IN)
-	{
-		temp1 = ft_filenew(token->value, "<");
-		ft_fileadd_back(&(*cmds)->redirections, temp1);
-	}
-	else if (token->type == T_APPEND_OUT)
-	{
-		temp1 = ft_filenew(token->value, "+");
-		ft_fileadd_back(&(*cmds)->redirections, temp1);
-	}
-	else if (token->type == T_HEREDOC)
-	{
-		temp1 = ft_filenew(token->value, "-");
-		ft_fileadd_back(&(*cmds)->redirections, temp1);
-	}
-}
-
-void	fill_cmd(t_commands **cmds, t_token *token)
+/*void	fill_cmd(t_commands **cmds, t_token *token)
 {
 	t_file	*temp1;
 	char 	*temp2;
@@ -99,8 +63,8 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 			while (token->next && token->is_separated == 1)
 			{
 				token = token->next;
-                temp2 = ft_strjoin(temp2, token->value, 0);
-            }
+				temp2 = ft_strjoin(temp2, token->value, 0);
+			}
 			if (i == 0)
 				(*cmds)->name = ft_strdup(temp2);
 			(*cmds)->args[i++] = ft_strdup(temp2);
@@ -125,6 +89,65 @@ void	fill_cmd(t_commands **cmds, t_token *token)
 		{
 			temp1 = ft_filenew(token->value, "-");
 			ft_fileadd_back(&(*cmds)->redirections, temp1);
+		}
+		else if (token->type == T_PIPE)
+		{
+			i = 0;
+			printf("debug\n");
+			cmds = &(*cmds)->next;
+		}
+		token = token->next;
+	}
+}*/
+
+void handle_word(t_commands **cmds, t_token **token, int *i)
+{
+	char *temp2;
+
+	temp2 = ft_strdup((*token)->value);
+	while ((*token)->next && (*token)->is_separated == 1)
+	{
+		(*token) = (*token)->next;
+		temp2 = ft_strjoin(temp2, (*token)->value, 0);
+	}
+	if (*i == 0)
+		(*cmds)->name = ft_strdup(temp2);
+	(*cmds)->args[(*i)++] = ft_strdup(temp2);
+	free(temp2);
+}
+
+void handle_redirection(t_commands **cmds, t_token *token)
+{
+	t_file *temp1;
+	char *type;
+
+	type = NULL;
+	if (token->type == T_REDIR_OUT)
+		type = ft_strdup(">");
+	else if (token->type == T_REDIR_IN)
+		type = ft_strdup("<");
+	else if (token->type == T_APPEND_OUT)
+		type = ft_strdup("+");
+	else if (token->type == T_HEREDOC)
+		type = ft_strdup("-");
+	temp1 = ft_filenew(token->value, type);
+	ft_fileadd_back(&(*cmds)->redirections, temp1);
+}
+
+void fill_cmd(t_commands **cmds, t_token *token)
+{
+	int i = 0;
+	while (token)
+	{
+		if (!(*cmds)->args)
+			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + 1, sizeof(char *));
+		if (ft_isword(token))
+		{
+			handle_word(cmds, &token, &i);
+		}
+		else if (token->type == T_REDIR_OUT || token->type == T_REDIR_IN || token->type == T_APPEND_OUT || token->type == T_HEREDOC)
+		{
+			handle_redirection(cmds, token);
 		}
 		else if (token->type == T_PIPE)
 		{
