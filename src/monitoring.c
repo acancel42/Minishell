@@ -25,7 +25,6 @@ char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 	while (s2[j] != '.' && s2[j] != '\0')
 		dest[i++] = s2[j++];
 	dest[i++] = c2;
-	dest[i++] = ' ';
 	dest[i] = '\0';
 	return (dest);
 }
@@ -60,6 +59,7 @@ char	*get_user(char **env)
 		return (NULL);
 	get_pwd(&pwd);
 	user = ft_strjoin_name(user,pwd, '~', '$');
+	user = ft_strjoin(user, " ", 0);
 	free(pwd);
 	if (!user)
 		return (NULL);
