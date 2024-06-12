@@ -3,6 +3,16 @@
 
 #include <unistd.h>
 
+char	*get_color(char *user, char *color)
+{
+	char *prompt;
+
+	prompt = ft_strdup(color);
+	prompt = ft_strjoin(prompt, user, 0);
+	prompt = ft_strjoin(prompt, RESET, 0);
+	return (prompt);
+}
+
 int main(int argc, char **argv, char **env)
 {
 	t_token				*token;
@@ -13,9 +23,6 @@ int main(int argc, char **argv, char **env)
 
 	(void)argc;
 	(void)argv;
-	user = get_user(env);
-	if (user == NULL)
-		return (-1);
 	while (1)
 	{
 		token = NULL;
@@ -23,7 +30,7 @@ int main(int argc, char **argv, char **env)
 		user = get_user(env);
 		if (user == NULL)
 		return (-1);
-		line = readline(user);
+		line = readline(get_color(user, BLUE));
 		if (!line)
 			exit_minishell(&token, &cmds, &user);
 		if (*line)
@@ -50,9 +57,3 @@ int main(int argc, char **argv, char **env)
 	}
 	return (0);
 }
-
-/*VALGRIND :
-
-valgrind --suppressions=debug/valgrind_ignore_leaks.txt --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --show-mismatched-frees=yes --read-var-info=yes
-
-*/
