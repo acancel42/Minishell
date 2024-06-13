@@ -20,7 +20,9 @@ int main(int argc, char **argv, char **env)
 	char				*user;
 	char				*line;
 	char				**my_env;
+	char				*home;
 
+	home = get_home(env);
 	(void)argc;
 	(void)argv;
 	while (1)
@@ -40,8 +42,17 @@ int main(int argc, char **argv, char **env)
 		fill_cmd(&cmds, token);
 		if (ft_strncmp(cmds->name, "cd", 2) == 0)
 		{
-			get_cd(ft_substr(line, 3, ft_strlen(line) - 3));
-			continue;
+			if (ft_strncmp(cmds->args[1], "~", 1) == 0)
+			{
+				ft_printf("HOME =%s\n", home);
+				get_cd(home);
+				continue ;
+			}
+			else
+			{
+				(ft_substr(line, 3, ft_strlen(line) - 3));
+				continue ;
+			}
 		}
 		print_cmds(cmds);
 		my_env = ft_get_env(env);

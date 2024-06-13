@@ -68,6 +68,7 @@ void		fill_cmd(t_commands **cmds, t_token *token);
 void		init_cmd(t_commands **cmds, t_token *token, char *user);
 void		lexer_init(t_token **token, char *src);
 int			get_cd(char *path);
+char		*get_home(char **env);
 char		*get_color(char *user, char *color);
 
 #endif
