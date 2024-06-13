@@ -19,12 +19,8 @@ int handle_double_quote(char *src, t_token **token, int i)
 		printf("%s\n", "Interactive mode");
 		exit(EXIT_FAILURE);
 	}
-	else
-	{
-		i++;
-		if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+	else if (!ft_iswspace(src[++i]) && !ft_isoperator(src[i]))
 			temp->is_separated = 1;
-	}
 	return (i);
 }
 
@@ -47,12 +43,8 @@ int handle_single_quote(char *src, t_token **token, int i)
 		printf("%s\n", "Interactive mode");
 		exit(EXIT_FAILURE);
 	}
-	else
-	{
-		i++;
-		if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+	else if (!ft_iswspace(src[++i]) && !ft_isoperator(src[i]))
 			temp->is_separated = 1;
-	}
 	return (i);
 }
 

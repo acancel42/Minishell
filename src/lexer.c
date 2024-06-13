@@ -46,69 +46,56 @@ int	count_type_until_pipe(t_token *token, t_token_types type)
 	return (count);
 }
 
-/*void	fill_cmd(t_commands **cmds, t_token *token)
+char *expand_variables(char *str)
 {
-	t_file	*temp1;
-	char 	*temp2;
-	int	i;
+	char *start = str;
+	char *end;
+	char *name;
+	char *value;
 
-	i = 0;
-	while (token)
+	while ((start = ft_strchr(start, '$')) != NULL)
 	{
-		if (!(*cmds)->args)
-			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + 1, sizeof(char *));
-		if (ft_isword(token))
+		end = start;
+		while (isalnum(*++end) || *end == '_')
+			;
+		name = ft_strndup(start + 1, end - start - 1);
+		value = getenv(name);
+		free(name);
+		if (value)
 		{
-			temp2 = ft_strdup(token->value);
-			while (token->next && token->is_separated == 1)
-			{
-				token = token->next;
-				temp2 = ft_strjoin(temp2, token->value, 0);
-			}
-			if (i == 0)
-				(*cmds)->name = ft_strdup(temp2);
-			(*cmds)->args[i++] = ft_strdup(temp2);
-			free(temp2);
+			char *temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
+			ft_strncpy(temp, str, start - str);
+			ft_strcpy(temp + (start - str), value);
+			ft_strcpy(temp + (start - str) + ft_strlen(value), end);
+			free(str);
+			str = temp;
+			start = str + (start - str) + ft_strlen(value);
 		}
-		else if (token->type == T_REDIR_OUT)
+		else
 		{
-			temp1 = ft_filenew(token->value, ">");
-			ft_fileadd_back(&(*cmds)->redirections, temp1);
+			start = end;
 		}
-		else if (token->type == T_REDIR_IN)
-		{
-			temp1 = ft_filenew(token->value, "<");
-			ft_fileadd_back(&(*cmds)->redirections, temp1);
-		}
-		else if (token->type == T_APPEND_OUT)
-		{
-			temp1 = ft_filenew(token->value, "+");
-			ft_fileadd_back(&(*cmds)->redirections, temp1);
-		}
-		else if (token->type == T_HEREDOC)
-		{
-			temp1 = ft_filenew(token->value, "-");
-			ft_fileadd_back(&(*cmds)->redirections, temp1);
-		}
-		else if (token->type == T_PIPE)
-		{
-			i = 0;
-			printf("debug\n");
-			cmds = &(*cmds)->next;
-		}
-		token = token->next;
 	}
-}*/
+	return str;
+}
 
 void handle_word(t_commands **cmds, t_token **token, int *i)
 {
 	char *temp2;
+	char *temp3;
 
 	temp2 = ft_strdup((*token)->value);
+	if ((*token)->type != T_S_QUOTED_WORD)
+		temp2 = expand_variables(temp2);
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
 		(*token) = (*token)->next;
-		temp2 = ft_strjoin(temp2, (*token)->value, 0);
+		if ((*token)->type != T_S_QUOTED_WORD)
+			temp3 = expand_variables(ft_strdup((*token)->value));
+		else
+			temp3 = ft_strdup((*token)->value);
+		temp2 = ft_strjoin(temp2, temp3, 0);
+		free(temp3);
 	}
 	if (*i == 0)
 		(*cmds)->name = ft_strdup(temp2);
@@ -165,7 +152,7 @@ void exit_minishell(t_token **token, t_commands **cmds, char **user)
 	ft_tokenclear(token);
 	if (user)
 		free(*user);
-	printf("%s\n", get_color("exit", RED));
+	printf(RED"%s\n"RESET, "exit");
 	exit(EXIT_SUCCESS);
 }
 

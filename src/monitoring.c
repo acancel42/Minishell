@@ -26,6 +26,7 @@ char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 		dest[i++] = s2[j++];
 	dest[i++] = c2;
 	dest[i] = '\0';
+	//free(s1);
 	return (dest);
 }
 
@@ -53,16 +54,15 @@ char	*get_user(char **env)
 		return (NULL);
 	}
 	user = ft_strjoin_name(username, host, '@', ':');
-	free(host);
 	if (!user)
 		return (NULL);
 	get_pwd(&pwd);
 	pwd = ft_substr(pwd, ft_strlen(username) + 6, ft_strlen(username) + 6 - ft_strlen(pwd));
-	printf("%s, %s\n", username, pwd);
-	free(username);
 	user = ft_strjoin_name(user, pwd, '~', '$');
-	user = ft_strjoin(user, " ", 0);
+	user = ft_strjoin(user, " ", 1);
 	free(pwd);
+	free(host);
+	free(username);
 	if (!user)
 		return (NULL);
 	return (user);

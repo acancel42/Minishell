@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/07 16:56:37 by Acancel           #+#    #+#             */
-/*   Updated: 2024/06/11 16:46:55 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/06/13 18:44:41 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,13 @@ int		ft_isquote(char c);
 char	*ft_itoa(int n);
 char	*ft_strchr(const char *str, int c);
 char	*ft_strdup(const char *s);
+char 	*ft_strndup(const char *s, size_t n);
 char	*ft_chardup(const char c);
 char	*ft_strjoin(char *s1, char *s2, int flag);
 char	*ft_charjoin(char *s1, char const s2);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
+char	*ft_strcpy(char *dest, const char *src);
+char	*ft_strncpy(char *dest, const char *src, size_t n);
 char	*ft_strnstr(const char *big, const char *little, size_t len);
 char	*ft_strrchr(const char *str, int c);
 int		ft_strchr_b(char *str, char c);

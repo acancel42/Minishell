@@ -8,8 +8,9 @@ char	*get_color(char *user, char *color)
 	char *prompt;
 
 	prompt = ft_strdup(color);
-	prompt = ft_strjoin(prompt, user, 0);
-	prompt = ft_strjoin(prompt, RESET, 0);
+	prompt = ft_strjoin(prompt, user, 1);
+	prompt = ft_strjoin(prompt, RESET, 1);
+	free(user);
 	return (prompt);
 }
 
@@ -32,7 +33,8 @@ int main(int argc, char **argv, char **env)
 		user = get_user(env);
 		if (user == NULL)
 		return (-1);
-		line = readline(get_color(user, BLUE));
+		user = get_color(user, BLUE);
+		line = readline(user);
 		if (!line)
 			exit_minishell(&token, &cmds, &user);
 		if (*line)
@@ -66,5 +68,6 @@ int main(int argc, char **argv, char **env)
 		ft_tokenclear(&token);
 		free(line);
 	}
+	free(home);
 	return (0);
 }
