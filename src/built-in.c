@@ -32,5 +32,6 @@ char	*get_home(char **env)
 		return (NULL);
 	home = ft_strjoin(home, name, 1);
 	printf("Home bin = %s\n", home);
+	free(name);
 	return (home);
 }

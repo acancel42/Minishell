@@ -65,13 +65,16 @@ int handle_else(char *src, t_token **token, int i)
 	t_token *temp;
 	temp = ft_toknew(src[i++], T_WORD);
 	ft_tokadd_back(token, temp);
-	while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]) && !ft_isquote(src[i])) {
+	while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]) && !ft_isquote(src[i]))
+	{
 		c = src[i];
+		printf("%c\n", c);
 		temp->value = ft_charjoin(temp->value, c);
 		i++;
 	}
 	if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
 		temp->is_separated = 1;
+	printf("%s\n", temp->value);
 	return (i);
 }
 
