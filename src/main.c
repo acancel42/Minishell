@@ -26,6 +26,9 @@ int main(int argc, char **argv, char **env)
 	home = get_home(env);
 	(void)argc;
 	(void)argv;
+	my_env = ft_get_env(env);
+	if (!my_env)
+			printf("no env\n");
 	while (1)
 	{
 		token = NULL;
@@ -34,9 +37,6 @@ int main(int argc, char **argv, char **env)
 		if (user == NULL)
 		return (-1);
 		user = get_color(user, BLUE);
-		my_env = ft_get_env(env);
-		if (!my_env)
-			printf("no env\n");
 		line = readline(user);
 		if (!line)
 			exit_minishell(&token, &cmds, &user);
@@ -59,7 +59,13 @@ int main(int argc, char **argv, char **env)
 				continue ;
 			}
 		}
-		print_cmds(cmds);
+		if (ft_strncmp(cmds->name, "echo", 4) == 0)
+			ft_echo(cmds->args);
+		if (ft_strncmp(cmds->name, "export", 6) == 0)
+		{
+			ft_export(cmds->args, &my_env);
+			continue ;
+		}
 		ft_pathfinder(token, cmds, env);
 		if (ft_exec_v1(cmds, my_env) == -1)
 			printf("execve failed\n");

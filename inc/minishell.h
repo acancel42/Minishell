@@ -23,6 +23,7 @@ typedef struct s_file
 	struct s_file	*next;
 }				t_file;
 
+
 typedef struct s_commands
 {
 	char				*name;
@@ -71,5 +72,6 @@ int			get_cd(char *path);
 char		*get_color(char *user, char *color);
 char		*get_home(char **env);
 int			ft_echo(char **args);
+int			ft_export(char **args, char ***env);
 
 #endif
