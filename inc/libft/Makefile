@@ -15,7 +15,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@ar rcs $(NAME) $(OBJS)
 	@echo "Done"
-	@echo -ne "\r\033[0;32mYour libft is built\033[0m"
+	@echo -ne "\r\033[0;32mYour libft.a is built\033[0m"
 
 $(OBJS): .objects/%.o: %.c libft.h
 	@echo -n "\r\033[0;31mWait until built-in libft\033[0m"
