@@ -21,7 +21,7 @@ char	*get_home(char **env)
 {
 	char	*home;
 	char	*name;
-	int		i = 0;
+	int		i;
 
 	home = ft_strdup("/home/");
 	i = 0;
@@ -31,8 +31,17 @@ char	*get_home(char **env)
 	if (name == NULL)
 		return (NULL);
 	home = ft_strjoin(home, name, 1);
-	printf("Home bin = %s\n", home);
 	free(name);
 	return (home);
 }
 
+int	ft_echo(char **args)
+{
+	int	i;
+
+	i = 0;
+	while (args[i])
+		printf(BLUE"%s "RESET, args[++i]);
+	printf("\n");
+	return (0);
+}
