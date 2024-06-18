@@ -34,6 +34,9 @@ int main(int argc, char **argv, char **env)
 		if (user == NULL)
 		return (-1);
 		user = get_color(user, BLUE);
+		my_env = ft_get_env(env);
+		if (!my_env)
+			printf("no env\n");
 		line = readline(user);
 		if (!line)
 			exit_minishell(&token, &cmds, &user);
@@ -41,7 +44,7 @@ int main(int argc, char **argv, char **env)
 			add_history(line);
 		lexer_init(&token, line);
 		init_cmd(&cmds, token, user);
-		fill_cmd(&cmds, token);
+		fill_cmd(&cmds, token, my_env);
 		if (ft_strncmp(cmds->name, "cd", 2) == 0)
 		{
 			if (ft_strncmp(cmds->args[1], "~", 1) == 0)
@@ -57,9 +60,6 @@ int main(int argc, char **argv, char **env)
 			}
 		}
 		print_cmds(cmds);
-		my_env = ft_get_env(env);
-		if (!my_env)
-			printf("no env\n");
 		ft_pathfinder(token, cmds, env);
 		if (ft_exec_v1(cmds, my_env) == -1)
 			printf("execve failed\n");
