@@ -61,7 +61,7 @@ int main(int argc, char **argv, char **env)
 		}
 		if (ft_strncmp(cmds->name, "echo", 4) == 0)
 			ft_echo(cmds->args);
-		print_cmds(cmds);
+		//print_cmds(cmds);
 		ft_pathfinder(token, cmds, env);
 		if (ft_exec_v1(cmds, my_env) == -1)
 			printf("execve failed\n");

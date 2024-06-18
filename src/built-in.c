@@ -38,10 +38,21 @@ char	*get_home(char **env)
 int	ft_echo(char **args)
 {
 	int	i;
+	int	flag;
 
-	i = 0;
+	flag = 0;
+	i = 1;
+	if (!ft_strncmp(args[1], "-n", 2))
+		flag++;
+	i += flag;
 	while (args[i])
-		printf(BLUE"%s "RESET, args[++i]);
-	printf("\n");
+	{
+		printf("%s", args[i]);
+		if (args[i +1])
+			printf(" ");
+		i++;
+	}
+	if (!flag)
+		printf("\n");
 	return (0);
 }
