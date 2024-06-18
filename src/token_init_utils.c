@@ -21,7 +21,6 @@ int handle_output(char *src, t_token **token, int i)
 		i++;
 	}
 	ft_tokadd_back(token, temp);
-	printf("%s\n", temp->value);
 	return (i);
 }
 
@@ -46,7 +45,6 @@ int handle_input(char *src, t_token **token, int i)
 		i++;
 	}
 	ft_tokadd_back(token, temp);
-	printf("%s\n", temp->value);
 	return (i);
 }
 
@@ -68,13 +66,11 @@ int handle_else(char *src, t_token **token, int i)
 	while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]) && !ft_isquote(src[i]))
 	{
 		c = src[i];
-		printf("%c\n", c);
 		temp->value = ft_charjoin(temp->value, c);
 		i++;
 	}
 	if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))
 		temp->is_separated = 1;
-	printf("%s\n", temp->value);
 	return (i);
 }
 
