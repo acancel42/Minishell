@@ -70,5 +70,6 @@ void		lexer_init(t_token **token, char *src);
 int			get_cd(char *path);
 char		*get_color(char *user, char *color);
 char		*get_home(char **env);
+int			ft_echo(char **args);
 
 #endif
