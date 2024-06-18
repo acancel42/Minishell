@@ -46,24 +46,42 @@ int	count_type_until_pipe(t_token *token, t_token_types type)
 	return (count);
 }
 
-char *expand_variables(char *str)
+char *find_env_var(char *name, char **env)
+{
+	int i = 0;
+	int len = ft_strlen(name);
+
+	while (env[i])
+	{
+		if (strncmp(env[i], name, len) == 0 && env[i][len] == '=')
+			return &env[i][len + 1];
+		i++;
+	}
+	return NULL;
+}
+
+int expand_variables(char **dest, char *str, char **env)
 {
 	char *start = str;
 	char *end;
 	char *name;
 	char *value;
+	char *temp;
+	int i;
 
+	i = 0;
 	while ((start = ft_strchr(start, '$')) != NULL)
 	{
 		end = start;
 		while (isalnum(*++end) || *end == '_')
 			;
 		name = ft_strndup(start + 1, end - start - 1);
-		value = getenv(name);
+		value = find_env_var(name, env);
 		free(name);
 		if (value)
 		{
-			char *temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
+			i++;
+			temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
 			ft_strncpy(temp, str, start - str);
 			ft_strcpy(temp + (start - str), value);
 			ft_strcpy(temp + (start - str) + ft_strlen(value), end);
@@ -73,28 +91,48 @@ char *expand_variables(char *str)
 		}
 		else
 		{
-			start = end;
+			(*dest) = NULL;
+			return -1;
 		}
 	}
-	return str;
+	(*dest) = ft_strdup(str);
+	return (i);
 }
 
-void handle_word(t_commands **cmds, t_token **token, int *i)
+void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
 {
 	char *temp2;
 	char *temp3;
+	int j;
 
-	temp2 = ft_strdup((*token)->value);
+	temp2 = NULL;
+	temp3 = NULL;
+	j = 0;
 	if ((*token)->type != T_S_QUOTED_WORD)
-		temp2 = expand_variables(temp2);
+		j = expand_variables(&temp2, ft_strdup((*token)->value), env);
+	else
+		temp2 = ft_strdup((*token)->value);
+	if (j == -1)
+	{
+		if (*i == 0)
+			(*cmds)->name = ft_strdup(temp2);
+		(*cmds)->args[(*i)++] = ft_strdup(temp2);
+		free(temp2);
+		return;
+	}
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
 		(*token) = (*token)->next;
 		if ((*token)->type != T_S_QUOTED_WORD)
-			temp3 = expand_variables(ft_strdup((*token)->value));
+			j = expand_variables(&temp3, ft_strdup((*token)->value), env);
 		else
 			temp3 = ft_strdup((*token)->value);
 		temp2 = ft_strjoin(temp2, temp3, 0);
+		if (j)
+		{
+			free(temp3);
+			break;
+		}
 		free(temp3);
 	}
 	if (*i == 0)
@@ -121,7 +159,7 @@ void handle_redirection(t_commands **cmds, t_token *token)
 	ft_fileadd_back(&(*cmds)->redirections, temp1);
 }
 
-void fill_cmd(t_commands **cmds, t_token *token)
+void fill_cmd(t_commands **cmds, t_token *token, char **env)
 {
 	int i = 0;
 	while (token)
@@ -130,7 +168,7 @@ void fill_cmd(t_commands **cmds, t_token *token)
 			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + 1, sizeof(char *));
 		if (ft_isword(token))
 		{
-			handle_word(cmds, &token, &i);
+			handle_word(cmds, &token, env, &i);
 		}
 		else if (token->type == T_REDIR_OUT || token->type == T_REDIR_IN || token->type == T_APPEND_OUT || token->type == T_HEREDOC)
 		{
