@@ -47,7 +47,7 @@ int main(int argc, char **argv, char **env)
 		fill_cmd(&cmds, token, my_env);
 		if (ft_strncmp(cmds->name, "cd", 2) == 0)
 		{
-			if (ft_strncmp(cmds->args[1], "~", 1) == 0)
+			if (cmds->args[1] == NULL || ft_strncmp(cmds->args[1], "~", 1) == 0)
 			{
 				ft_printf("HOME =%s\n", home);
 				get_cd(home);

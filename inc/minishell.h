@@ -71,5 +71,6 @@ int			get_cd(char *path);
 char		*get_color(char *user, char *color);
 char		*get_home(char **env);
 int			ft_echo(char **args);
+int 		ft_wich_redir(t_file *redirection);
 
 #endif
