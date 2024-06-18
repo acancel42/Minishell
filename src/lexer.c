@@ -177,7 +177,6 @@ void fill_cmd(t_commands **cmds, t_token *token, char **env)
 		else if (token->type == T_PIPE)
 		{
 			i = 0;
-			printf("debug\n");
 			cmds = &(*cmds)->next;
 		}
 		token = token->next;

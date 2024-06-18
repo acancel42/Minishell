@@ -55,7 +55,6 @@ int main(int argc, char **argv, char **env)
 			}
 			else
 			{
-				ft_printf("test\n");
 				get_cd(ft_substr(line, 3, ft_strlen(line) - 3));
 				continue ;
 			}
