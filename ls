@@ -1,0 +1,12 @@
+a.out
+b
+cat
+debug
+env
+inc
+in.txt
+ls
+Makefile
+minishell
+README.md
+src

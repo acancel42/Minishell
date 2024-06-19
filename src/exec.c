@@ -5,9 +5,7 @@
 
 int	ft_exec_v1(t_commands *cmds, char **my_env)
 {
-	int		i;
 
-	i = 0;
 	cmds->infile_fd = -1;
 	cmds->outfile_fd = -1;
 	cmds->pid = -1;

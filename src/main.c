@@ -22,6 +22,8 @@ int main(int argc, char **argv, char **env)
 	char				*line;
 	char				**my_env;
 	char				*home;
+	int i = -1;
+	int pflag = 0;
 
 	home = get_home(env);
 	my_env = ft_get_env(env);
@@ -61,11 +63,21 @@ int main(int argc, char **argv, char **env)
 			}
 		}
 		// print_cmds(cmds);
-	
+		i = -1;
+		pflag = 0;
 		ft_pathfinder(token, cmds, env);
-		if (ft_exec_v1(cmds, my_env) == -1)
-			printf("execve failed\n");
-		// ft_free_tab(my_env);
+		while (line[++i])
+		{
+			if (line[i] == '|')
+				pflag = 1;
+		}
+		if (pflag != 0)
+				ft_pipe(cmds, my_env);
+		else
+		{
+			if (ft_exec_v1(cmds, my_env) == -1)
+				printf("execve failed\n");
+		}
 		ft_cmdsclear(&cmds);
 		ft_tokenclear(&token);
 		free(line);

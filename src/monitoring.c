@@ -56,6 +56,7 @@ char	*get_user(char **my_env)
 	user = ft_strjoin_name(username, host, '@', ':');
 	if (!user)
 		return (NULL);
+	i = 0;
 	while (ft_strncmp(my_env[i], "PWD=", 4))
 		i++;
 	pwd = ft_substr(my_env[i], 4, ft_strlen(my_env[i]) - 4);

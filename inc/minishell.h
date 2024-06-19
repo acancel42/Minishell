@@ -35,6 +35,7 @@ typedef struct s_commands
 	int					outfile_fd;
 	char				**args;
 	char				*user;
+	int					fd_p[2];
 	struct s_commands	*next;
 }			              t_commands;
 
@@ -73,6 +74,6 @@ char		*get_home(char **env);
 int			ft_echo(char **args);
 int 		ft_wich_redir(t_file *redirection);
 void 		print_my_env(char **my_env);
-
+int			ft_pipe(t_commands *cmds, char **my_env);
 
 #endif
