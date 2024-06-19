@@ -24,19 +24,21 @@ int main(int argc, char **argv, char **env)
 	char				*home;
 
 	home = get_home(env);
+	my_env = ft_get_env(env);
+
+	if (!my_env)
+		printf("no env\n");
 	(void)argc;
 	(void)argv;
 	while (1)
 	{
 		token = NULL;
 		cmds = NULL;
-		user = get_user(env);
+		// print_my_env(my_env);
+		user = get_user(my_env);
 		if (user == NULL)
 		return (-1);
 		user = get_color(user, BLUE);
-		my_env = ft_get_env(env);
-		if (!my_env)
-			printf("no env\n");
 		line = readline(user);
 		if (!line)
 			exit_minishell(&token, &cmds, &user);
@@ -49,21 +51,21 @@ int main(int argc, char **argv, char **env)
 		{
 			if (cmds->args[1] == NULL || ft_strncmp(cmds->args[1], "~", 1) == 0)
 			{
-				ft_printf("HOME =%s\n", home);
-				get_cd(home);
+				ft_cd(home, my_env);
 				continue ;
 			}
 			else
 			{
-				get_cd(ft_substr(line, 3, ft_strlen(line) - 3));
+				ft_cd(ft_substr(line, 3, ft_strlen(line) - 3), my_env);
 				continue ;
 			}
 		}
-		print_cmds(cmds);
+		// print_cmds(cmds);
+	
 		ft_pathfinder(token, cmds, env);
 		if (ft_exec_v1(cmds, my_env) == -1)
 			printf("execve failed\n");
-		ft_free_tab(my_env);
+		// ft_free_tab(my_env);
 		ft_cmdsclear(&cmds);
 		ft_tokenclear(&token);
 		free(line);

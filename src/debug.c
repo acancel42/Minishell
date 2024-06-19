@@ -54,3 +54,13 @@ void	print_cmds(t_commands *cmds)
 		cmds = cmds->next;
 	}
 }
+
+void print_my_env(char **my_env)
+{
+	int	i;
+
+	i = -1;
+	while (my_env[++i])
+		printf("%s\n", my_env[i]);
+	return ;
+}
