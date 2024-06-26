@@ -118,7 +118,7 @@ int expand_variables(char **dest, char *str, char **env)
 	while ((start = ft_strchr(start, '$')) != NULL)
 	{
 		end = start;
-		while (ft_isalnum(*++end))
+		while (ft_isalnum(*++end) || *end == '_')
 			;
 		name = ft_strndup(start + 1, end - start - 1);
 		value = find_env_var(name, env);
@@ -177,7 +177,7 @@ void handle_word(t_commands **cmds, t_token **token, char **env, int *i, int *k)
 		(*cmds)->name = ft_strdup(temp2);
 	if (*i > 0)
 	{
-		if (temp2[0] != '-')
+		if (temp2 && temp2[0] != '-')
 			(*cmds)->file[(*k)++] = ft_strdup(temp2);
 	}
 	(*cmds)->args[(*i)++] = ft_strdup(temp2);
