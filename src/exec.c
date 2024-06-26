@@ -14,6 +14,8 @@ int	ft_exec_v1(t_commands *cmds, char **my_env)
 	cmds->pid = fork();
 	if (cmds->pid == 0)
 	{
+		if (cmds->redirections)
+			ft_wich_redir(cmds->redirections);
 		if (execve(cmds->path, cmds->args, my_env) == -1)
 		{
 			printf("execve failed\n");

@@ -9,29 +9,40 @@ int	get_pwd(char **pwd)
 	return (0);
 }
 
-int	get_cd(char *path)
+int	ft_cd(char *path, char **my_env)
 {
-	printf("%s\n", path);
+	int	i;
+	char	*oldpwd;
+	char	*pwd;
+
+	i = 0;
+	while (ft_strncmp(my_env[i], "OLDPWD=", 7))
+		i++;
+	get_pwd(&oldpwd);
+	my_env[i] = ft_strjoin("OLDPWD=", oldpwd, 0);
+	if (!my_env)
+		return (-1);
 	if (chdir(path) == -1)
 		return (-2);
+	i = 0;
+	while (ft_strncmp(my_env[i], "PWD=", 4))
+		i++;
+	get_pwd(&pwd);
+	my_env[i] = ft_strjoin("PWD=", pwd, 0);
 	return (0);
 }
 
 char	*get_home(char **env)
 {
 	char	*home;
-	char	*name;
 	int		i;
 
-	home = ft_strdup("/home/");
 	i = 0;
-	while (ft_strncmp(env[i], "LOGNAME=", 8) != 0)
+	while (ft_strncmp(env[i], "HOME=", 5))
 		i++;
-	name = ft_substr(env[i], 8, 8);
-	if (name == NULL)
+	home = ft_substr(env[i], 5, 6 + 8);
+	if (home == NULL)
 		return (NULL);
-	home = ft_strjoin(home, name, 1);
-	free(name);
 	return (home);
 }
 

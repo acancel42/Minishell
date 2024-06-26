@@ -25,6 +25,10 @@ int main(int argc, char **argv, char **env)
 	char				*home;
 
 	home = get_home(env);
+	my_env = ft_get_env(env);
+
+	if (!my_env)
+		printf("no env\n");
 	(void)argc;
 	(void)argv;
 	my_env = ft_get_env(env);
@@ -36,7 +40,8 @@ int main(int argc, char **argv, char **env)
 		i = 0;
 		token = NULL;
 		cmds = NULL;
-		user = get_user(env);
+		// print_my_env(my_env);
+		user = get_user(my_env);
 		if (user == NULL)
 		return (-1);
 		user = get_color(user, BLUE);
@@ -51,21 +56,16 @@ int main(int argc, char **argv, char **env)
 		print_cmds(cmds);
 		if (ft_strncmp(cmds->name, "cd", 2) == 0)
 		{
-			if (ft_strncmp(cmds->args[1], "~", 1) == 0)
+			if (cmds->args[1] == NULL || ft_strncmp(cmds->args[1], "~", 1) == 0)
 			{
-				ft_printf("HOME =%s\n", home);
-				get_cd(home);
+				ft_cd(home, my_env);
+				continue ;
 			}
 			else
 			{
-				get_cd(ft_substr(line, 3, ft_strlen(line) - 3));
+				ft_cd(ft_substr(line, 3, ft_strlen(line) - 3), my_env);
+				continue ;
 			}
-			i++;
-		}
-		if (ft_strncmp(cmds->name, "echo", 4) == 0)
-		{
-			ft_echo(cmds->args);
-			i++;
 		}
 		if (ft_strncmp(cmds->name, "export", 6) == 0)
 		{

@@ -69,11 +69,14 @@ void 		exit_minishell(t_token **token, t_commands **cmds, char **user, char ***e
 void		fill_cmd(t_commands **cmds, t_token *token, char **env);
 void		init_cmd(t_commands **cmds, t_token *token, char *user);
 void		lexer_init(t_token **token, char *src);
-int			get_cd(char *path);
+int			ft_cd(char *path,char **my_env);
 char		*get_color(char *user, char *color);
 char		*get_home(char **env);
 int			ft_echo(char **args);
 char		**tab_join(char **tab, char *str);
 int			ft_export(char **args, char ***env);
+int 		ft_wich_redir(t_file *redirection);
+void 		print_my_env(char **my_env);
+
 
 #endif
