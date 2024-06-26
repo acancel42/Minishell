@@ -16,7 +16,6 @@ int	ft_exec_v1(t_commands *cmds, char **my_env)
 			ft_wich_redir(cmds);
 		if (execve(cmds->path, cmds->args, my_env) == -1)
 		{
-			printf ("path = %s args = %s, my env %s\n", cmds->path, cmds->args[0], my_env[0]);
 			printf("execve failed\n");
 			return (-1);
 		}
