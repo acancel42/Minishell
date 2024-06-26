@@ -78,6 +78,6 @@ int			ft_wich_redir(t_commands *cmds);
 char		**tab_join(char **tab, char *str);
 int			ft_export(char **args, char ***env);
 void 		print_my_env(char **my_env);
-int			ft_pipe(t_commands *cmds, char **my_env);
+int			ft_pipe(t_commands *cmds, char **my_env, t_token *token);
 
 #endif

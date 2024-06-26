@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	ft_pipe(t_commands *cmds, char **my_env)
+int	ft_pipe(t_commands *cmds, char **my_env, t_token *token)
 {
 	cmds->infile_fd = -1;
 	cmds->outfile_fd = -1;
@@ -8,7 +8,7 @@ int	ft_pipe(t_commands *cmds, char **my_env)
 	if (pipe(cmds->fd_p) == -1)
 	{
 		perror("pipe");
-		exit_minishell(NULL, &cmds, NULL); // ?? data still malloced
+		exit_minishell(&token, &cmds, NULL, &my_env); // ?? data still malloced
 	}
 	cmds->pid = fork();
 	if (cmds->pid == -1)
@@ -19,7 +19,7 @@ int	ft_pipe(t_commands *cmds, char **my_env)
 		if (cmds->redirections)
 			ft_wich_redir(cmds);
 		else
-			cmds->infile_fd = open(cmds->args[1], O_RDONLY);
+			cmds->infile_fd = open(cmds->file[0], O_RDONLY);
 		ft_dprintf("fdp1 %s\n", cmds->args[1]);
 		// int i = -1;
 		// while (cmds->args[++i])
@@ -34,7 +34,7 @@ int	ft_pipe(t_commands *cmds, char **my_env)
 		close(cmds->fd_p[1]);
 		if (execve(cmds->path, cmds->args, my_env) == -1)
 		{
-			printf ("p1 path = %s args = %s, my env %s\n", cmds->path, cmds->args[1], my_env[0]);
+			ft_dprintf ("p1 path = %s args = %s, my env %s\n", cmds->path, cmds->args[1], my_env[0]);
 			printf("execve failed pipe in\n");
 			return (-1);
 		}
@@ -47,9 +47,9 @@ int	ft_pipe(t_commands *cmds, char **my_env)
 		close(cmds->fd_p[1]);
 		if (cmds->next->redirections)
 			ft_wich_redir(cmds->next);
-		else
-			cmds->outfile_fd = open(cmds->next->args[1], O_WRONLY | O_TRUNC | O_CREAT, 0644);
-		ft_dprintf("--fd p2 %s\n", cmds->next->args[1]);
+		else if (cmds->next->file)
+			cmds->outfile_fd = open(cmds->next->file[0], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		ft_dprintf("--fd p2 %s\n", cmds->next->file[0]);
 		// int i = -1;
 		// while (cmds->next->args[++i])
 		// 	ft_dprintf("--p2 args[%d] %s\n", i, cmds->next->args[i]);
@@ -63,7 +63,7 @@ int	ft_pipe(t_commands *cmds, char **my_env)
 		close(cmds->fd_p[0]);
 		if (execve(cmds->next->path, cmds->next->args, my_env) == -1)
 		{
-			printf ("p2 path = %s args = %s, my env %s\n", cmds->path, cmds->args[1], my_env[0]);
+			ft_dprintf ("p2 path = %s args = %s, my env %s\n", cmds->path, cmds->args[1], my_env[0]);
 			printf("execve failed pipe out\n");
 			return (-1);
 		}

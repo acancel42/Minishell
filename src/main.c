@@ -22,9 +22,9 @@ int main(int argc, char **argv, char **env)
 	char				*line;
 	char				**my_env;
 	int					i;
+	int					j;
 	char				*home;
-	int i = -1;
-	int pflag = 0;
+	int 				pflag;
 	int					error;
 
 	home = get_home(env);
@@ -70,16 +70,16 @@ int main(int argc, char **argv, char **env)
 			}
 		}
 		print_cmds(cmds);
-		i = -1;
-		pflag = 0;
+		j = -1;
+		pflag = false;
 		ft_pathfinder(token, cmds, my_env);
-		while (line[++i])
+		while (line[++j])
 		{
-			if (line[i] == '|')
+			if (line[j] == '|')
 				pflag = 1;
 		}
 		if (pflag != 0)
-				ft_pipe(cmds, my_env);
+				ft_pipe(cmds, my_env, token);
 		else
 			error = ft_exec_v1(cmds, my_env);
 
