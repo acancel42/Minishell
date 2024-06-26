@@ -72,7 +72,7 @@ int			ft_cd(char *path,char **my_env);
 char		*get_color(char *user, char *color);
 char		*get_home(char **env);
 int			ft_echo(char **args);
-int 		ft_wich_redir(t_file *redirection);
+int			ft_wich_redir(t_commands *cmds);
 void 		print_my_env(char **my_env);
 int			ft_pipe(t_commands *cmds, char **my_env);
 
