@@ -4,7 +4,10 @@ int handle_double_quote(char *src, t_token **token, int i)
 {
 	char c;
 	t_token *temp;
+	if (src[i] == '"' && src[i + 1] == '"')
+		return (i + 2);
 	i++;
+	printf("%c\n", src[i]);
 	temp = ft_toknew(src[i], T_D_QUOTED_WORD);
 	ft_tokadd_back(token, temp);
 	i++;
@@ -16,6 +19,8 @@ int handle_double_quote(char *src, t_token **token, int i)
 	}
 	if (src[i] != '"')
 	{
+		printf("%d\n", i);
+		printf("%c\n", src[i]);
 		printf("%s\n", "Interactive mode");
 		exit(EXIT_FAILURE);
 	}
@@ -28,6 +33,8 @@ int handle_single_quote(char *src, t_token **token, int i)
 {
 	char c;
 	t_token *temp;
+	if (src[i] == '\'' && src[i + 1] == '\'')
+		return (i + 2);
 	i++;
 	temp = ft_toknew(src[i], T_S_QUOTED_WORD);
 	ft_tokadd_back(token, temp);
