@@ -31,6 +31,7 @@ int	ft_export(char **args, char ***env)
 	i = 1;
 	while (args[i])
 	{
+		printf("debug");
 		if (ft_strchr(args[i], '='))
 		{
 			new_env = tab_join((*env), args[i]);

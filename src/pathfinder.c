@@ -8,7 +8,7 @@ void	cmd_not_found(t_token *token, t_commands *cmds)
 
 	cmd_n_found = ft_strjoin(cmds->name, " : command not found\n", 0);
 	if (cmd_n_found == NULL)
-		exit_minishell(&token, &cmds, NULL);
+		exit_minishell(&token, &cmds, NULL, NULL);
 	printf("ici %s\n", cmds->name);
 	free(cmd_n_found);
 	return ;
@@ -32,7 +32,7 @@ void	build_path(t_token *token, t_commands *cmds, char *s1, \
 	if (cmds->path == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		exit_minishell(&token, &cmds, NULL);
+		exit_minishell(&token, &cmds, NULL, NULL);
 	}
 	ft_memcpy(cmds->path, s1, len_s1);
 	ft_memcpy(cmds->path + len_s1, "/", 1);
@@ -63,7 +63,7 @@ void	cmd_path(t_token *token, t_commands *cmds, char **env)
 	if (all_paths == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		exit_minishell(&token, &cmds, NULL);
+		exit_minishell(&token, &cmds, NULL, &env);
 	}
 	i = 0;
 	build_path(token, cmds, all_paths[i], cmds->name);
