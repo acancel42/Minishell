@@ -86,12 +86,16 @@ void	ft_pathfinder(t_token *token, t_commands *cmds, char **env)
 	while (cmds)
 	{
 		cmds->valid_path = access(cmds->args[0], F_OK);
+		printf("%d\n", cmds->valid_path);
 		if (cmds->valid_path == -1 && ft_strchr_b(cmds->name, '/'))
 			cmd_path(token, cmds, env);
 		else
 			cmds->path = ft_strdup(cmds->args[0]);
 		if (cmds->path)
-		cmds = cmds->next;
+		{
+			printf("cmd path : %s\n", cmds->path);
+			cmds = cmds->next;
+		}
 	}
 	return ;
 }

@@ -37,6 +37,7 @@ typedef struct s_commands
 	char				**args;
 	char				**file;
 	char				*user;
+	int					fd_p[2];
 	struct s_commands	*next;
 }			              t_commands;
 
@@ -73,10 +74,10 @@ int			ft_cd(char *path,char **my_env);
 char		*get_color(char *user, char *color);
 char		*get_home(char **env);
 int			ft_echo(char **args);
+int			ft_wich_redir(t_commands *cmds);
 char		**tab_join(char **tab, char *str);
 int			ft_export(char **args, char ***env);
-int 		ft_wich_redir(t_file *redirection);
 void 		print_my_env(char **my_env);
-
+int			ft_pipe(t_commands *cmds, char **my_env);
 
 #endif

@@ -1,43 +1,41 @@
 #include "minishell.h"
 
-int	ft_redir_output(t_file *redir)
+int	ft_redir_output(t_commands *cmds)
 {
-	redir->fd = open(redir->name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
-	if (redir->fd == -1)
-		perror(redir->name);
-	if (dup2(redir->fd, STDOUT_FILENO) == -1)
-		perror("dup out");
-	close(redir->fd);
+	cmds->outfile_fd = open(cmds->redirections->name, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+	if (cmds->outfile_fd == -1)
+		perror(cmds->redirections->name);
+	if (dup2(cmds->outfile_fd, STDOUT_FILENO) == -1)
+		perror("dup out redir");
 	return (0);
 }
 
-int	ft_redir_input(t_file *redir)
+int	ft_redir_input(t_commands *cmds)
 {
-	redir->fd = open(redir->name, O_RDONLY);
-	if (redir->fd == -1)
-		perror(redir->name);
-	if (dup2(redir->fd, STDIN_FILENO) == -1)
-		perror("dup in");
-	close(redir->fd);
+	cmds->infile_fd = open(cmds->redirections->name, O_RDONLY);
+	if (cmds->infile_fd == -1)
+		perror(cmds->redirections->name);
+	if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
+		perror("dup in redir");
 	return (0);
 }
 
-int ft_wich_redir(t_file *redirection)
+int	ft_wich_redir(t_commands *cmds)
 {
-	while (redirection)
+	while (cmds->redirections)
 	{
 
-		if (!ft_strncmp(redirection->name, ">", 1))
+		if (!ft_strncmp(cmds->redirections->name, ">", 1))
 		{
-			redirection->name = ft_strdup(redirection->name + 1);
-			ft_redir_output(redirection);
+			cmds->redirections->name = ft_strdup(cmds->redirections->name + 1);
+			ft_redir_output(cmds);
 		}
-		else if (!ft_strncmp(redirection->name, "<", 1))
+		else if (!ft_strncmp(cmds->redirections->name, "<", 1))
 		{
-			redirection->name = ft_strdup(redirection->name + 1);
-			ft_redir_input(redirection);
+			cmds->redirections->name = ft_strdup(cmds->redirections->name + 1);
+			ft_redir_input(cmds);
 		}
-		redirection = redirection->next;
+		cmds->redirections = cmds->redirections->next;
 	}
 	return (0);
 }
