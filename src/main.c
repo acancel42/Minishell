@@ -74,7 +74,7 @@ int main(int argc, char **argv, char **env)
 				continue ;
 			}
 		}
-		print_cmds(cmds);
+		//print_cmds(cmds);
 		j = -1;
 		pflag = false;
 		ft_pathfinder(token, cmds, my_env);
