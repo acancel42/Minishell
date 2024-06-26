@@ -44,11 +44,18 @@ void	print_file(t_file *file)
 void	print_cmds(t_commands *cmds)
 {
 	int	i;
+	int j;
 
 	while (cmds)
 	{
 		i = -1;
+		j = -1;
 		printf("command : %s\n", cmds->name);
+		printf("args 0 : %s\n", cmds->args[0]);
+		while (cmds->args[++i])
+			printf("args : %s\n", cmds->args[i]);
+		while (cmds->file[++j])
+			printf("file : %s\n", cmds->file[j]);
 		print_file(cmds->redirections);
 		printf("%c", '\n');
 		cmds = cmds->next;

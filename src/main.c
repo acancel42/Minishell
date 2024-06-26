@@ -21,6 +21,7 @@ int main(int argc, char **argv, char **env)
 	char				*user;
 	char				*line;
 	char				**my_env;
+	int					i;
 	char				*home;
 	int i = -1;
 	int pflag = 0;
@@ -32,8 +33,13 @@ int main(int argc, char **argv, char **env)
 		printf("no env\n");
 	(void)argc;
 	(void)argv;
+	my_env = ft_get_env(env);
+	if (!my_env)
+			printf("no env\n");
+	my_env = tab_join(my_env, "IFS= \t\n");
 	while (1)
 	{
+		i = 0;
 		token = NULL;
 		cmds = NULL;
 		// print_my_env(my_env);
@@ -43,12 +49,13 @@ int main(int argc, char **argv, char **env)
 		user = get_color(user, BLUE);
 		line = readline(user);
 		if (!line)
-			exit_minishell(&token, &cmds, &user);
+			exit_minishell(&token, &cmds, &user, &my_env);
 		if (*line)
 			add_history(line);
 		lexer_init(&token, line);
 		init_cmd(&cmds, token, user);
 		fill_cmd(&cmds, token, my_env);
+		print_cmds(cmds);
 		if (ft_strncmp(cmds->name, "cd", 2) == 0)
 		{
 			if (cmds->args[1] == NULL || ft_strncmp(cmds->args[1], "~", 1) == 0)
@@ -75,6 +82,18 @@ int main(int argc, char **argv, char **env)
 				ft_pipe(cmds, my_env);
 		else
 			error = ft_exec_v1(cmds, my_env);
+
+		if (ft_strncmp(cmds->name, "export", 6) == 0)
+		{
+			ft_export(cmds->args, &my_env);
+			i++;
+		}
+		if (i == 0)
+		{
+			ft_pathfinder(token, cmds, my_env);
+			if (ft_exec_v1(cmds, my_env) == -1)
+				printf("execve failed\n");
+		}
 		ft_cmdsclear(&cmds);
 		ft_tokenclear(&token);
 		free(line);

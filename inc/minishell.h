@@ -23,6 +23,7 @@ typedef struct s_file
 	struct s_file	*next;
 }				t_file;
 
+
 typedef struct s_commands
 {
 	char				*name;
@@ -34,6 +35,7 @@ typedef struct s_commands
 	int					infile_fd;
 	int					outfile_fd;
 	char				**args;
+	char				**file;
 	char				*user;
 	int					fd_p[2];
 	struct s_commands	*next;
@@ -64,7 +66,7 @@ void		print_cmds(t_commands *cmds);
 void		print_file(t_file *file);
 void		print_lst(t_token *token);
 void		print_type(t_token_types type);
-void 		exit_minishell(t_token **token, t_commands **cmds, char **user);
+void 		exit_minishell(t_token **token, t_commands **cmds, char **user, char ***env);
 void		fill_cmd(t_commands **cmds, t_token *token, char **env);
 void		init_cmd(t_commands **cmds, t_token *token, char *user);
 void		lexer_init(t_token **token, char *src);
@@ -73,6 +75,8 @@ char		*get_color(char *user, char *color);
 char		*get_home(char **env);
 int			ft_echo(char **args);
 int			ft_wich_redir(t_commands *cmds);
+char		**tab_join(char **tab, char *str);
+int			ft_export(char **args, char ***env);
 void 		print_my_env(char **my_env);
 int			ft_pipe(t_commands *cmds, char **my_env);
 

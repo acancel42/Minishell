@@ -32,7 +32,7 @@ void	init_cmd(t_commands **cmds, t_token *token, char *user)
 	}
 }
 
-int	count_type_until_pipe(t_token *token, t_token_types type)
+int	count_type_until_pipe(t_token *token, t_token_types type, int flag)
 {
 	int	count;
 
@@ -40,7 +40,13 @@ int	count_type_until_pipe(t_token *token, t_token_types type)
 	while (token && token->type != T_PIPE)
 	{
 		if (token->type == type)
-			count++;
+		{
+			if (flag == 0)
+				count++;
+			else if (flag == 1)
+				if (token->value[0] != '-')
+					count++;
+		}
 		token = token->next;
 	}
 	return (count);
@@ -60,6 +66,45 @@ char *find_env_var(char *name, char **env)
 	return NULL;
 }
 
+/*int expand_variables(char **dest, char *str, char **env)
+{
+	char *start = str;
+	char *end;
+	char *name;
+	char *value;
+	char *temp;
+	int i;
+
+	i = 0;
+	while ((start = ft_strchr(start, '$')) != NULL)
+	{
+		end = start;
+		while (ft_isalnum(*++end))
+			;
+		name = ft_strndup(start + 1, end - start - 1);
+		value = find_env_var(name, env);
+		free(name);
+		if (value)
+		{
+			i++;
+			temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
+			ft_strncpy(temp, str, start - str);
+			ft_strcpy(temp + (start - str), value);
+			ft_strcpy(temp + (start - str) + ft_strlen(value), end);
+			free(str);
+			str = temp;
+			start = str + (start - str) + ft_strlen(value);
+		}
+		else
+		{
+			(*dest) = NULL;
+			return -1;
+		}
+	}
+	(*dest) = ft_strdup(str);
+	return (i);
+}*/
+
 int expand_variables(char **dest, char *str, char **env)
 {
 	char *start = str;
@@ -73,7 +118,7 @@ int expand_variables(char **dest, char *str, char **env)
 	while ((start = ft_strchr(start, '$')) != NULL)
 	{
 		end = start;
-		while (isalnum(*++end) || *end == '_')
+		while (ft_isalnum(*++end))
 			;
 		name = ft_strndup(start + 1, end - start - 1);
 		value = find_env_var(name, env);
@@ -99,7 +144,7 @@ int expand_variables(char **dest, char *str, char **env)
 	return (i);
 }
 
-void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
+void handle_word(t_commands **cmds, t_token **token, char **env, int *i, int *k)
 {
 	char *temp2;
 	char *temp3;
@@ -112,14 +157,6 @@ void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
 		j = expand_variables(&temp2, ft_strdup((*token)->value), env);
 	else
 		temp2 = ft_strdup((*token)->value);
-	if (j == -1)
-	{
-		if (*i == 0)
-			(*cmds)->name = ft_strdup(temp2);
-		(*cmds)->args[(*i)++] = ft_strdup(temp2);
-		free(temp2);
-		return;
-	}
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
 		(*token) = (*token)->next;
@@ -130,6 +167,7 @@ void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
 		temp2 = ft_strjoin(temp2, temp3, 0);
 		if (j)
 		{
+			printf("j = %d\n", j);
 			free(temp3);
 			break;
 		}
@@ -137,6 +175,11 @@ void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
 	}
 	if (*i == 0)
 		(*cmds)->name = ft_strdup(temp2);
+	if (*i > 0)
+	{
+		if (temp2[0] != '-')
+			(*cmds)->file[(*k)++] = ft_strdup(temp2);
+	}
 	(*cmds)->args[(*i)++] = ft_strdup(temp2);
 	free(temp2);
 }
@@ -162,13 +205,16 @@ void handle_redirection(t_commands **cmds, t_token *token)
 void fill_cmd(t_commands **cmds, t_token *token, char **env)
 {
 	int i = 0;
+	int k = 0;
 	while (token)
 	{
 		if (!(*cmds)->args)
-			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + count_type_until_pipe(token, T_WORD) + 1, sizeof(char *));
+			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD, 0) + count_type_until_pipe(token, T_D_QUOTED_WORD, 0) + count_type_until_pipe(token, T_S_QUOTED_WORD, 0) + 1, sizeof(char *));
+		if (!(*cmds)->file)
+			(*cmds)->file = ft_calloc(count_type_until_pipe(token, T_WORD, 1) + count_type_until_pipe(token, T_D_QUOTED_WORD, 1) + count_type_until_pipe(token, T_S_QUOTED_WORD, 1) + 1, sizeof(char *));
 		if (ft_isword(token))
 		{
-			handle_word(cmds, &token, env, &i);
+			handle_word(cmds, &token, env, &i, &k);
 		}
 		else if (token->type == T_REDIR_OUT || token->type == T_REDIR_IN || token->type == T_APPEND_OUT || token->type == T_HEREDOC)
 		{
@@ -183,10 +229,12 @@ void fill_cmd(t_commands **cmds, t_token *token, char **env)
 	}
 }
 
-void exit_minishell(t_token **token, t_commands **cmds, char **user)
+void exit_minishell(t_token **token, t_commands **cmds, char **user, char ***env)
 {
 	ft_cmdsclear(cmds);
 	ft_tokenclear(token);
+	if (env)
+		ft_free_tab(*env);
 	if (user)
 		free(*user);
 	printf(RED"%s\n"RESET, "exit");
