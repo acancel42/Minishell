@@ -74,6 +74,11 @@ int main(int argc, char **argv, char **env)
 				continue ;
 			}
 		}
+		if (ft_strncmp(cmds->name, "echo", 4) == 0)
+		{
+			ft_echo(cmds->args);
+			continue;
+		}
 		//print_cmds(cmds);
 		j = -1;
 		pflag = false;
