@@ -2,13 +2,13 @@
 #include "minishell.h"
 
 
-int	cmd_not_found(t_token *token, t_commands *cmds)
+int	cmd_not_found(t_token *token, t_commands *cmds, char **env)
 {
 	char	*cmd_n_found;
 
 	cmd_n_found = ft_strjoin(cmds->name, " : command not found\n", 0);
 	if (cmd_n_found == NULL)
-		exit_minishell(&token, &cmds, NULL);
+		exit_minishell(&token, &cmds, NULL, &env);
 	ft_printf("%s\n", cmd_n_found);
 	free(cmd_n_found);
 	return (1);
@@ -75,7 +75,7 @@ void	cmd_path(t_token *token, t_commands *cmds, char **env)
 		build_path(token, cmds, all_paths[i++], cmds->name);
 	}
 	if (cmds->path == NULL && ft_strncmp(cmds->name, "cd", 2) && flag == 0)
-		flag += cmd_not_found(token, cmds);
+		flag += cmd_not_found(token, cmds, env);
 	free_tab(all_paths);
 	return ;
 }
