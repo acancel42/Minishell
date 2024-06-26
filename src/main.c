@@ -52,10 +52,15 @@ int main(int argc, char **argv, char **env)
 			exit_minishell(&token, &cmds, &user, &my_env);
 		if (*line)
 			add_history(line);
+		if (ft_strncmp(line, "", 1) == 0)
+		{
+			free(line);
+			continue ;
+		}
 		lexer_init(&token, line);
 		init_cmd(&cmds, token, user);
 		fill_cmd(&cmds, token, my_env);
-		print_cmds(cmds);
+		//print_cmds(cmds);
 		if (ft_strncmp(cmds->name, "cd", 2) == 0)
 		{
 			if (cmds->args[1] == NULL || ft_strncmp(cmds->args[1], "~", 1) == 0)
