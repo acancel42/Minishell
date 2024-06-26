@@ -23,10 +23,12 @@ int main(int argc, char **argv, char **env)
 	char				**my_env;
 	int					i;
 	char				*home;
+	int i = -1;
+	int pflag = 0;
+	int					error;
 
 	home = get_home(env);
 	my_env = ft_get_env(env);
-
 	if (!my_env)
 		printf("no env\n");
 	(void)argc;
@@ -72,6 +74,20 @@ int main(int argc, char **argv, char **env)
 				continue ;
 			}
 		}
+		print_cmds(cmds);
+		i = -1;
+		pflag = 0;
+		ft_pathfinder(token, cmds, my_env);
+		while (line[++i])
+		{
+			if (line[i] == '|')
+				pflag = 1;
+		}
+		if (pflag != 0)
+				ft_pipe(cmds, my_env);
+		else
+			error = ft_exec_v1(cmds, my_env);
+
 		if (ft_strncmp(cmds->name, "export", 6) == 0)
 		{
 			ft_export(cmds->args, &my_env);
