@@ -21,7 +21,6 @@ int main(int argc, char **argv, char **env)
 	char				*user;
 	char				*line;
 	char				**my_env;
-	int					i;
 	int					j;
 	char				*home;
 	int 				pflag;
@@ -39,7 +38,6 @@ int main(int argc, char **argv, char **env)
 	my_env = tab_join(my_env, "IFS= \t\n");
 	while (1)
 	{
-		i = 0;
 		token = NULL;
 		cmds = NULL;
 		// print_my_env(my_env);
@@ -61,28 +59,53 @@ int main(int argc, char **argv, char **env)
 		init_cmd(&cmds, token, user);
 		fill_cmd(&cmds, token, my_env);
 		//print_cmds(cmds);
-		if (ft_strncmp(cmds->name, "cd", 2) == 0)
+		if (ft_strncmp(cmds->name, "cd", 3) == 0)
 		{
 			if (cmds->args[1] == NULL || ft_strncmp(cmds->args[1], "~", 1) == 0)
 			{
 				ft_cd(home, my_env);
+				ft_echo(cmds->args);
+				ft_cmdsclear(&cmds);
+				ft_tokenclear(&token);
+				free(line);
 				continue ;
 			}
 			else
 			{
 				ft_cd(ft_substr(line, 3, ft_strlen(line) - 3), my_env);
+				ft_echo(cmds->args);
+				ft_cmdsclear(&cmds);
+				ft_tokenclear(&token);
+				free(line);
 				continue ;
 			}
 		}
-		if (ft_strncmp(cmds->name, "echo", 4) == 0)
+		if (ft_strncmp(cmds->name, "echo", 5) == 0)
 		{
 			ft_echo(cmds->args);
+			ft_cmdsclear(&cmds);
+			ft_tokenclear(&token);
+			free(line);
+			continue;
+		}
+		if (ft_strncmp(cmds->name, "export", 7) == 0)
+		{
+			ft_export(cmds->args, &my_env);
+			ft_cmdsclear(&cmds);
+			ft_tokenclear(&token);
+			free(line);
 			continue;
 		}
 		//print_cmds(cmds);
 		j = -1;
 		pflag = false;
-		ft_pathfinder(token, cmds, my_env);
+		if (ft_pathfinder(token, cmds, my_env) == 0)
+		{
+			ft_cmdsclear(&cmds);
+			ft_tokenclear(&token);
+			free(line);
+			continue;
+		}
 		while (line[++j])
 		{
 			if (line[j] == '|')
@@ -92,21 +115,11 @@ int main(int argc, char **argv, char **env)
 				ft_pipe(cmds, my_env, token);
 		else
 			error = ft_exec_v1(cmds, my_env);
-
-		if (ft_strncmp(cmds->name, "export", 6) == 0)
-		{
-			ft_export(cmds->args, &my_env);
-			i++;
-		}
-		if (i == 0)
-		{
-			ft_pathfinder(token, cmds, my_env);
-			if (ft_exec_v1(cmds, my_env) == -1)
-				printf("execve failed\n");
-		}
 		ft_cmdsclear(&cmds);
 		ft_tokenclear(&token);
 		free(line);
+		free(home);
+		exit_minishell(&token, &cmds, &user, &my_env);
 	}
 	free(home);
 	return (0);

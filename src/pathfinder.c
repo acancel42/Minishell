@@ -1,19 +1,6 @@
 
 #include "minishell.h"
 
-
-void	cmd_not_found(t_token *token, t_commands *cmds, char **env)
-{
-	char	*cmd_n_found;
-
-	cmd_n_found = ft_strjoin(cmds->name, " : command not found\n", 0);
-	if (cmd_n_found == NULL)
-		exit_minishell(&token, &cmds, NULL, &env);
-	ft_printf("%s\n", cmd_n_found);
-	free(cmd_n_found);
-	exit_minishell(&token, &cmds, NULL, &env);
-}
-
 void	build_path(t_token *token, t_commands *cmds, char *s1, \
 					char *s2)
 {
@@ -49,14 +36,12 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-void	cmd_path(t_token *token, t_commands *cmds, char **env)
+int	cmd_path(t_token *token, t_commands *cmds, char **env)
 {
 	char	**all_paths;
 	int		i;
-	int		flag;
 
 	i = 0;
-	flag = 0;
 	while (ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
 	cmds->path = env[i];
@@ -73,24 +58,30 @@ void	cmd_path(t_token *token, t_commands *cmds, char **env)
 		free(cmds->path);
 		build_path(token, cmds, all_paths[i++], cmds->name);
 	}
-	if (cmds->path == NULL && ft_strncmp(cmds->name, "cd", 2) && flag == 0)
-	cmd_not_found(token, cmds, env);
 	free_tab(all_paths);
-	return ;
+	if (cmds->path == NULL)
+	{
+		printf("command '%s' not found\n", cmds->name);
+		return (0);
+	}
+	return (1);
 }
 
 
-void	ft_pathfinder(t_token *token, t_commands *cmds, char **env)
+int	ft_pathfinder(t_token *token, t_commands *cmds, char **env)
 {
 	while (cmds)
 	{
 		cmds->valid_path = access(cmds->args[0], F_OK);
 		if (cmds->valid_path == -1 && ft_strchr_b(cmds->name, '/'))
-			cmd_path(token, cmds, env);
+		{
+			if (cmd_path(token, cmds, env) == 0)
+				return (0);
+		}
 		else
 			cmds->path = ft_strdup(cmds->args[0]);
 		if (cmds->path)
 			cmds = cmds->next;
 	}
-	return ;
+	return (1);
 }

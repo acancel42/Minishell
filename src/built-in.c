@@ -46,6 +46,23 @@ char	*get_home(char **env)
 	return (home);
 }
 
+int	is_flagn(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] != '-')
+		return (0);
+	i++;
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	ft_echo(char **args)
 {
 	int	i;
@@ -53,13 +70,17 @@ int	ft_echo(char **args)
 
 	flag = 0;
 	i = 1;
-	if (!ft_strncmp(args[1], "-n", 2))
+	while (args[i][0] == 0)
+		i++;
+	while (args[i] && is_flagn(args[i]))
+	{
+		i++;
 		flag++;
-	i += flag;
+	}
 	while (args[i])
 	{
 		printf("%s", args[i]);
-		if (args[i +1])
+		if (args[i + 1] && args[i + 1][0] != 0)
 			printf(" ");
 		i++;
 	}

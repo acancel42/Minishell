@@ -1,25 +1,24 @@
 #include "minishell.h"
 
-char	**ft_shlvl(char **my_env)
+void	ft_shlvl(char ***my_env)
 {
 	int		i;
 	int 	lvl;
 	char	*shlvl;
 
 	i = 0;
-	while (ft_strncmp(my_env[i], "SHLVL=", 6))
+	while (ft_strncmp((*my_env)[i], "SHLVL=", 6))
 		i++;
-	lvl = ft_atoi(my_env[i] + 6);
+	lvl = ft_atoi((*my_env)[i] + 6);
 	lvl++;
 	shlvl = ft_itoa(lvl);
 	if (!shlvl)
-		return (NULL);
+		return ;
 	i = 0;
-	while (ft_strncmp(my_env[i], "SHLVL=", 6))
+	while (ft_strncmp((*my_env)[i], "SHLVL=", 6))
 		i++;
-	my_env[i] = ft_strjoin("SHLVL=", shlvl, 0);
+	(*my_env)[i] = ft_strjoin("SHLVL=", shlvl, 0);
 	free(shlvl);
-	return (my_env);
 }
 
 char	**ft_get_env(char **env)
@@ -44,7 +43,7 @@ char	**ft_get_env(char **env)
 		}
 		i++;
 	}
-	my_env = ft_shlvl(my_env);
+	ft_shlvl(&my_env);
 	if (!my_env)
 		return (NULL);
 	i = 0;

@@ -115,6 +115,11 @@ int expand_variables(char **dest, char *str, char **env)
 	int i;
 
 	i = 0;
+	if (ft_strncmp(str, "$", 1) == 0 && ft_strlen(str) == 1)
+	{
+		(*dest) = ft_strdup(str);
+		return (i);
+	}
 	while ((start = ft_strchr(start, '$')) != NULL)
 	{
 		end = start;
@@ -144,7 +149,7 @@ int expand_variables(char **dest, char *str, char **env)
 	return (i);
 }
 
-void handle_word(t_commands **cmds, t_token **token, char **env, int *i, int *k)
+void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
 {
 	char *temp2;
 	char *temp3;
@@ -154,20 +159,19 @@ void handle_word(t_commands **cmds, t_token **token, char **env, int *i, int *k)
 	temp3 = NULL;
 	j = 0;
 	if ((*token)->type != T_S_QUOTED_WORD)
-		j = expand_variables(&temp2, ft_strdup((*token)->value), env);
+		j = expand_variables(&temp2, (*token)->value, env);
 	else
 		temp2 = ft_strdup((*token)->value);
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
 		(*token) = (*token)->next;
 		if ((*token)->type != T_S_QUOTED_WORD)
-			j = expand_variables(&temp3, ft_strdup((*token)->value), env);
+			j = expand_variables(&temp3, (*token)->value, env);
 		else
 			temp3 = ft_strdup((*token)->value);
 		temp2 = ft_strjoin(temp2, temp3, 0);
 		if (j)
 		{
-			printf("j = %d\n", j);
 			free(temp3);
 			break;
 		}
@@ -175,11 +179,6 @@ void handle_word(t_commands **cmds, t_token **token, char **env, int *i, int *k)
 	}
 	if (*i == 0)
 		(*cmds)->name = ft_strdup(temp2);
-	if (*i > 0)
-	{
-		if (temp2 && temp2[0] != '-')
-			(*cmds)->file[(*k)++] = ft_strdup(temp2);
-	}
 	(*cmds)->args[(*i)++] = ft_strdup(temp2);
 	free(temp2);
 }
@@ -200,21 +199,19 @@ void handle_redirection(t_commands **cmds, t_token *token)
 		type = ft_strdup("-");
 	temp1 = ft_filenew(token->value, type);
 	ft_fileadd_back(&(*cmds)->redirections, temp1);
+	free(type);
 }
 
 void fill_cmd(t_commands **cmds, t_token *token, char **env)
 {
 	int i = 0;
-	int k = 0;
 	while (token)
 	{
 		if (!(*cmds)->args)
 			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD, 0) + count_type_until_pipe(token, T_D_QUOTED_WORD, 0) + count_type_until_pipe(token, T_S_QUOTED_WORD, 0) + 1, sizeof(char *));
-		if (!(*cmds)->file)
-			(*cmds)->file = ft_calloc(count_type_until_pipe(token, T_WORD, 1) + count_type_until_pipe(token, T_D_QUOTED_WORD, 1) + count_type_until_pipe(token, T_S_QUOTED_WORD, 1) + 1, sizeof(char *));
 		if (ft_isword(token))
 		{
-			handle_word(cmds, &token, env, &i, &k);
+			handle_word(cmds, &token, env, &i);
 		}
 		else if (token->type == T_REDIR_OUT || token->type == T_REDIR_IN || token->type == T_APPEND_OUT || token->type == T_HEREDOC)
 		{
