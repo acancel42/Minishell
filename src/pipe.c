@@ -32,7 +32,7 @@ int	last_child(t_commands *cmds, char **my_env, int temp)
 	return (0);
 }
 
-int	midlle_child(t_commands *cmds, char **my_env, int temp)
+int	middle_child(t_commands *cmds, char **my_env, int temp)
 {
 	close(cmds->fd_p[0]);
 	if (dup2(temp, STDIN_FILENO) == -1)
@@ -49,17 +49,17 @@ int	midlle_child(t_commands *cmds, char **my_env, int temp)
 	}
 	return (0);
 }
-void witch_child(t_commands *cmds, char **my_env, t_data data, int temp)
+void witch_child(t_commands *cmds, char **my_env, t_data *data, int temp)
 {
-	if (cmds.index == 0)
+	if (cmds->index == 0)
 		first_child(cmds, my_env);
-	else if (cmds.index == data.index_max)
+	else if (cmds->index == data->index_max)
 		last_child(cmds, my_env, temp);
 	else
 		middle_child(cmds, my_env, temp);
 }
 
-int	ft_pipe(t_commands *cmds, char **my_env, t_token *token)
+int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 {
 	int	temp;
 
@@ -69,13 +69,13 @@ int	ft_pipe(t_commands *cmds, char **my_env, t_token *token)
 		if (pipe(cmds->fd_p) == -1)
 		{
 			perror("pipe");
-			exit_minishell(&token, &cmds, NULL, &my_env);
+			exit_minishell(&token, &cmds, NULL, &data->my_env);
 		}
 		cmds->pid = fork();
 		if (cmds->pid == -1)
 			perror("fork");
 		if (cmds->pid == 0)
-			witch_child(cmds, my_env, data, &temp);
+			witch_child(cmds, data->my_env, data, temp);
 		if (temp != -1)
 			close(temp);
 		temp = cmds->fd_p[0];
