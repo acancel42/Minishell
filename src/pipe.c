@@ -49,8 +49,10 @@ int	middle_child(t_commands *cmds, char **my_env, int *temp)
 	}
 	return (0);
 }
+
 void witch_child(t_commands *cmds, char **my_env, t_data *data, int *temp)
 {
+	printf("%d %d\n", cmds->index, data->index_max);
 	if (cmds->index == 0)
 		first_child(cmds, my_env);
 	else if (cmds->index == data->index_max)
@@ -64,7 +66,7 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 	int	temp;
 
 	temp = -1;
-	while (cmds->next != NULL)
+	while (cmds != NULL)
 	{
 		if (pipe(cmds->fd_p) == -1)
 		{
@@ -76,10 +78,8 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 			perror("fork");
 		if (cmds->pid == 0)
 			witch_child(cmds, data->my_env, data, &temp);
-		if (temp != -1)
-			close(temp);
 		temp = cmds->fd_p[0];
-		close(cmds->fd_p[0]);
+		// close(cmds->fd_p[0]); need to close temp !
 		close(cmds->fd_p[1]);
 		cmds = cmds->next;
 	}
