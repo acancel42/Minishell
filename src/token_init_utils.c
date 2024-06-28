@@ -1,7 +1,8 @@
 # include "minishell.h"
 
-int handle_output(char *src, t_token **token, int i)
+int handle_output(char *src, t_token **token, int i, t_data *data)
 {
+	(void)(data);
 	int j = 0;
 	char c;
 	t_token *temp;
@@ -24,8 +25,9 @@ int handle_output(char *src, t_token **token, int i)
 	return (i);
 }
 
-int handle_input(char *src, t_token **token, int i)
+int handle_input(char *src, t_token **token, int i, t_data *data)
 {
+	(void)(data);
 	int j = 0;
 	char c;
 	t_token *temp;
@@ -48,8 +50,9 @@ int handle_input(char *src, t_token **token, int i)
 	return (i);
 }
 
-int handle_pipe(t_token **token, int i)
+int handle_pipe(t_token **token, int i, t_data *data)
 {
+	(void)(data);
 	t_token *temp;
 	temp = ft_toknew('|', T_PIPE);
 	ft_tokadd_back(token, temp);
@@ -57,8 +60,9 @@ int handle_pipe(t_token **token, int i)
 	return (i);
 }
 
-int handle_else(char *src, t_token **token, int i)
+int handle_else(char *src, t_token **token, int i, t_data *data)
 {
+	(void)(data);
 	char c;
 	t_token *temp;
 	temp = ft_toknew(src[i++], T_WORD);

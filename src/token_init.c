@@ -1,7 +1,8 @@
 # include "minishell.h"
 
-int handle_double_quote(char *src, t_token **token, int i)
+int handle_double_quote(char *src, t_token **token, int i, t_data *data)
 {
+	(void)(data);
 	char c;
 	t_token *temp;
 	if (src[i] == '"' && src[i + 1] == '"')
@@ -34,8 +35,9 @@ int handle_double_quote(char *src, t_token **token, int i)
 	return (i);
 }
 
-int handle_single_quote(char *src, t_token **token, int i)
+int handle_single_quote(char *src, t_token **token, int i, t_data *data)
 {
+	(void)(data);
 	char c;
 	t_token *temp;
 	if (src[i] == '\'' && src[i + 1] == '\'')
@@ -66,7 +68,7 @@ int handle_single_quote(char *src, t_token **token, int i)
 	return (i);
 }
 
-int	token_init(char *src, t_token **token)
+int	token_init(char *src, t_token **token, t_data *data)
 {
 	int		i;
 
@@ -76,16 +78,16 @@ int	token_init(char *src, t_token **token)
 	if (!src[i])
 		return (i);
 	if (src[i] == '"')
-		i = handle_double_quote(src, token, i);
+		i = handle_double_quote(src, token, i, data);
 	else if (src[i] == '\'')
-		i = handle_single_quote(src, token, i);
+		i = handle_single_quote(src, token, i, data);
 	else if (src[i] == '>')
-		i = handle_output(src, token, i);
+		i = handle_output(src, token, i, data);
 	else if (src[i] == '<')
-		i = handle_input(src, token, i);
+		i = handle_input(src, token, i, data);
 	else if (src[i] == '|')
-		i = handle_pipe(token, i);
+		i = handle_pipe(token, i, data);
 	else
-		i = handle_else(src, token, i);
+		i = handle_else(src, token, i, data);
 	return (i);
 }

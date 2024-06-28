@@ -53,7 +53,7 @@ int main(int argc, char **argv, char **env)
 		data->user = get_color(data->user, BLUE);
 		data->line = readline(data->user);
 		if (!data->line)
-			exit_minishell(&token, &cmds, &data->user, &data->my_env);
+			exit_minishell(&token, &cmds, data);
 		if (data->line)
 			add_history(data->line);
 		if (ft_strncmp(data->line, "", 1) == 0)
@@ -61,9 +61,9 @@ int main(int argc, char **argv, char **env)
 			free(data->line);
 			continue ;
 		}
-		lexer_init(&token, data->line);
+		lexer_init(&token, data);
 		init_cmd(&cmds, token, data);
-		fill_cmd(&cmds, token, data->my_env);
+		fill_cmd(&cmds, token, data);
 		data->cmds = cmds;
 		data->token = token;
 		//print_cmds(cmds);

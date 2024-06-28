@@ -8,13 +8,13 @@ int	ft_isword(t_token *token)
 }
 
 
-void	lexer_init(t_token **token, char *src)
+void	lexer_init(t_token **token, t_data *data)
 {
 	int	i;
 
 	i = 0;
-	while (src[i])
-		i += token_init(src + i, token);
+	while (data->line[i])
+		i += token_init(data->line + i, token, data);
 }
 
 void	init_cmd(t_commands **cmds, t_token *token, t_data *data)
@@ -109,7 +109,7 @@ char *find_env_var(char *name, char **env)
 	return (i);
 }*/
 
-int expand_variables(char **dest, char *str, char **env)
+int expand_variables(char **dest, char *str, t_data *data)
 {
 	char *start = str;
 	char *end;
@@ -130,8 +130,7 @@ int expand_variables(char **dest, char *str, char **env)
 		while (ft_isalnum(*++end) || *end == '_')
 			;
 		name = ft_strndup(start + 1, end - start - 1);
-		value = find_env_var(name, env);
-		free(name);
+		value = find_env_var(name, data->my_env);
 		if (value)
 		{
 			i++;
@@ -148,12 +147,13 @@ int expand_variables(char **dest, char *str, char **env)
 			(*dest) = NULL;
 			return -1;
 		}
+		free(name);
 	}
 	(*dest) = ft_strdup(str);
 	return (i);
 }
 
-void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
+void handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 {
 	char *temp2;
 	char *temp3;
@@ -163,14 +163,14 @@ void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
 	temp3 = NULL;
 	j = 0;
 	if ((*token)->type != T_S_QUOTED_WORD)
-		j = expand_variables(&temp2, (*token)->value, env);
+		j = expand_variables(&temp2, (*token)->value, data);
 	else
 		temp2 = ft_strdup((*token)->value);
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
 		(*token) = (*token)->next;
 		if ((*token)->type != T_S_QUOTED_WORD)
-			j = expand_variables(&temp3, (*token)->value, env);
+			j = expand_variables(&temp3, (*token)->value, data);
 		else
 			temp3 = ft_strdup((*token)->value);
 		temp2 = ft_strjoin(temp2, temp3, 0);
@@ -187,7 +187,7 @@ void handle_word(t_commands **cmds, t_token **token, char **env, int *i)
 	free(temp2);
 }
 
-void handle_redirection(t_commands **cmds, t_token *token)
+void handle_redirection(t_commands **cmds, t_token *token, t_data *data)
 {
 	t_file *temp1;
 	char *type;
@@ -201,25 +201,29 @@ void handle_redirection(t_commands **cmds, t_token *token)
 		type = ft_strdup("+");
 	else if (token->type == T_HEREDOC)
 		type = ft_strdup("-");
+	if (!type)
+		exit_minishell(&token, cmds, data);
 	temp1 = ft_filenew(token->value, type);
 	ft_fileadd_back(&(*cmds)->redirections, temp1);
 	free(type);
 }
 
-void fill_cmd(t_commands **cmds, t_token *token, char **env)
+void fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 {
 	int i = 0;
 	while (token)
 	{
 		if (!(*cmds)->args)
 			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD, 0) + count_type_until_pipe(token, T_D_QUOTED_WORD, 0) + count_type_until_pipe(token, T_S_QUOTED_WORD, 0) + 1, sizeof(char *));
+		if (!(*cmds)->args)
+			exit_minishell(&token, cmds, data);
 		if (ft_isword(token))
 		{
-			handle_word(cmds, &token, env, &i);
+			handle_word(cmds, &token, data, &i);
 		}
 		else if (token->type == T_REDIR_OUT || token->type == T_REDIR_IN || token->type == T_APPEND_OUT || token->type == T_HEREDOC)
 		{
-			handle_redirection(cmds, token);
+			handle_redirection(cmds, token, data);
 		}
 		else if (token->type == T_PIPE)
 		{
@@ -230,15 +234,23 @@ void fill_cmd(t_commands **cmds, t_token *token, char **env)
 	}
 }
 
-void exit_minishell(t_token **token, t_commands **cmds, char **user, char ***env)
+void exit_minishell(t_token **token, t_commands **cmds, t_data *data)
 {
+
 	ft_cmdsclear(cmds);
 	ft_tokenclear(token);
-	if (env)
-		ft_free_tab(*env);
-	if (user)
-		free(*user);
+	if (data)
+	{
+		if (data->line)
+			free(data->line);
+		if (data->my_env)
+			ft_free_tab(data->my_env);
+		if (data->user)
+			free(data->user);
+		if (data->home)
+			free(data->home);
+		free(data);
+	}
 	printf(RED"%s\n"RESET, "exit");
 	exit(EXIT_SUCCESS);
 }
-

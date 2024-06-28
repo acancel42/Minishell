@@ -66,12 +66,14 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 	int	temp;
 
 	temp = -1;
+	(void)token;
 	while (cmds != NULL)
 	{
 		if (pipe(cmds->fd_p) == -1)
 		{
 			perror("pipe");
-			exit_minishell(&token, &cmds, NULL, &data->my_env);
+			exit(EXIT_FAILURE);
+			//exit_minishell(&token, &cmds, NULL, &data->my_env);
 		}
 		cmds->pid = fork();
 		if (cmds->pid == -1)

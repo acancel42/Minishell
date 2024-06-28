@@ -18,7 +18,7 @@ void	build_path(t_token *token, t_commands *cmds, char *s1, \
 	if (cmds->path == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		exit_minishell(&token, &cmds, NULL, NULL);
+		exit_minishell(&token, &cmds, NULL);
 	}
 	ft_memcpy(cmds->path, s1, len_s1);
 	ft_memcpy(cmds->path + len_s1, "/", 1);
@@ -49,7 +49,7 @@ int	cmd_path(t_token *token, t_commands *cmds, char **env)
 	if (all_paths == NULL)
 	{
 		ft_putstr_fd("malloc failed\n", 2);
-		exit_minishell(&token, &cmds, NULL, &env);
+		exit_minishell(&token, &cmds, NULL);
 	}
 	i = 0;
 	build_path(token, cmds, all_paths[i], cmds->name);
