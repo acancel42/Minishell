@@ -14,6 +14,16 @@ char	*get_color(char *user, char *color)
 	return (prompt);
 }
 
+void	free_data(t_data *data)
+{
+	ft_cmdsclear(&data->cmds);
+	ft_tokenclear(&data->token);
+	free(data->line);
+	free(data->user);
+	data->index_max = 0;
+	data->pflag = 0;
+}
+
 int main(int argc, char **argv, char **env)
 {
 	t_token				*token;
@@ -21,6 +31,11 @@ int main(int argc, char **argv, char **env)
 	t_data				*data;
 	int					j;
 
+	if (!env[0])
+	{
+		printf("no env\n");
+		return (-1);
+	}
 	data = ft_calloc(1, sizeof(t_data));
 	data->home = get_home(env);
 	data->my_env = ft_get_env(env);
@@ -58,44 +73,34 @@ int main(int argc, char **argv, char **env)
 			{
 				ft_cd(data->home, data->my_env);
 				ft_echo(cmds->args);
-				ft_cmdsclear(&cmds);
-				ft_tokenclear(&token);
-				free(data->line);
+				free_data(data);
 				continue ;
 			}
 			else
 			{
 				ft_cd(ft_substr(data->line, 3, ft_strlen(data->line) - 3), data->my_env);
 				ft_echo(cmds->args);
-				ft_cmdsclear(&cmds);
-				ft_tokenclear(&token);
-				free(data->line);
+				free_data(data);
 				continue ;
 			}
 		}
 		if (ft_strncmp(cmds->name, "echo", 5) == 0)
 		{
 			ft_echo(cmds->args);
-			ft_cmdsclear(&cmds);
-			ft_tokenclear(&token);
-			free(data->line);
+			free_data(data);
 			continue;
 		}
 		if (ft_strncmp(cmds->name, "export", 7) == 0)
 		{
 			ft_export(cmds->args, &data->my_env);
-			ft_cmdsclear(&cmds);
-			ft_tokenclear(&token);
-			free(data->line);
+			free_data(data);
 			continue;
 		}
 		j = -1;
 		data->pflag = false;
 		if (ft_pathfinder(token, cmds, data->my_env) == 0)
 		{
-			ft_cmdsclear(&cmds);
-			ft_tokenclear(&token);
-			free(data->line);
+			free_data(data);
 			continue;
 		}
 		while (data->line[++j])
@@ -107,9 +112,7 @@ int main(int argc, char **argv, char **env)
 			ft_pipe(cmds, data, token);
 		else
 			data->last_error_status = ft_exec_v1(cmds, data->my_env);
-		ft_cmdsclear(&data->cmds);
-		ft_tokenclear(&data->token);
-		free(data->line);
+		free_data(data);
 	}
 	free(data->home);
 	return (0);

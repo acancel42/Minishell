@@ -20,12 +20,14 @@ void	lexer_init(t_token **token, char *src)
 void	init_cmd(t_commands **cmds, t_token *token, t_data *data)
 {
 	t_commands	*temp;
+	int			flag;
 
+	flag = 0;
 	while (token)
 	{
 		if (token->type == T_PIPE)
 			token = token->next;
-		temp = ft_cmdnew(data->user);
+		temp = ft_cmdnew(data->user, flag++);
 		ft_cmdadd_back(cmds, temp);
 		data->index_max = temp->index;
 		while (token && token->type != T_PIPE)

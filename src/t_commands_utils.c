@@ -1,11 +1,11 @@
 #include "minishell.h"
 
-t_commands *ft_cmdnew(char *user)
+t_commands *ft_cmdnew(char *user, int flag)
 {
 	t_commands *new = ft_calloc(1, sizeof(t_commands));
 	static int	i;
 
-	if (!i)
+	if (!flag)
 		i = 0;
 	new->next = NULL;
 	new->path = NULL;
