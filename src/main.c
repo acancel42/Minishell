@@ -18,60 +18,61 @@ int main(int argc, char **argv, char **env)
 {
 	t_token				*token;
 	t_commands			*cmds;
-	char				*user;
-	char				*line;
-	char				**my_env;
+	t_data				*data;
 	int					j;
-	char				*home;
-	int 				pflag;
-	int					error;
 
-	home = get_home(env);
-	my_env = ft_get_env(env);
-	if (!my_env)
+	data = ft_calloc(1, sizeof(t_data));
+	data->home = get_home(env);
+	data->my_env = ft_get_env(env);
+	if (!data->my_env)
 		printf("no env\n");
 	(void)argc;
 	(void)argv;
+	data->my_env = ft_get_env(env);
+	if (!data->my_env)
+		printf("no env\n");
 	while (1)
 	{
 		token = NULL;
 		cmds = NULL;
-		user = get_user(my_env);
-		if (user == NULL)
+		data->user = get_user(data->my_env);
+		if (data->user == NULL)
 			return (-1);
-		user = get_color(user, BLUE);
-		line = readline(user);
-		if (!line)
-			exit_minishell(&token, &cmds, &user, &my_env);
-		if (*line)
-			add_history(line);
-		if (ft_strncmp(line, "", 1) == 0)
+		data->user = get_color(data->user, BLUE);
+		data->line = readline(data->user);
+		if (!data->line)
+			exit_minishell(&token, &cmds, &data->user, &data->my_env);
+		if (data->line)
+			add_history(data->line);
+		if (ft_strncmp(data->line, "", 1) == 0)
 		{
-			free(line);
+			free(data->line);
 			continue ;
 		}
-		lexer_init(&token, line);
-		init_cmd(&cmds, token, user);
-		fill_cmd(&cmds, token, my_env);
+		lexer_init(&token, data->line);
+		init_cmd(&cmds, token, data);
+		fill_cmd(&cmds, token, data->my_env);
+		data->cmds = cmds;
+		data->token = token;
 		//print_cmds(cmds);
 		if (ft_strncmp(cmds->name, "cd", 3) == 0)
 		{
 			if (cmds->args[1] == NULL || ft_strncmp(cmds->args[1], "~", 1) == 0)
 			{
-				ft_cd(home, my_env);
+				ft_cd(data->home, data->my_env);
 				ft_echo(cmds->args);
 				ft_cmdsclear(&cmds);
 				ft_tokenclear(&token);
-				free(line);
+				free(data->line);
 				continue ;
 			}
 			else
 			{
-				ft_cd(ft_substr(line, 3, ft_strlen(line) - 3), my_env);
+				ft_cd(ft_substr(data->line, 3, ft_strlen(data->line) - 3), data->my_env);
 				ft_echo(cmds->args);
 				ft_cmdsclear(&cmds);
 				ft_tokenclear(&token);
-				free(line);
+				free(data->line);
 				continue ;
 			}
 		}
@@ -80,41 +81,39 @@ int main(int argc, char **argv, char **env)
 			ft_echo(cmds->args);
 			ft_cmdsclear(&cmds);
 			ft_tokenclear(&token);
-			free(line);
+			free(data->line);
 			continue;
 		}
 		if (ft_strncmp(cmds->name, "export", 7) == 0)
 		{
-			ft_export(cmds->args, &my_env);
+			ft_export(cmds->args, &data->my_env);
 			ft_cmdsclear(&cmds);
 			ft_tokenclear(&token);
-			free(line);
+			free(data->line);
 			continue;
 		}
 		j = -1;
-		pflag = false;
-		if (ft_pathfinder(token, cmds, my_env) == 0)
+		data->pflag = false;
+		if (ft_pathfinder(token, cmds, data->my_env) == 0)
 		{
 			ft_cmdsclear(&cmds);
 			ft_tokenclear(&token);
-			free(line);
+			free(data->line);
 			continue;
 		}
-		while (line[++j])
+		while (data->line[++j])
 		{
-			if (line[j] == '|')
-				pflag = 1;
+			if (data->line[j] == '|')
+				data->pflag = 1;
 		}
-		if (pflag != 0)
-			ft_pipe(cmds, my_env, token);
+		if (data->pflag != 0)
+			ft_pipe(cmds, data, token);
 		else
-			error = ft_exec_v1(cmds, my_env);
-		ft_cmdsclear(&cmds);
-		ft_tokenclear(&token);
-		free(line);
-		free(home);
-		exit_minishell(&token, &cmds, &user, &my_env);
+			data->last_error_status = ft_exec_v1(cmds, data->my_env);
+		ft_cmdsclear(&data->cmds);
+		ft_tokenclear(&data->token);
+		free(data->line);
 	}
-	free(home);
+	free(data->home);
 	return (0);
 }

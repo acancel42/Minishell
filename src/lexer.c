@@ -17,7 +17,7 @@ void	lexer_init(t_token **token, char *src)
 		i += token_init(src + i, token);
 }
 
-void	init_cmd(t_commands **cmds, t_token *token, char *user)
+void	init_cmd(t_commands **cmds, t_token *token, t_data *data)
 {
 	t_commands	*temp;
 
@@ -25,11 +25,13 @@ void	init_cmd(t_commands **cmds, t_token *token, char *user)
 	{
 		if (token->type == T_PIPE)
 			token = token->next;
-		temp = ft_cmdnew(user);
+		temp = ft_cmdnew(data->user);
 		ft_cmdadd_back(cmds, temp);
+		data->index_max = temp->index;
 		while (token && token->type != T_PIPE)
 			token = token->next;
 	}
+
 }
 
 int	count_type_until_pipe(t_token *token, t_token_types type, int flag)

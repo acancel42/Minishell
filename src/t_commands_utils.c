@@ -3,11 +3,17 @@
 t_commands *ft_cmdnew(char *user)
 {
 	t_commands *new = ft_calloc(1, sizeof(t_commands));
+	static int	i;
+
+	if (!i)
+		i = 0;
 	new->next = NULL;
 	new->path = NULL;
 	new->valid_path = 0;
 	new->name = NULL;
+	new->index = i;
 	new->user = ft_strdup(user);
+	i++;
 	return (new);
 }
 
