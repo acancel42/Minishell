@@ -1,25 +1,33 @@
 #include "minishell.h"
 
-void	ft_shlvl(char ***my_env)
-{
-	int		i;
-	int 	lvl;
-	char	*shlvl;
+// void	ft_shlvl(char ***my_env)
+// {
+// 	int		i;
+// 	int 	lvl;
+// 	char	*shlvl;
+// 	char	*temp;
+// 	char	*temp2;
 
-	i = 0;
-	while (ft_strncmp((*my_env)[i], "SHLVL=", 6))
-		i++;
-	lvl = ft_atoi((*my_env)[i] + 6);
-	lvl++;
-	shlvl = ft_itoa(lvl);
-	if (!shlvl)
-		return ;
-	i = 0;
-	while (ft_strncmp((*my_env)[i], "SHLVL=", 6))
-		i++;
-	(*my_env)[i] = ft_strjoin("SHLVL=", shlvl, 0);
-	free(shlvl);
-}
+// 	i = 0;
+// 	while (ft_strncmp((*my_env)[i], "SHLVL=", 6))
+// 		i++;
+// 	lvl = ft_atoi((*my_env)[i] + 6);
+// 	print_my_env(*my_env);
+// 	lvl++;
+// 	shlvl = ft_itoa(lvl);
+// 	if (!shlvl)
+// 		return ;
+// 	i = 0;
+// 	while (ft_strncmp((*my_env)[i], "SHLVL=", 6))
+// 		i++;
+// 	temp2 = ft_strjoin("SHLVL=", shlvl, 0);
+// 	free(shlvl);
+// 	if (!temp2)
+// 		return (ft_free_tab(*my_env));
+// 	temp = (*my_env)[i];
+// 	free(temp);
+// 	(*my_env)[i] = temp;
+// }
 
 char	**ft_get_env(char **env)
 {
@@ -43,9 +51,9 @@ char	**ft_get_env(char **env)
 		}
 		i++;
 	}
-	ft_shlvl(&my_env);
-	if (!my_env)
-		return (NULL);
+	// ft_shlvl(&my_env);
+	// if (!my_env)
+	// 	return (NULL);
 	i = 0;
 	return (my_env);
 }

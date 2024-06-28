@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:51:48 by acancel           #+#    #+#             */
-/*   Updated: 2024/06/04 18:39:48 by talibert         ###   ########.fr       */
+/*   Updated: 2024/06/28 18:21:42 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ char	*ft_strjoin(char *s1, char *s2, int flag)
 	return (dest);
 }
 //redirection not malloc'd, so free problem
-
 
 char	*ft_charjoin(char *s1, char const s2)
 {
