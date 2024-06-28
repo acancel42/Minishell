@@ -9,26 +9,26 @@ int	get_pwd(char **pwd)
 	return (0);
 }
 
-int	ft_cd(char *path, char **my_env)
+int	ft_cd(char *path, t_data *data)
 {
-	int	i;
+	int		i;
 	char	*oldpwd;
 	char	*pwd;
 
 	i = 0;
-	while (ft_strncmp(my_env[i], "OLDPWD=", 7))
+	while (ft_strncmp(data->my_env[i], "OLDPWD=", 7))
 		i++;
 	get_pwd(&oldpwd);
-	my_env[i] = ft_strjoin("OLDPWD=", oldpwd, 0);
-	if (!my_env)
+	data->my_env[i] = ft_strjoin("OLDPWD=", oldpwd, 0);
+	if (!data->my_env)
 		return (-1);
 	if (chdir(path) == -1)
 		return (-2);
 	i = 0;
-	while (ft_strncmp(my_env[i], "PWD=", 4))
+	while (ft_strncmp(data->my_env[i], "PWD=", 4))
 		i++;
 	get_pwd(&pwd);
-	my_env[i] = ft_strjoin("PWD=", pwd, 0);
+	data->my_env[i] = ft_strjoin("PWD=", pwd, 0);
 	return (0);
 }
 
@@ -63,24 +63,24 @@ int	is_flagn(char *str)
 	return (1);
 }
 
-int	ft_echo(char **args)
+int	ft_echo(t_data *data)
 {
 	int	i;
 	int	flag;
 
 	flag = 0;
 	i = 1;
-	while (args[i][0] == 0)
+	while (data->cmds->args[i][0] == 0)
 		i++;
-	while (args[i] && is_flagn(args[i]))
+	while (data->cmds->args[i] && is_flagn(data->cmds->args[i]))
 	{
 		i++;
 		flag++;
 	}
-	while (args[i])
+	while (data->cmds->args[i])
 	{
-		printf("%s", args[i]);
-		if (args[i + 1] && args[i + 1][0] != 0)
+		printf("%s", data->cmds->args[i]);
+		if (data->cmds->args[i + 1] && data->cmds->args[i + 1][0] != 0)
 			printf(" ");
 		i++;
 	}
