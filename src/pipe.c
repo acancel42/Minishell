@@ -89,3 +89,5 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 	return (0);
 }
 
+//test
+
