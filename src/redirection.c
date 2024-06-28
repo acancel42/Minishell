@@ -22,6 +22,8 @@ int	ft_redir_input(t_commands *cmds)
 
 int	ft_wich_redir(t_commands *cmds)
 {
+	char	*temp;
+
 	while (cmds->redirections)
 	{
 
@@ -29,11 +31,15 @@ int	ft_wich_redir(t_commands *cmds)
 		{
 			cmds->redirections->name = ft_strdup(cmds->redirections->name + 1);
 			ft_redir_output(cmds);
+			temp = ft_strdup(">");
+			cmds->redirections->name = ft_strjoin(temp, cmds->redirections->name, 1);
 		}
 		else if (!ft_strncmp(cmds->redirections->name, "<", 1))
 		{
 			cmds->redirections->name = ft_strdup(cmds->redirections->name + 1);
 			ft_redir_input(cmds);
+			temp = ft_strdup("<");
+			cmds->redirections->name = ft_strjoin(temp, cmds->redirections->name, 1);
 		}
 		cmds->redirections = cmds->redirections->next;
 	}

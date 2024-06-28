@@ -34,16 +34,14 @@ int main(int argc, char **argv, char **env)
 	(void)argv;
 	my_env = ft_get_env(env);
 	if (!my_env)
-			printf("no env\n");
-	my_env = tab_join(my_env, "IFS= \t\n");
+		printf("no env\n");
 	while (1)
 	{
 		token = NULL;
 		cmds = NULL;
-		// print_my_env(my_env);
 		user = get_user(my_env);
 		if (user == NULL)
-		return (-1);
+			return (-1);
 		user = get_color(user, BLUE);
 		line = readline(user);
 		if (!line)
@@ -96,7 +94,6 @@ int main(int argc, char **argv, char **env)
 			free(line);
 			continue;
 		}
-		//print_cmds(cmds);
 		j = -1;
 		pflag = false;
 		if (ft_pathfinder(token, cmds, my_env) == 0)
@@ -112,7 +109,7 @@ int main(int argc, char **argv, char **env)
 				pflag = 1;
 		}
 		if (pflag != 0)
-				ft_pipe(cmds, my_env, token);
+			ft_pipe(cmds, my_env, token);
 		else
 			error = ft_exec_v1(cmds, my_env);
 		ft_cmdsclear(&cmds);
