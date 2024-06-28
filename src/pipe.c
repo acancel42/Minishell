@@ -1,14 +1,14 @@
 #include "minishell.h"
 
-int	first_child(t_commands *cmds, char **my_env)
+int	first_child(t_data *data)
 {
-	close(cmds->fd_p[0]);
-	if (dup2(cmds->fd_p[1], STDOUT_FILENO) == -1)
+	close(data->cmds->fd_p[0]);
+	if (dup2(data->cmds->fd_p[1], STDOUT_FILENO) == -1)
 		perror("dup");
-	if (cmds->redirections)
-		ft_wich_redir(cmds);
-	close(cmds->fd_p[1]);
-	if (execve(cmds->path, cmds->args, my_env) == -1)
+	if (data->cmds->redirections)
+		ft_wich_redir(data->cmds);
+	close(data->cmds->fd_p[1]);
+	if (execve(data->cmds->path, data->cmds->args, data->my_env) == -1)
 	{
 		printf("execve failed pipe in\n");
 		return (-1);
@@ -16,15 +16,15 @@ int	first_child(t_commands *cmds, char **my_env)
 	return (0);
 }
 
-int	last_child(t_commands *cmds, char **my_env, int*temp)
+int	last_child(t_data *data, int *temp)
 {
-	close(cmds->fd_p[1]);
+	close(data->cmds->fd_p[1]);
 	if (dup2(*temp, STDIN_FILENO) == -1)
 		perror("dup");
-	if (cmds->redirections)
-		ft_wich_redir(cmds);
-	close(cmds->fd_p[0]);
-	if (execve(cmds->path, cmds->args, my_env) == -1)
+	if (data->cmds->redirections)
+		ft_wich_redir(data->cmds);
+	close(data->cmds->fd_p[0]);
+	if (execve(data->cmds->path, data->cmds->args, data->my_env) == -1)
 	{
 		printf("execve failed pipe out\n");
 		return (-1);
@@ -32,62 +32,61 @@ int	last_child(t_commands *cmds, char **my_env, int*temp)
 	return (0);
 }
 
-int	middle_child(t_commands *cmds, char **my_env, int *temp)
+int	middle_child(t_data *data, int *temp)
 {
-	close(cmds->fd_p[0]);
+	close(data->cmds->fd_p[0]);
 	if (dup2(*temp, STDIN_FILENO) == -1)
 		perror("dup");
-	if (dup2(cmds->fd_p[1], STDOUT_FILENO) == -1)
+	if (dup2(data->cmds->fd_p[1], STDOUT_FILENO) == -1)
 		perror("dup");
-	if (cmds->redirections)
-		ft_wich_redir(cmds);
-	close(cmds->fd_p[1]);
-	if (execve(cmds->path, cmds->args, my_env) == -1)
+	if (data->cmds->redirections)
+		ft_wich_redir(data->cmds);
+	close(data->cmds->fd_p[1]);
+	if (execve(data->cmds->path, data->cmds->args, data->my_env) == -1)
 	{
 		printf("execve failed pipe out\n");
 		return (-1);
 	}
 	return (0);
 }
-void witch_child(t_commands *cmds, char **my_env, t_data *data, int *temp)
+
+void	witch_child(t_data *data, int *temp)
 {
-	if (cmds->index == 0)
-		first_child(cmds, my_env);
-	else if (cmds->index == data->index_max)
-		last_child(cmds, my_env, temp);
+	if (data->cmds->index == 0)
+		first_child(data);
+	else if (data->cmds->index == data->index_max)
+		last_child(data, temp);
 	else
-		middle_child(cmds, my_env, temp);
+		middle_child(data, temp);
 }
 
-int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
+int	ft_pipe(t_data *data)
 {
 	int	temp;
 
 	temp = -1;
-	while (cmds->next != NULL)
+	while (data->cmds->next != NULL)
 	{
-		if (pipe(cmds->fd_p) == -1)
+		if (pipe(data->cmds->fd_p) == -1)
 		{
 			perror("pipe");
-			exit_minishell(&token, &cmds, NULL, &data->my_env);
+			exit_minishell(&data->token, &data->cmds, data, NULL); //review that exit !!!!
 		}
-		cmds->pid = fork();
-		if (cmds->pid == -1)
+		data->cmds->pid = fork();
+		if (data->cmds->pid == -1)
 			perror("fork");
-		if (cmds->pid == 0)
-			witch_child(cmds, data->my_env, data, &temp);
+		if (data->cmds->pid == 0)
+			witch_child(data, &temp);
 		if (temp != -1)
 			close(temp);
-		temp = cmds->fd_p[0];
-		close(cmds->fd_p[0]);
-		close(cmds->fd_p[1]);
-		cmds = cmds->next;
+		temp = data->cmds->fd_p[0];
+		close(data->cmds->fd_p[0]);
+		close(data->cmds->fd_p[1]);
+		data->cmds = data->cmds->next;
 	}
 	while (wait(NULL) > 0)
 		;
 	return (0);
 }
 
-//test
-//gjfdxjgdjgj
 

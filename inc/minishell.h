@@ -58,8 +58,8 @@ typedef struct s_data
 }				t_data;
 
 char		**ft_get_env(char **env);
-char		*get_user(char **env);
-int			ft_exec_v1(t_commands *cmds, char **my_env);
+char		*get_user(t_data *data);
+int			ft_exec_v1(t_data *data);
 int			get_pwd(char **pwd);
 t_commands	*ft_cmdnew(char *user, int flag);
 t_file		*ft_filenew(char *content, char *type);
@@ -69,13 +69,13 @@ int			handle_output(char *src, t_token **token, int i);
 int			handle_input(char *src, t_token **token, int i);
 int			handle_pipe(t_token **token, int i);
 int			handle_else(char *src, t_token **token, int i);
-int			cmd_path(t_token *token, t_commands *cmds, char **env);
+int			cmd_path(t_data *data);
 void		ft_cmdadd_back(t_commands **lst, t_commands *new);
 void		ft_cmdsclear(t_commands **lst);
 void		ft_fileadd_back(t_file **lst, t_file *new);
 void		ft_fileclear(t_file **file);
 void		ft_free_tab(char **arr);
-int			ft_pathfinder(t_token *token, t_commands *cmds, char **env);
+int			ft_pathfinder(t_data *data);
 void		ft_tokadd_back(t_token **lst, t_token *new);
 void		ft_tokenclear(t_token **token);
 void		print_cmds(t_commands *cmds);
@@ -86,14 +86,14 @@ void 		exit_minishell(t_token **token, t_commands **cmds, char **user, char ***e
 void		fill_cmd(t_commands **cmds, t_token *token, char **env);
 void		init_cmd(t_commands **cmds, t_token *token, t_data *data);
 void		lexer_init(t_token **token, char *src);
-int			ft_cd(char *path,char **my_env);
+int			ft_cd(char *path, t_data *data);
 char		*get_color(char *user, char *color);
 char		*get_home(char **env);
-int			ft_echo(char **args);
-int			ft_wich_redir(t_commands *cmds);
+int			ft_echo(t_data *data);
+int			ft_wich_redir(t_data *data);
 char		**tab_join(char **tab, char *str);
 int			ft_export(char **args, char ***env);
 void 		print_my_env(char **my_env);
-int			ft_pipe(t_commands *cmds, t_data *data, t_token *token);
+int			ft_pipe(t_data *data);
 
 #endif

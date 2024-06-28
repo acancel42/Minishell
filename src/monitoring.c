@@ -26,11 +26,10 @@ char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 		dest[i++] = s2[j++];
 	dest[i++] = c2;
 	dest[i] = '\0';
-	//free(s1);
 	return (dest);
 }
 
-char	*get_user(char **my_env)
+char	*get_user(t_data *data)
 {
 	int		i;
 	char	*host;
@@ -39,15 +38,15 @@ char	*get_user(char **my_env)
 	char	*pwd;
 
 	i = 0;
-	while (ft_strncmp(my_env[i], "SESSION_MANAGER=", 16) != 0)
+	while (ft_strncmp(data->my_env[i], "SESSION_MANAGER=", 16) != 0)
 		i++;
-	host = ft_substr(my_env[i], 22, 7);
+	host = ft_substr(data->my_env[i], 22, 7);
 	if (host == NULL)
 		return (NULL);
 	i = 0;
-	while (ft_strncmp(my_env[i], "LOGNAME=", 8) != 0)
+	while (ft_strncmp(data->my_env[i], "LOGNAME=", 8) != 0)
 		i++;
-	username = ft_substr(my_env[i], 8, 8);
+	username = ft_substr(data->my_env[i], 8, 8);
 	if (username == NULL)
 	{
 		free(host);
@@ -57,15 +56,15 @@ char	*get_user(char **my_env)
 	if (!user)
 		return (NULL);
 	i = 0;
-	while (ft_strncmp(my_env[i], "PWD=", 4))
+	while (ft_strncmp(data->my_env[i], "PWD=", 4))
 		i++;
-	pwd = ft_substr(my_env[i], 4, ft_strlen(my_env[i]) - 4);
+	pwd = ft_substr(data->my_env[i], 4, ft_strlen(data->my_env[i]) - 4);
 	if (!pwd)
 	{
 		printf("getcwd: cannot access \
-parent directories: No such file or directory\n");
-		pwd = get_home(my_env);
-		ft_cd(pwd, my_env);
+	parent directories: No such file or directory\n");
+		pwd = get_home(data->my_env);
+		ft_cd(pwd, data);
 	}
 	pwd = ft_substr(pwd, ft_strlen(username) + 6, ft_strlen(username) + 6 - ft_strlen(pwd));
 	user = ft_strjoin_name(user, pwd, '~', '$');
@@ -77,4 +76,3 @@ parent directories: No such file or directory\n");
 		return (NULL);
 	return (user);
 }
-
