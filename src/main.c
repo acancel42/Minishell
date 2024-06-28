@@ -32,9 +32,6 @@ int main(int argc, char **argv, char **env)
 		printf("no env\n");
 	(void)argc;
 	(void)argv;
-	my_env = ft_get_env(env);
-	if (!my_env)
-		printf("no env\n");
 	while (1)
 	{
 		token = NULL;

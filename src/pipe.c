@@ -87,4 +87,3 @@ int	ft_pipe(t_commands *cmds, char **my_env, t_token *token)
 		;
 	return (0);
 }
-
