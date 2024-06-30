@@ -48,7 +48,7 @@ int	cmd_path(t_data *data)
 		free(data->cmds->path);
 		build_path(data, all_paths[i++], data->cmds->name);
 	}
-	free_tab(all_paths);
+	ft_free_tab(all_paths);
 	if (data->cmds->path == NULL)
 	{
 		printf("command '%s' not found\n", data->cmds->name);

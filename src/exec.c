@@ -3,23 +3,23 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-int	ft_exec_v1(t_data *data)
+int	ft_exec(t_commands *cmds, t_data *data)
 {
-	data->cmds->infile_fd = -1;
-	data->cmds->outfile_fd = -1;
-	data->cmds->pid = -1;
-	data->cmds->pid = fork();
-	if (data->cmds->pid == 0)
+	cmds->infile_fd = -1;
+	cmds->outfile_fd = -1;
+	cmds->pid = -1;
+	cmds->pid = fork();
+	if (cmds->pid == 0)
 	{
-		if (data->cmds->redirections)
-			ft_wich_redir(data);
-		if (execve(data->cmds->path, data->cmds->args, data->my_env) == -1)
+		if (cmds->redirections)
+			ft_wich_redir(cmds);
+		if (execve(cmds->path, cmds->args, data->my_env) == -1)
 		{
 			printf("execve failed\n");
 			return (-1);
 		}
 	}
-	if (data->cmds->pid == -1)
+	if (cmds->pid == -1)
 	{
 		printf("fork error\n");
 		return (-1);
