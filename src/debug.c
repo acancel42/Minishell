@@ -36,12 +36,12 @@ void	print_file(t_file *file)
 	while (file)
 	{
 
-		printf("redirection : %s\n", file->name);
+		dprintf(2, "redirection : %s\n", file->name);
 		file = file->next;
 	}
 }
 
-void	print_cmds(t_commands *cmds)
+void	print_cmds(t_commands *cmds) // dprintf for pipes debug !
 {
 	int	i;
 	int j;
@@ -50,14 +50,14 @@ void	print_cmds(t_commands *cmds)
 	{
 		i = -1;
 		j = -1;
-		printf("command : %s\n", cmds->name);
-		printf("args 0 : %s\n", cmds->args[0]);
+		dprintf(2, "command : %s\n", cmds->name);
+		dprintf(2, "args 0 : %s\n", cmds->args[0]);
 		while (cmds->args[++i])
-			printf("args : %s\n", cmds->args[i]);
-		while (cmds->file[++j])
-			printf("file : %s\n", cmds->file[j]);
+			dprintf(2, "args : %s\n", cmds->args[i]);
+		// while (cmds->file[++j])
+		// 	dprintf(2 ,"file : %s\n", cmds->file[j]);
 		print_file(cmds->redirections);
-		printf("%c", '\n');
+		dprintf(2 ,"%c", '\n');
 		cmds = cmds->next;
 	}
 }

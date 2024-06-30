@@ -24,6 +24,7 @@ int	last_child(t_commands *cmds, t_data *data, int *temp)
 	if (cmds->redirections)
 		ft_wich_redir(cmds);
 	close(cmds->fd_p[0]);
+	close(*temp);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
 		printf("execve failed pipe out\n");
@@ -42,6 +43,7 @@ int	middle_child(t_commands *cmds, t_data *data, int *temp)
 	if (cmds->redirections)
 		ft_wich_redir(cmds);
 	close(cmds->fd_p[1]);
+	close(*temp);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
 		printf("execve failed pipe out\n");
@@ -63,27 +65,27 @@ void	witch_child(t_commands *cmds, t_data *data, int *temp)
 int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 {
 	int	temp;
+	t_commands *head;
 
+	head = cmds;
 	temp = -1;
 	while (cmds != NULL)
 	{
 		if (pipe(cmds->fd_p) == -1)
-		{
-			perror("pipe");
-			exit_minishell(&token, &cmds, data); //review that exit !!!!
-		}
+			ft_exec_error(token, cmds, data, 0);
 		cmds->pid = fork();
 		if (cmds->pid == -1)
-			perror("fork");
+			ft_exec_error(token, cmds, data, 1);
 		if (cmds->pid == 0)
 			witch_child(cmds, data, &temp);
-		// if (temp != -1)
-		// 	close(temp);
+		if (temp != -1)
+			close(temp);
 		temp = cmds->fd_p[0];
-		//close(cmds->fd_p[0]);
 		close(cmds->fd_p[1]);
 		cmds = cmds->next;
 	}
+	cmds = head;
+	ft_close_fd_pipe(cmds);
 	while (wait(NULL) > 0)
 		;
 	return (0);
