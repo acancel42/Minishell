@@ -66,43 +66,13 @@ int main(int argc, char **argv, char **env)
 		fill_cmd(&cmds, token, data);
 		data->cmds = cmds;
 		data->token = token;
-		//print_cmds(cmds);
-		// if (ft_strncmp(cmds->name, "cd", 3) == 0)
-		// {
-		// 	if (cmds->args[1] == NULL || ft_strncmp(cmds->args[1], "~", 1) == 0)
-		// 	{
-		// 		ft_cd(data->home, data);
-		// 		ft_echo(data);
-		// 		free_data(data);
-		// 		continue ;
-		// 	}
-		// 	else
-		// 	{
-		// 		ft_cd(ft_substr(data->line, 3, ft_strlen(data->line) - 3), data);
-		// 		ft_echo(data);
-		// 		free_data(data);
-		// 		continue ;
-		// 	}
-		// }
-		// if (ft_strncmp(cmds->name, "echo", 5) == 0)
-		// {
-		// 	ft_echo(data);
-		// 	free_data(data);
-		// 	continue;
-		// }
-		// if (ft_strncmp(cmds->name, "export", 7) == 0)
-		// {
-		// 	ft_export(cmds->args, &data->my_env);
-		// 	free_data(data);
-		// 	continue;
-		// }
-		if (ft_is_built_in(data))
+		if (ft_is_built_in(data, cmds))
 			continue ;
 		j = -1;
 		data->pflag = false;
 		if (ft_pathfinder(data) == 0)
 		{
-			free_data(data);
+			// free_data(data);
 			continue;
 		}
 		while (data->line[++j])

@@ -64,7 +64,7 @@ char		*get_home(char **env);
 char		*get_user(t_data *data);
 int			cmd_path(t_data *data);
 int			ft_cd(char *path, t_data *data);
-int			ft_echo(t_data *data);
+int			ft_echo(t_commands *cmds);
 int			ft_exec(t_commands *cmds, t_data *data);
 int			ft_export(char **args, char ***env);
 int			ft_pathfinder(t_data *data);
@@ -98,7 +98,7 @@ void		print_type(t_token_types type);
 void 		exit_minishell(t_token **token, t_commands **cmds, t_data *data);
 void 		print_my_env(char **my_env);
 
-int			ft_is_built_in(t_data *data);
+int			ft_is_built_in(t_data *data, t_commands *cmds);
 void		free_data(t_data *data);
 
 #endif

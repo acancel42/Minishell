@@ -32,6 +32,8 @@ int	cmd_path(t_data *data)
 	int		i;
 
 	i = 0;
+	if (ft_is_built_in(data, data->cmds))
+		return (2);
 	while (ft_strncmp(data->my_env[i], "PATH=", 5) != 0)
 		i++;
 	data->cmds->path = data->my_env[i];
@@ -60,16 +62,23 @@ int	cmd_path(t_data *data)
 
 int	ft_pathfinder(t_data *data)
 {
+	int	btflag;
+
+	btflag = 0;
 	while (data->cmds)
 	{
 		data->cmds->valid_path = access(data->cmds->args[0], F_OK | X_OK);
 		if (data->cmds->valid_path == -1 && ft_strchr_b(data->cmds->name, '/'))
 		{
-			if (cmd_path(data) == 0)
+			btflag = cmd_path(data);
+			if ( btflag == 0)
 				return (0);
+			else if (btflag == 2)
+				return (1);
 		}
 		else
 			data->cmds->path = ft_strdup(data->cmds->args[0]);
+		printf("'%s'\n", data->cmds->path);
 		if (data->cmds->path)
 			data->cmds = data->cmds->next;
 	}

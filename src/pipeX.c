@@ -8,10 +8,13 @@ int	first_child(t_commands *cmds, t_data *data)
 	if (cmds->redirections)
 		ft_wich_redir(cmds);
 	close(cmds->fd_p[1]);
-	if (execve(cmds->path, cmds->args, data->my_env) == -1)
+	if (!ft_is_built_in(data, cmds))
 	{
-		printf("execve failed pipe in\n");
-		return (-1);
+		if (execve(cmds->path, cmds->args, data->my_env) == -1)
+		{
+			printf("execve failed pipe out\n");
+			return (-1);
+		}
 	}
 	return (0);
 }
@@ -25,10 +28,13 @@ int	last_child(t_commands *cmds, t_data *data, int *temp)
 		ft_wich_redir(cmds);
 	close(cmds->fd_p[0]);
 	close(*temp);
-	if (execve(cmds->path, cmds->args, data->my_env) == -1)
+	if (!ft_is_built_in(data, cmds))
 	{
-		printf("execve failed pipe out\n");
-		return (-1);
+		if (execve(cmds->path, cmds->args, data->my_env) == -1)
+		{
+			printf("execve failed pipe out\n");
+			return (-1);
+		}
 	}
 	return (0);
 }
@@ -44,10 +50,14 @@ int	middle_child(t_commands *cmds, t_data *data, int *temp)
 		ft_wich_redir(cmds);
 	close(cmds->fd_p[1]);
 	close(*temp);
-	if (execve(cmds->path, cmds->args, data->my_env) == -1)
+	dprintf(2, "%s\n", data->cmds->name);
+	if (!ft_is_built_in(data, cmds))
 	{
-		printf("execve failed pipe out\n");
-		return (-1);
+		if (execve(cmds->path, cmds->args, data->my_env) == -1)
+		{
+			printf("execve failed pipe out\n");
+			return (-1);
+		}
 	}
 	return (0);
 }

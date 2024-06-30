@@ -63,24 +63,26 @@ int	is_flagn(char *str)
 	return (1);
 }
 
-int	ft_echo(t_data *data)
+int	ft_echo(t_commands *cmds)
 {
 	int	i;
 	int	flag;
 
 	flag = 0;
 	i = 1;
-	while (data->cmds->args[i][0] == 0)
+	if (cmds->args[i] == NULL)
+		return (0);
+	while (cmds->args[i][0] == 0)
 		i++;
-	while (data->cmds->args[i] && is_flagn(data->cmds->args[i]))
+	while (cmds->args[i] && is_flagn(cmds->args[i]))
 	{
 		i++;
 		flag++;
 	}
-	while (data->cmds->args[i])
+	while (cmds->args[i])
 	{
-		printf("%s", data->cmds->args[i]);
-		if (data->cmds->args[i + 1] && data->cmds->args[i + 1][0] != 0)
+		printf("%s", cmds->args[i]);
+		if (cmds->args[i + 1] && cmds->args[i + 1][0] != 0)
 			printf(" ");
 		i++;
 	}
