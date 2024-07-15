@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 void	build_path(t_data *data, char *s1, \
@@ -78,7 +77,6 @@ int	ft_pathfinder(t_data *data)
 		}
 		else
 			data->cmds->path = ft_strdup(data->cmds->args[0]);
-		printf("'%s'\n", data->cmds->path);
 		if (data->cmds->path)
 			data->cmds = data->cmds->next;
 	}

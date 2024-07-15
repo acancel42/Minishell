@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 #include <unistd.h>
@@ -54,11 +53,16 @@ int main(int argc, char **argv, char **env)
 		data->line = readline(data->user);
 		if (!data->line)
 			exit_minishell(&token, &cmds, data);
-		if (data->line)
-			add_history(data->line);
 		if (ft_strncmp(data->line, "", 1) == 0)
 		{
-			free(data->line);
+			free_data(data);
+			continue ;
+		}
+		if (data->line)
+			add_history(data->line);
+		if (prelexer_check(data) == 2)
+		{
+			free_data(data);
 			continue ;
 		}
 		lexer_init(&token, data);

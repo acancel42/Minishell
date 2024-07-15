@@ -97,7 +97,8 @@ void		print_lst(t_token *token);
 void		print_type(t_token_types type);
 void 		exit_minishell(t_token **token, t_commands **cmds, t_data *data);
 void 		print_my_env(char **my_env);
-
+int			prelexer_check(t_data *data);
+int			postlexer_check(t_data *data);
 int			ft_is_built_in(t_data *data, t_commands *cmds);
 void		free_data(t_data *data);
 
