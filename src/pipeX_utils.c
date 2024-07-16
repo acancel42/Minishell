@@ -6,14 +6,16 @@ void	ft_exec_error(t_token *token, t_commands *cmds, t_data *data, int flag)
 		perror("pipe");
 	else if (flag == 1)
 		perror("fork");
+	else if (flag == 2)
+		perror("dup2");
 	exit_minishell(&token, &cmds, data); //review that exit !!!!
 }
 
-void	ft_close_fd_pipe(t_commands *cmds)
-{
-	while (cmds != NULL)
-	{
-		close(cmds->fd_p[0]);
-		cmds = cmds->next;
-	}
-}
+// void	ft_close_fd_pipe(t_commands *cmds)
+// {
+// 	while (cmds != NULL)
+// 	{
+// 		close(cmds->fd_p[0]);
+// 		cmds = cmds->next;
+// 	}
+// }

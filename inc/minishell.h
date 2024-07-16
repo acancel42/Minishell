@@ -40,7 +40,6 @@ typedef struct s_commands
 	char				**args;
 	char				**file;
 	char				*user;
-	int					fd_p[2];
 	struct s_commands	*next;
 }			              t_commands;
 
@@ -101,5 +100,9 @@ int			prelexer_check(t_data *data);
 int			postlexer_check(t_data *data);
 int			ft_is_built_in(t_data *data, t_commands *cmds);
 void		free_data(t_data *data);
+int			ft_pip(t_commands *cmds, t_data *data, t_token *token);
+int 		ft_last_cmd(t_commands *cmds, t_data *data, t_token *token);
+
+
 
 #endif

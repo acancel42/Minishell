@@ -84,10 +84,22 @@ int main(int argc, char **argv, char **env)
 			if (data->line[j] == '|')
 				data->pflag = 1;
 		}
-		if (data->pflag != 0)
-			ft_pipe(cmds, data, token);
-		else
-			data->last_error_status = ft_exec(cmds, data);
+		while (cmds)
+		{
+			if (data->pflag != 0)
+			{
+				if (cmds->index == data->index_max)
+					ft_last_cmd(cmds, data, token);
+				else
+					ft_pip(cmds, data, token);
+				cmds = cmds->next;
+			}
+			else
+			{
+				data->last_error_status = ft_exec(cmds, data);
+				break ;
+			}
+		}
 		free_data(data);
 	}
 	free(data->home);

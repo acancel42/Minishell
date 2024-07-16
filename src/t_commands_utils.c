@@ -12,6 +12,8 @@ t_commands *ft_cmdnew(char *user, int flag)
 	new->valid_path = 0;
 	new->name = NULL;
 	new->index = i;
+	new->infile_fd = 0;
+	new->outfile_fd = 1;
 	new->user = ft_strdup(user);
 	i++;
 	return (new);
