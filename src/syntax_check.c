@@ -119,16 +119,6 @@ static int	pipe_handle(char *line, int *i)
 			j++;
 			break;
 		}
-		if (line[*i] == '<')
-		{
-			l++;
-			(*i)++;
-		}
-		if (line[*i] == '>')
-		{
-			l++;
-			(*i)++;
-		}
 		if (line[*i] == '|')
 		{
 			l++;

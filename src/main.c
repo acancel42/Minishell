@@ -29,7 +29,9 @@ int main(int argc, char **argv, char **env)
 	t_commands			*cmds;
 	t_data				*data;
 	int					j;
+	t_commands			*head;
 
+	head = NULL;
 	if (!env[0])
 	{
 		printf("no env\n");
@@ -69,37 +71,20 @@ int main(int argc, char **argv, char **env)
 		init_cmd(&cmds, token, data);
 		fill_cmd(&cmds, token, data);
 		data->cmds = cmds;
+		head = cmds;
 		data->token = token;
 		if (ft_is_built_in(data, cmds))
 			continue ;
 		j = -1;
 		data->pflag = false;
 		if (ft_pathfinder(data) == 0)
-		{
-			// free_data(data);
 			continue;
-		}
 		while (data->line[++j])
 		{
 			if (data->line[j] == '|')
 				data->pflag = 1;
 		}
-		while (cmds)
-		{
-			if (data->pflag != 0)
-			{
-				if (cmds->index == data->index_max)
-					ft_last_cmd(cmds, data, token);
-				else
-					ft_pip(cmds, data, token);
-				cmds = cmds->next;
-			}
-			else
-			{
-				data->last_error_status = ft_exec(cmds, data);
-				break ;
-			}
-		}
+		exec_cmd(data, cmds);
 		free_data(data);
 	}
 	free(data->home);
