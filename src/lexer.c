@@ -70,86 +70,58 @@ char *find_env_var(char *name, char **env)
 	return NULL;
 }
 
-/*int expand_variables(char **dest, char *str, char **env)
-{
-	char *start = str;
-	char *end;
-	char *name;
-	char *value;
-	char *temp;
-	int i;
-
-	i = 0;
-	while ((start = ft_strchr(start, '$')) != NULL)
-	{
-		end = start;
-		while (ft_isalnum(*++end))
-			;
-		name = ft_strndup(start + 1, end - start - 1);
-		value = find_env_var(name, env);
-		free(name);
-		if (value)
-		{
-			i++;
-			temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
-			ft_strncpy(temp, str, start - str);
-			ft_strcpy(temp + (start - str), value);
-			ft_strcpy(temp + (start - str) + ft_strlen(value), end);
-			free(str);
-			str = temp;
-			start = str + (start - str) + ft_strlen(value);
-		}
-		else
-		{
-			(*dest) = NULL;
-			return -1;
-		}
-	}
-	(*dest) = ft_strdup(str);
-	return (i);
-}*/
-
 int expand_variables(char **dest, char *str, t_data *data)
 {
-	char *start = str;
-	char *end;
-	char *name;
-	char *value;
-	char *temp;
-	int i;
+	int		start;
+	int		end;
+	char	*name;
+	char	*value;
+	char	*temp;
+	int		i;
 
 	i = 0;
+	end = 0;
 	if (ft_strncmp(str, "$", 1) == 0 && ft_strlen(str) == 1)
 	{
 		(*dest) = ft_strdup(str);
 		return (i);
 	}
-	while ((start = ft_strchr(start, '$')) != NULL)
+	while (str && str[i])
 	{
-		end = start;
-		while (ft_isalnum(*++end) || *end == '_')
-			;
-		name = ft_strndup(start + 1, end - start - 1);
-		value = find_env_var(name, data->my_env);
-		if (value)
+		if (str[i] == '$')
 		{
+			start = i;
+			end = i + 1;
 			i++;
-			temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
-			ft_strncpy(temp, str, start - str);
-			ft_strcpy(temp + (start - str), value);
-			ft_strcpy(temp + (start - str) + ft_strlen(value), end);
-			free(str);
-			str = temp;
-			start = str + (start - str) + ft_strlen(value);
+			while (ft_isalnum(str[i++]) && str[i - 1] != '$')
+				end++;
+			name = ft_strndup(str + (start + 1), end - start - 1);
+			value = find_env_var(name, data->my_env);
+			if (value)
+			{
+				i++;
+				temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
+				ft_strncpy(temp, str, start);
+				ft_strcpy(temp + start, value);
+				ft_strcpy(temp + start + ft_strlen(value), str + end);
+				str = ft_strdup(temp);
+			}
+			else
+			{
+				i = start;
+				temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
+				ft_strncpy(temp, str, start);
+				ft_strcpy(temp + start, str + end);
+				str = ft_strdup(temp);
+			}
+			free(temp);
+			free(name);
 		}
 		else
-		{
-			(*dest) = NULL;
-			return -1;
-		}
-		free(name);
+			i++;
 	}
 	(*dest) = ft_strdup(str);
+	free(str);
 	return (i);
 }
 
