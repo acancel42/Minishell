@@ -2,45 +2,46 @@
 
 static int	oredir_handle(char *line, int *i)
 {
-	int count;
-	int j;
-	int l;
+	int op_count;
+	int is_word;
+	int multiple_op;
 
-	j = 0;
-	l = 0;
-	count = 0;
+	is_word = 0;
+	multiple_op = 0;
+	op_count = 0;
 	while (line[*i])
 	{
 		while (line[*i] == '>')
 		{
-			count++;
+			op_count++;
 			(*i)++;
 		}
 		while (ft_iswspace(line[*i]))
 			(*i)++;
 		if (ft_isalnum(line[*i]) || line[*i] == '_')
 		{
-			j++;
+			is_word++;
 			break;
 		}
 		if (line[*i] == '<')
 		{
-			l++;
+			multiple_op++;
 			(*i)++;
 		}
-		if (line[*i] == '>')
+		else if (line[*i] == '>')
 		{
-			l++;
+			multiple_op++;
 			(*i)++;
 		}
-		if (line[*i] == '|')
+		else if (line[*i] == '|')
 		{
-			l++;
+			multiple_op++;
 			(*i)++;
 		}
-		(*i)++;
+		else if (line[*i])
+			(*i)++;
 	}
-	if (count > 2 || l > 0 || j == 0)
+	if (op_count > 2 || multiple_op > 0 || is_word == 0)
 	{
 		printf("syntax error\n");
 		return (2);
@@ -50,45 +51,46 @@ static int	oredir_handle(char *line, int *i)
 
 static int	iredir_handle(char *line, int *i)
 {
-	int count;
-	int j;
-	int l;
+	int op_count;
+	int is_word;
+	int multiple_op;
 
-	j = 0;
-	l = 0;
-	count = 0;
+	is_word = 0;
+	multiple_op = 0;
+	op_count = 0;
 	while (line[*i])
 	{
 		while (line[*i] == '<')
 		{
-			count++;
+			op_count++;
 			(*i)++;
 		}
 		while (ft_iswspace(line[*i]))
 			(*i)++;
 		if (ft_isalnum(line[*i]) || line[*i] == '_')
 		{
-			j++;
+			is_word++;
 			break;
 		}
 		if (line[*i] == '<')
 		{
-			l++;
+			multiple_op++;
 			(*i)++;
 		}
-		if (line[*i] == '>')
+		else if (line[*i] == '>')
 		{
-			l++;
+			multiple_op++;
 			(*i)++;
 		}
-		if (line[*i] == '|')
+		else if (line[*i] == '|')
 		{
-			l++;
+			multiple_op++;
 			(*i)++;
 		}
-		(*i)++;
+		else if (line[*i])
+			(*i)++;
 	}
-	if (count > 2 || l > 0 || j == 0)
+	if (op_count > 2 || multiple_op > 0 || is_word == 0)
 	{
 		printf("syntax error\n");
 		return (2);
@@ -98,35 +100,36 @@ static int	iredir_handle(char *line, int *i)
 
 static int	pipe_handle(char *line, int *i)
 {
-	int count;
-	int j;
-	int l;
+	int op_count;
+	int is_word;
+	int multiple_op;
 
-	j = 0;
-	l = 0;
-	count = 0;
+	is_word = 0;
+	multiple_op = 0;
+	op_count = 0;
 	while (line[*i])
 	{
 		while (line[*i] == '|')
 		{
-			count++;
+			op_count++;
 			(*i)++;
 		}
 		while (ft_iswspace(line[*i]))
 			(*i)++;
 		if (ft_isalnum(line[*i]) || line[*i] == '_')
 		{
-			j++;
+			is_word++;
 			break;
 		}
-		if (line[*i] == '|')
+		else if (line[*i] == '|')
 		{
-			l++;
+			multiple_op++;
 			(*i)++;
 		}
-		(*i)++;
+		else if (line[*i])
+			(*i)++;
 	}
-	if (count > 1 || l > 0 || j == 0)
+	if (line[0] == '|' || op_count > 1 || multiple_op > 0 || is_word == 0)
 	{
 		printf("syntax error\n");
 		return (2);
@@ -138,20 +141,34 @@ int prelexer_check(t_data *data)
 {
 	int i;
 	int j;
+	int wspace;
 
-	i = -1;
+	wspace = 0;
+	i = 0;
 	j = 0;
-	while (data->line[++i])
+	while (data->line[i])
 	{
+		if (ft_iswspace(data->line[i]) == 0)
+			wspace = 1;
 		if (data->line[i] == '>')
+		{
 			if (oredir_handle(data->line, &i) == 2)
 				return (2);
-		if (data->line[i] == '<')
+		}
+		else if (data->line[i] == '<')
+		{
 			if (iredir_handle(data->line, &i) == 2)
 				return (2);
-		if (data->line[i] == '|')
+		}
+		else if (data->line[i] == '|')
+		{
 			if (pipe_handle(data->line, &i) == 2)
 				return (2);
+		}
+		else
+			i++;
 	}
+	if (wspace == 0)
+		return(2);
 	return (0);
 }

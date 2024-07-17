@@ -27,13 +27,11 @@ int	ft_is_built_in(t_data *data, t_commands *cmds)
 	if (ft_strncmp(cmds->name, "echo", 5) == 0)
 	{
 		ft_echo(cmds);
-		free_data(data);
 		return (1);
 	}
 	if (ft_strncmp(cmds->name, "export", 7) == 0)
 	{
 		ft_export(cmds->args, &data->my_env);
-		free_data(data);
 		return (1);
 	}
 	if (ft_strncmp(cmds->name, "exit", 5) == 0)

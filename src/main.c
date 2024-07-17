@@ -15,10 +15,14 @@ char	*get_color(char *user, char *color)
 
 void	free_data(t_data *data)
 {
-	ft_cmdsclear(&data->cmds);
-	ft_tokenclear(&data->token);
-	free(data->line);
-	free(data->user);
+	if (data->cmds)
+		ft_cmdsclear(&data->cmds);
+	if (data->token)
+		ft_tokenclear(&data->token);
+	if (data->line)
+		free(data->line);
+	if (data->user)
+		free(data->user);
 	data->index_max = 0;
 	data->pflag = 0;
 }
@@ -78,7 +82,10 @@ int main(int argc, char **argv, char **env)
 		j = -1;
 		data->pflag = false;
 		if (ft_pathfinder(data) == 0)
+		{
+			//free_data(data);
 			continue;
+		}
 		while (data->line[++j])
 		{
 			if (data->line[j] == '|')
