@@ -83,7 +83,7 @@ int main(int argc, char **argv, char **env)
 		data->pflag = false;
 		if (ft_pathfinder(data) == 0)
 		{
-			free_data(data);
+			//free_data(data);
 			continue;
 		}
 		while (data->line[++j])

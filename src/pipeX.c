@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipeX.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 23:13:00 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/17 04:03:04 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/17 04:09:56 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 		dprintf(2, "execve failed\n");
 		exit(EXIT_FAILURE);
 	}
-}	
+}
 
 int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 {
 	int		fd_pipe[2];
 	int 	status;
-	
+
 	if (pipe(fd_pipe) == -1)
 		return(ft_exec_error(token, cmds, data, 0), -1);
 	cmds->next->infile_fd = fd_pipe[0];
@@ -47,7 +47,7 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)
 		close(cmds->infile_fd);
-	return (0);	
+	return (0);
 }
 
 int	ft_last_cmd(t_commands *cmds, t_data *data, t_token *token)
@@ -69,7 +69,7 @@ int	ft_last_cmd(t_commands *cmds, t_data *data, t_token *token)
 		{
 			dprintf(2, "execve failed\n");
 			exit(EXIT_FAILURE);
-		}		
+		}
 	}
 	waitpid(data->pid, &status, 0);
 	if (cmds->outfile_fd != 1)
@@ -82,7 +82,7 @@ int	ft_last_cmd(t_commands *cmds, t_data *data, t_token *token)
 void	exec_cmd(t_data *data , t_commands *cmds)
 {
 	t_commands *temp;
-	
+
 	temp = cmds;
 	while (temp)
 		{
@@ -91,11 +91,11 @@ void	exec_cmd(t_data *data , t_commands *cmds)
 				if (temp->index >= data->index_max)
 					ft_last_cmd(temp, data, data->token);
 				else
-					ft_pip(temp, data, data->token);
+					ft_pipe(temp, data, data->token);
 			}
 			else
 			{
-				data->last_error_status = ft_exec(temp, data);	 
+				data->last_error_status = ft_exec(temp, data);
 			}
 			temp = temp->next;
 		}
