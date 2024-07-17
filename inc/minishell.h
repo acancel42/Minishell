@@ -40,7 +40,6 @@ typedef struct s_commands
 	char				**args;
 	char				**file;
 	char				*user;
-	int					fd_p[2];
 	struct s_commands	*next;
 }			              t_commands;
 
@@ -55,6 +54,7 @@ typedef struct s_data
 	int			pflag;
 	int			index_max;
 	int			last_error_status;
+	pid_t		pid;
 }				t_data;
 
 char		**ft_get_env(char **env);
@@ -68,7 +68,6 @@ int			ft_echo(t_commands *cmds);
 int			ft_exec(t_commands *cmds, t_data *data);
 int			ft_export(char **args, char ***env);
 int			ft_pathfinder(t_data *data);
-int			ft_pipe(t_commands *cmds, t_data *data, t_token *token);
 int			ft_wich_redir(t_commands *cmds);
 int			get_pwd(char **pwd);
 int			handle_else(char *src, t_token **token, int i, t_data *data);
@@ -80,7 +79,6 @@ t_commands	*ft_cmdnew(char *user, int flag);
 t_file		*ft_filenew(char *content, char *type);
 t_token		*ft_toknew(char content, t_token_types type);
 void		fill_cmd(t_commands **cmds, t_token *token, t_data *data);
-void		ft_close_fd_pipe(t_commands *cmds);
 void		ft_cmdadd_back(t_commands **lst, t_commands *new);
 void		ft_cmdsclear(t_commands **lst);
 void		ft_exec_error(t_token *token, t_commands *cmds, t_data *data, int flag);
@@ -98,8 +96,10 @@ void		print_type(t_token_types type);
 void 		exit_minishell(t_token **token, t_commands **cmds, t_data *data);
 void 		print_my_env(char **my_env);
 int			prelexer_check(t_data *data);
-int			postlexer_check(t_data *data);
 int			ft_is_built_in(t_data *data, t_commands *cmds);
 void		free_data(t_data *data);
+int			ft_pipe(t_commands *cmds, t_data *data, t_token *token);
+int 		ft_last_cmd(t_commands *cmds, t_data *data, t_token *token);
+void		exec_cmd(t_data *data , t_commands *cmds);
 
 #endif

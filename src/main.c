@@ -33,7 +33,9 @@ int main(int argc, char **argv, char **env)
 	t_commands			*cmds;
 	t_data				*data;
 	int					j;
+	t_commands			*head;
 
+	head = NULL;
 	if (!env[0])
 	{
 		printf("no env\n");
@@ -73,6 +75,7 @@ int main(int argc, char **argv, char **env)
 		init_cmd(&cmds, token, data);
 		fill_cmd(&cmds, token, data);
 		data->cmds = cmds;
+		head = cmds;
 		data->token = token;
 		if (ft_is_built_in(data, cmds))
 			continue ;
@@ -88,10 +91,7 @@ int main(int argc, char **argv, char **env)
 			if (data->line[j] == '|')
 				data->pflag = 1;
 		}
-		if (data->pflag != 0)
-			ft_pipe(cmds, data, token);
-		else
-			data->last_error_status = ft_exec(cmds, data);
+		exec_cmd(data, cmds);
 		free_data(data);
 	}
 	free(data->home);
