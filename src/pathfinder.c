@@ -24,6 +24,14 @@ void	build_path(t_data *data, char *s1, \
 	ft_memcpy(data->cmds->path + len_s1 + 1, s2, len_s2);
 	return ;
 }
+static void	try_acces(t_data *data, char **all_paths, int i)
+{
+	while (data->cmds->path != NULL && access(data->cmds->path, F_OK))
+	{
+		free(data->cmds->path);
+		build_path(data, all_paths[i++], data->cmds->name);
+	}
+}
 
 int	cmd_path(t_data *data)
 {
@@ -44,11 +52,7 @@ int	cmd_path(t_data *data)
 	}
 	i = 0;
 	build_path(data, all_paths[i], data->cmds->name);
-	while (data->cmds->path != NULL && access(data->cmds->path, F_OK))
-	{
-		free(data->cmds->path);
-		build_path(data, all_paths[i++], data->cmds->name);
-	}
+	try_acces(data, all_paths, i);
 	ft_free_tab(all_paths);
 	if (data->cmds->path == NULL)
 	{
@@ -57,7 +61,6 @@ int	cmd_path(t_data *data)
 	}
 	return (1);
 }
-
 
 int	ft_pathfinder(t_data *data)
 {
@@ -70,7 +73,7 @@ int	ft_pathfinder(t_data *data)
 		if (data->cmds->valid_path == -1 && ft_strchr_b(data->cmds->name, '/'))
 		{
 			btflag = cmd_path(data);
-			if ( btflag == 0)
+			if (btflag == 0)
 				return (0);
 			else if (btflag == 2)
 				return (1);

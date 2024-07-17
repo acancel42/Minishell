@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 23:13:00 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/17 04:03:04 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/17 04:10:31 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	exec_cmd(t_data *data , t_commands *cmds)
 				if (temp->index >= data->index_max)
 					ft_last_cmd(temp, data, data->token);
 				else
-					ft_pip(temp, data, data->token);
+					ft_pipe(temp, data, data->token);
 			}
 			else
 			{
