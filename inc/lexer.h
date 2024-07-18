@@ -1,7 +1,8 @@
-#ifndef	LEXER_H
-# define	LEXER_H
+#ifndef LEXER_H
+# define LEXER_H
 
-typedef enum	e_token_types{
+typedef enum e_token_types
+{
 	T_WORD,
 	T_PIPE,
 	T_REDIR_IN,
@@ -12,13 +13,12 @@ typedef enum	e_token_types{
 	T_S_QUOTED_WORD,
 }	t_token_types;
 
-typedef struct	s_token
+typedef struct s_token
 {
 	char			*value;
 	t_token_types	type;
 	int				is_separated;
 	struct s_token	*next;
 }				t_token;
-
 
 #endif
