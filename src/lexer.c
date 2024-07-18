@@ -55,19 +55,10 @@ int	expand_variables(char **dest, char *str, t_data *data)
 	return (i);
 }
 
-void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
+static void	handle_word_utils(t_token **token, t_data *data, char *temp2, int j)
 {
-	char	*temp2;
 	char	*temp3;
-	int		j;
 
-	temp2 = NULL;
-	temp3 = NULL;
-	j = 0;
-	if ((*token)->type != T_S_QUOTED_WORD)
-		j = expand_variables(&temp2, (*token)->value, data);
-	else
-		temp2 = ft_strdup((*token)->value);
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
 		(*token) = (*token)->next;
@@ -83,6 +74,22 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 		}
 		free(temp3);
 	}
+}
+
+void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
+{
+	char	*temp2;
+	char	*temp3;
+	int		j;
+
+	temp2 = NULL;
+	temp3 = NULL;
+	j = 0;
+	if ((*token)->type != T_S_QUOTED_WORD)
+		j = expand_variables(&temp2, (*token)->value, data);
+	else
+		temp2 = ft_strdup((*token)->value);
+	handle_word_utils(token, data, temp2, j);
 	if (*i == 0)
 		(*cmds)->name = ft_strdup(temp2);
 	(*cmds)->args[(*i)++] = ft_strdup(temp2);

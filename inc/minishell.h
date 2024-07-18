@@ -98,5 +98,9 @@ void		print_lst(t_token *token);
 void		print_type(t_token_types type);
 void		exit_minishell(t_token **token, t_commands **cmds, t_data *data);
 void		print_my_env(char **my_env);
+char		*find_env_var(char *name, char **env);
+int			count_type_until_pipe(t_token *token, t_token_types type, int flag);
+void		init_cmd(t_commands **cmds, t_token *token, t_data *data);
+int			ft_isword(t_token *token);
 
 #endif
