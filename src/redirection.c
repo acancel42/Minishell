@@ -1,47 +1,64 @@
 #include "minishell.h"
 
-int	ft_redir_output(t_commands *cmds)
+int	ft_redir_output(t_commands *cmds, int i)
 {
-	cmds->outfile_fd = open(cmds->redirections->name, \
+	cmds->outfile_fd = open(cmds->redirections[i], \
 			O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (cmds->outfile_fd == -1)
-		perror(cmds->redirections->name);
+		perror(cmds->redirections[i]);
 	return (0);
 }
 
-int	ft_redir_input(t_commands *cmds)
+int	ft_redir_input(t_commands *cmds, int i)
 {
-	cmds->infile_fd = open(cmds->redirections->name, O_RDONLY);
+	cmds->infile_fd = open(cmds->redirections[i], O_RDONLY);
 	if (cmds->infile_fd == -1)
-		perror(cmds->redirections->name);
+		perror(cmds->redirections[i]);
 	return (0);
 }
 
-int	ft_wich_redir(t_commands *cmds)
+int	ft_wich_redir(t_commands *cmds, int i)
 {
 	char	*temp;
 
-	while (cmds->redirections)
+	if (cmds->redirections[i][0] == '>')
 	{
-		if (!ft_strncmp(cmds->redirections->name, ">", 1))
-		{
-			cmds->redirections->name = \
-				ft_strdup(cmds->redirections->name + 1);
-			ft_redir_output(cmds);
-			temp = ft_strdup(">");
-			cmds->redirections->name = \
-				ft_strjoin(temp, cmds->redirections->name, 1);
-		}
-		else if (!ft_strncmp(cmds->redirections->name, "<", 1))
-		{
-			cmds->redirections->name = \
-				ft_strdup(cmds->redirections->name + 1);
-			ft_redir_input(cmds);
-			temp = ft_strdup("<");
-			cmds->redirections->name = \
-				ft_strjoin(temp, cmds->redirections->name, 1);
-		}
-		cmds->redirections = cmds->redirections->next;
+		cmds->redirections[i] = \
+			ft_strdup(cmds->redirections[i] + 1);
+		ft_redir_output(cmds);
+		temp = ft_strdup(">");
+		cmds->redirections[i] = \
+			ft_strjoin(temp, cmds->redirections[i], 1);
+	}
+	else if (cmds->redirections[i][0] == '<')
+	{
+		cmds->redirections[i] = \
+			ft_strdup(cmds->redirections[i] + 1);
+		ft_redir_input(cmds);
+		temp = ft_strdup("<");
+		cmds->redirections[i] = \
+			ft_strjoin(temp, cmds->redirections[i], 1);
 	}
 	return (0);
+}
+
+int	ft_redir_or_append(t_commands *cmds)
+{
+	int		i;
+
+	i = 0;
+	while (cmds->redirections[i])
+	{
+		if (cmds->redirections[i][0] == '+')
+		{
+			cmds->outfile_fd = open(cmds->redirections[i], \
+			O_WRONLY | O_APPEND | O_CREAT, 0644);
+			if (cmds->outfile_fd == -1)
+				perror(cmds->redirections[i]);
+		}
+		else if (cmds->redirections[i][0] == '<' || \
+					cmds->redirections[i][0] == '>')
+			ft_wich_redir(cmds, i);
+		i++;
+	}
 }
