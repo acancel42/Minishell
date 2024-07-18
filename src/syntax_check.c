@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static int	oredir_handle(char *line, int *i)
+int	oredir_handle(char *line, int *i)
 {
 	int	op_count;
 	int	is_word;
@@ -16,30 +16,8 @@ static int	oredir_handle(char *line, int *i)
 			op_count++;
 			(*i)++;
 		}
-		while (ft_iswspace(line[*i]))
-			(*i)++;
-		if (ft_isalnum(line[*i]) || line[*i] == '_')
-		{
-			is_word++;
+		if (is_mult_op(line, i, &multiple_op, &is_word) == 1)
 			break ;
-		}
-		if (line[*i] == '<')
-		{
-			multiple_op++;
-			(*i)++;
-		}
-		else if (line[*i] == '>')
-		{
-			multiple_op++;
-			(*i)++;
-		}
-		else if (line[*i] == '|')
-		{
-			multiple_op++;
-			(*i)++;
-		}
-		else if (line[*i])
-			(*i)++;
 	}
 	if (op_count > 2 || multiple_op > 0 || is_word == 0)
 	{
@@ -49,7 +27,7 @@ static int	oredir_handle(char *line, int *i)
 	return (0);
 }
 
-static int	iredir_handle(char *line, int *i)
+int	iredir_handle(char *line, int *i)
 {
 	int	op_count;
 	int	is_word;
@@ -65,30 +43,8 @@ static int	iredir_handle(char *line, int *i)
 			op_count++;
 			(*i)++;
 		}
-		while (ft_iswspace(line[*i]))
-			(*i)++;
-		if (ft_isalnum(line[*i]) || line[*i] == '_')
-		{
-			is_word++;
+		if (is_mult_op(line, i, &multiple_op, &is_word) == 1)
 			break ;
-		}
-		if (line[*i] == '<')
-		{
-			multiple_op++;
-			(*i)++;
-		}
-		else if (line[*i] == '>')
-		{
-			multiple_op++;
-			(*i)++;
-		}
-		else if (line[*i] == '|')
-		{
-			multiple_op++;
-			(*i)++;
-		}
-		else if (line[*i])
-			(*i)++;
 	}
 	if (op_count > 2 || multiple_op > 0 || is_word == 0)
 	{
@@ -98,7 +54,26 @@ static int	iredir_handle(char *line, int *i)
 	return (0);
 }
 
-static int	pipe_handle(char *line, int *i)
+int	op_counter(char *line, int *i, int *is_word, int *multi_op)
+{
+	while (ft_iswspace(line[*i]))
+		(*i)++;
+	if (ft_isalnum(line[*i]) || line[*i] == '_')
+	{
+		(*is_word)++;
+		return (1);
+	}
+	else if (line[*i] == '|')
+	{
+		(*multi_op)++;
+		(*i)++;
+	}
+	else if (line[*i])
+		(*i)++;
+	return (0);
+}
+
+int	pipe_handle(char *line, int *i)
 {
 	int	op_count;
 	int	is_word;
@@ -114,20 +89,8 @@ static int	pipe_handle(char *line, int *i)
 			op_count++;
 			(*i)++;
 		}
-		while (ft_iswspace(line[*i]))
-			(*i)++;
-		if (ft_isalnum(line[*i]) || line[*i] == '_')
-		{
-			is_word++;
+		if (op_counter(line, i, &is_word, &multiple_op) == 1)
 			break ;
-		}
-		else if (line[*i] == '|')
-		{
-			multiple_op++;
-			(*i)++;
-		}
-		else if (line[*i])
-			(*i)++;
 	}
 	if (line[0] == '|' || op_count > 1 || multiple_op > 0 || is_word == 0)
 	{
@@ -148,21 +111,8 @@ int	prelexer_check(t_data *data)
 	{
 		if (ft_iswspace(data->line[i]) == 0)
 			wspace = 1;
-		if (data->line[i] == '>')
-		{
-			if (oredir_handle(data->line, &i) == 2)
-				return (2);
-		}
-		else if (data->line[i] == '<')
-		{
-			if (iredir_handle(data->line, &i) == 2)
-				return (2);
-		}
-		else if (data->line[i] == '|')
-		{
-			if (pipe_handle(data->line, &i) == 2)
-				return (2);
-		}
+		if (is_redir_or_pipe(data, i) == 2)
+			return (2);
 		else
 			i++;
 	}
