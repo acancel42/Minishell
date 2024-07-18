@@ -1,4 +1,3 @@
-
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -25,7 +24,6 @@ typedef struct s_file
 	struct s_file	*next;
 }				t_file;
 
-
 typedef struct s_commands
 {
 	char				*name;
@@ -41,14 +39,14 @@ typedef struct s_commands
 	char				**file;
 	char				*user;
 	struct s_commands	*next;
-}			              t_commands;
+}				t_commands;
 
 typedef struct s_data
 {
 	t_commands	*cmds;
 	t_token		*token;
 	char		**my_env;
-	char 		*line;
+	char		*line;
 	char		*user;
 	char		*home;
 	int			pflag;
@@ -65,23 +63,28 @@ char		*get_user(t_data *data);
 int			cmd_path(t_data *data);
 int			ft_cd(char *path, t_data *data);
 int			ft_echo(t_commands *cmds);
-int			ft_exec(t_commands *cmds, t_data *data);
 int			ft_export(char **args, char ***env);
+int			ft_is_built_in(t_data *data, t_commands *cmds);
 int			ft_pathfinder(t_data *data);
+int			ft_pipe(t_commands *cmds, t_data *data, t_token *token);
 int			ft_wich_redir(t_commands *cmds);
 int			get_pwd(char **pwd);
 int			handle_else(char *src, t_token **token, int i, t_data *data);
 int			handle_input(char *src, t_token **token, int i, t_data *data);
 int			handle_output(char *src, t_token **token, int i, t_data *data);
 int			handle_pipe(t_token **token, int i, t_data *data);
+int			prelexer_check(t_data *data);
 int			token_init(char *src, t_token **token, t_data *data);
 t_commands	*ft_cmdnew(char *user, int flag);
 t_file		*ft_filenew(char *content, char *type);
 t_token		*ft_toknew(char content, t_token_types type);
+void		exec_cmd(t_data *data, t_commands *cmds);
 void		fill_cmd(t_commands **cmds, t_token *token, t_data *data);
+void		free_data(t_data *data);
 void		ft_cmdadd_back(t_commands **lst, t_commands *new);
 void		ft_cmdsclear(t_commands **lst);
-void		ft_exec_error(t_token *token, t_commands *cmds, t_data *data, int flag);
+void		ft_exec_error(t_token *token, t_commands *cmds, \
+							t_data *data, int flag);
 void		ft_fileadd_back(t_file **lst, t_file *new);
 void		ft_fileclear(t_file **file);
 void		ft_free_tab(char **arr);
@@ -93,13 +96,7 @@ void		print_cmds(t_commands *cmds);
 void		print_file(t_file *file);
 void		print_lst(t_token *token);
 void		print_type(t_token_types type);
-void 		exit_minishell(t_token **token, t_commands **cmds, t_data *data);
-void 		print_my_env(char **my_env);
-int			prelexer_check(t_data *data);
-int			ft_is_built_in(t_data *data, t_commands *cmds);
-void		free_data(t_data *data);
-int			ft_pipe(t_commands *cmds, t_data *data, t_token *token);
-int 		ft_last_cmd(t_commands *cmds, t_data *data, t_token *token);
-void		exec_cmd(t_data *data , t_commands *cmds);
+void		exit_minishell(t_token **token, t_commands **cmds, t_data *data);
+void		print_my_env(char **my_env);
 
 #endif
