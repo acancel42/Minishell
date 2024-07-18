@@ -68,6 +68,7 @@ int	main(int argc, char **argv, char **env)
 			continue ;
 		}
 		lexer_init(&token, data);
+		print_lst(token);
 		init_cmd(&cmds, token, data);
 		fill_cmd(&cmds, token, data);
 		data->cmds = cmds;

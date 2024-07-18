@@ -14,7 +14,7 @@ void	lexer_init(t_token **token, t_data *data)
 
 	i = 0;
 	while (data->line[i])
-		i += token_init(data->line + i, token, data);
+		i = token_init(data->line, i, token, data);
 }
 
 void	init_cmd(t_commands **cmds, t_token *token, t_data *data)

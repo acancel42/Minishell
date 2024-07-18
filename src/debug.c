@@ -4,6 +4,8 @@ void	print_type(t_token_types type)
 {
 	if (type == T_WORD)
 		printf("%s : ", "T_WORD");
+	if (type == T_RWORD)
+		printf("%s : ", "T_RWORD");
 	if (type == T_PIPE)
 		printf("%s : ", "T_PIPE");
 	if (type == T_REDIR_IN)
@@ -18,6 +20,10 @@ void	print_type(t_token_types type)
 		printf("%s : ", "T_D_QUOTED_WORD");
 	if (type == T_S_QUOTED_WORD)
 		printf("%s : ", "T_S_QUOTED_WORD");
+	if (type == T_RD_QUOTED_WORD)
+		printf("%s : ", "T_RD_QUOTED_WORD");
+	if (type == T_RS_QUOTED_WORD)
+		printf("%s : ", "T_RS_QUOTED_WORD");
 }
 
 // Afficher les tokens
@@ -26,16 +32,8 @@ void	print_lst(t_token *token)
 	while (token)
 	{
 		print_type(token->type);
+		printf("%s\n", token->value);
 		token = token->next;
-	}
-}
-
-void	print_file(t_file *file)
-{
-	while (file)
-	{
-		dprintf(2, "redirection : %s\n", file->name);
-		file = file->next;
 	}
 }
 
@@ -50,7 +48,6 @@ void	print_cmds(t_commands *cmds) // dprintf for pipes debug !
 		dprintf(2, "args 0 : %s\n", cmds->args[0]);
 		while (cmds->args[++i])
 			dprintf(2, "args : %s\n", cmds->args[i]);
-		print_file(cmds->redirections);
 		dprintf(2, "%c", '\n');
 		cmds = cmds->next;
 	}

@@ -79,11 +79,9 @@ static void	handle_word_utils(t_token **token, t_data *data, char *temp2, int j)
 void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 {
 	char	*temp2;
-	char	*temp3;
 	int		j;
 
 	temp2 = NULL;
-	temp3 = NULL;
 	j = 0;
 	if ((*token)->type != T_S_QUOTED_WORD)
 		j = expand_variables(&temp2, (*token)->value, data);
@@ -96,31 +94,53 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 	free(temp2);
 }
 
-void	handle_redirection(t_commands **cmds, t_token *token, t_data *data)
+static void	handle_rword_utils(t_token **token, t_data *data, char *temp2, int j)
 {
-	t_file	*temp1;
-	char	*type;
+	char	*temp3;
 
-	type = NULL;
-	if (token->type == T_REDIR_OUT)
-		type = ft_strdup(">");
-	else if (token->type == T_REDIR_IN)
-		type = ft_strdup("<");
-	else if (token->type == T_APPEND_OUT)
-		type = ft_strdup("+");
-	else if (token->type == T_HEREDOC)
-		type = ft_strdup("-");
-	if (!type)
-		exit_minishell(&token, cmds, data);
-	temp1 = ft_filenew(token->value, type);
-	ft_fileadd_back(&(*cmds)->redirections, temp1);
-	free(type);
+	while ((*token)->next && (*token)->is_separated == 1)
+	{
+		(*token) = (*token)->next;
+		if ((*token)->type != T_RS_QUOTED_WORD)
+			j = expand_variables(&temp3, (*token)->value, data);
+		else
+			temp3 = ft_strdup((*token)->value);
+		temp2 = ft_strjoin(temp2, temp3, 0);
+		if (j)
+		{
+			free(temp3);
+			break ;
+		}
+		free(temp3);
+	}
+}
+
+void	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
+{
+	char	*redir_type;
+	char	*temp2;
+	int		j;
+
+	temp2 = NULL;
+	redir_type = ft_strdup((*token)->value);
+	(*token) = (*token)->next;
+	j = 0;
+	if ((*token)->type != T_RS_QUOTED_WORD)
+		j = expand_variables(&temp2, (*token)->value, data);
+	else
+		temp2 = ft_strdup((*token)->value);
+	handle_rword_utils(token, data, temp2, j);
+	(*cmds)->redirections[(*k)++] = ft_strjoin(redir_type, temp2, 0);
+	free(redir_type);
+	free(temp2);
 }
 
 void	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 {
 	int	i;
+	int	k;
 
+	k = 0;
 	i = 0;
 	while (token)
 	{
@@ -131,11 +151,18 @@ void	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 			+ 1, sizeof(char *));
 		if (!(*cmds)->args)
 			exit_minishell(&token, cmds, data);
+		if (!(*cmds)->redirections)
+			(*cmds)->redirections = ft_calloc(count_type_until_pipe(token, T_RWORD, 0) \
+			+ count_type_until_pipe(token, T_RD_QUOTED_WORD, 0) \
+			+ count_type_until_pipe(token, T_RS_QUOTED_WORD, 0) \
+			+ 1, sizeof(char *));
+		if (!(*cmds)->redirections)
+			exit_minishell(&token, cmds, data);
 		if (ft_isword(token))
 			handle_word(cmds, &token, data, &i);
 		else if (token->type == T_REDIR_OUT || token->type == T_REDIR_IN \
 				|| token->type == T_APPEND_OUT || token->type == T_HEREDOC)
-			handle_redirection(cmds, token, data);
+			handle_rword(cmds, &token, data, &k);
 		else if (token->type == T_PIPE)
 		{
 			i = 0;

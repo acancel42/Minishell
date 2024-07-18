@@ -1,11 +1,12 @@
 #include "minishell.h"
 
-int	handle_output(char *src, t_token **token, int i, t_data *data)
+int	handle_output(char *src, t_token **token, t_data *data)
 {
 	int		j;
-	char	c;
+	int		i;
 	t_token	*temp;
 
+	i = 0;
 	(void)(data);
 	j = 0;
 	if (src && src[i + 1] == '>')
@@ -13,69 +14,75 @@ int	handle_output(char *src, t_token **token, int i, t_data *data)
 		j++;
 		i++;
 	}
-	i++;
-	while (src[i] && ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-		i++;
-	temp = ft_toknew(src[i++], T_REDIR_OUT);
-	if (j > 0)
-		temp->type = T_APPEND_OUT;
-	while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+	if (j == 0)
 	{
-		c = src[i];
-		temp->value = ft_charjoin(temp->value, c);
-		i++;
+		temp = ft_toknew('>', T_REDIR_OUT);
+		ft_tokadd_back(token, temp);
 	}
-	ft_tokadd_back(token, temp);
+	else
+	{
+		temp = ft_toknew('+', T_APPEND_OUT);
+		ft_tokadd_back(token, temp);
+	}
+	data->rflag = 1;
+	i++;
 	return (i);
 }
 
-int	handle_input(char *src, t_token **token, int i, t_data *data)
+int	handle_input(char *src, t_token **token, t_data *data)
 {
-	t_token	*temp;
 	int		j;
-	char	c;
+	int		i;
+	t_token	*temp;
 
-	j = 0;
 	(void)(data);
+	i = 0;
+	j = 0;
 	if (src && src[i + 1] == '<')
 	{
 		j++;
 		i++;
 	}
-	i++;
-	while (src[i] && ft_iswspace(src[i]) && !ft_isoperator(src[i]))
-		i++;
-	temp = ft_toknew(src[i++], T_REDIR_IN);
-	if (j > 0)
-		temp->type = T_HEREDOC;
-	while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]))
+	if (j == 0)
 	{
-		c = src[i];
-		temp->value = ft_charjoin(temp->value, c);
-		i++;
+		temp = ft_toknew('<', T_REDIR_IN);
+		ft_tokadd_back(token, temp);
 	}
-	ft_tokadd_back(token, temp);
+	else
+	{
+		temp = ft_toknew('-', T_HEREDOC);
+		ft_tokadd_back(token, temp);
+	}
+	data->rflag = 1;
+	i++;
 	return (i);
 }
 
-int	handle_pipe(t_token **token, int i, t_data *data)
+int	handle_pipe(t_token **token, t_data *data)
 {
 	t_token	*temp;
 
 	(void)(data);
 	temp = ft_toknew('|', T_PIPE);
 	ft_tokadd_back(token, temp);
-	i++;
-	return (i);
+	return (1);
 }
 
-int	handle_else(char *src, t_token **token, int i, t_data *data)
+int	handle_else(char *src, t_token **token, t_data *data)
 {
 	char	c;
+	int		i;
 	t_token	*temp;
 
+	i = 0;
 	(void)(data);
-	temp = ft_toknew(src[i++], T_WORD);
+	if (data->rflag == 0)
+		temp = ft_toknew(src[i++], T_WORD);
+	else
+	{
+		data->rflag = 0;
+		temp = ft_toknew(src[i++], T_RWORD);
+	}
 	ft_tokadd_back(token, temp);
 	while (src[i] && !ft_iswspace(src[i]) && !ft_isoperator(src[i]) && \
 		!ft_isquote(src[i]))
