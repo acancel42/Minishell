@@ -3,11 +3,9 @@
 t_file	*ft_filenew(char *content, char *type)
 {
 	char	*temp;
-	t_file	*new;
+	t_file *new;
 
 	new = ft_calloc(1, sizeof(t_file));
-	if (!new)
-		return (NULL);
 	temp = ft_strdup(type);
 	new->next = NULL;
 	new->fd = 0;
@@ -16,8 +14,7 @@ t_file	*ft_filenew(char *content, char *type)
 	return (new);
 }
 
-static	t_file	*ft_filelast(t_file *lst)
-{
+static t_file *ft_filelast(t_file *lst) {
 	while (lst && lst->next != NULL)
 		lst = lst->next;
 	return (lst);
@@ -25,11 +22,9 @@ static	t_file	*ft_filelast(t_file *lst)
 
 void	ft_fileadd_back(t_file **lst, t_file *new)
 {
-	t_file	*temp;
-
 	if (!lst || !new)
-		return ;
-	temp = ft_filelast(*lst);
+		return;
+	t_file *temp = ft_filelast(*lst);
 	if (temp != NULL)
 		temp->next = new;
 	else

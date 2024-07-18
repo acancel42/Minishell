@@ -17,6 +17,7 @@ int	ft_redir_input(t_commands *cmds)
 	return (0);
 }
 
+
 int	ft_wich_redir(t_commands *cmds)
 {
 	char	*temp;
@@ -45,3 +46,4 @@ int	ft_wich_redir(t_commands *cmds)
 	}
 	return (0);
 }
+

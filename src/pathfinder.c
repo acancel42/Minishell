@@ -24,7 +24,6 @@ void	build_path(t_data *data, char *s1, \
 	ft_memcpy(data->cmds->path + len_s1 + 1, s2, len_s2);
 	return ;
 }
-
 static void	try_acces(t_data *data, char **all_paths, int i)
 {
 	while (data->cmds->path != NULL && access(data->cmds->path, F_OK))

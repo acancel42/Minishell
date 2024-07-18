@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+
 char	**ft_get_env(char **env)
 {
 	char	**my_env;
@@ -22,10 +23,9 @@ char	**ft_get_env(char **env)
 		}
 		i++;
 	}
-	i = 0;
-	return (my_env);
-}
-
 	// ft_shlvl(&my_env);
 	// if (!my_env)
 	// 	return (NULL);
+	i = 0;
+	return (my_env);
+}
