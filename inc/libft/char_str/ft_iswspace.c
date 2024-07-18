@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 16:46:56 by acancel           #+#    #+#             */
-/*   Updated: 2024/06/12 21:33:01 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 01:39:54 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	ft_isoperator(char c)
 		return (1);
 	return (0);
 }
+
 int	ft_isquote(char c)
 {
 	if (c == '"' || c == '\'')
