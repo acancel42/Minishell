@@ -102,5 +102,10 @@ char		*find_env_var(char *name, char **env);
 int			count_type_until_pipe(t_token *token, t_token_types type, int flag);
 void		init_cmd(t_commands **cmds, t_token *token, t_data *data);
 int			ft_isword(t_token *token);
+int			is_mult_op(char *line, int *i, int *multiple_op, int *is_word);
+int			is_redir_or_pipe(t_data *data, int i);
+int			oredir_handle(char *line, int *i);
+int			iredir_handle(char *line, int *i);
+int			pipe_handle(char *line, int *i);
 
 #endif
