@@ -1,10 +1,13 @@
 #include "minishell.h"
 
-t_commands *ft_cmdnew(char *user, int flag)
+t_commands	*ft_cmdnew(char *user, int flag)
 {
-	t_commands *new = ft_calloc(1, sizeof(t_commands));
+	t_commands	*new;
 	static int	i;
 
+	new = ft_calloc(1, sizeof(t_commands));
+	if (!new)
+		return (NULL);
 	if (!flag)
 		i = 0;
 	new->next = NULL;
@@ -19,18 +22,20 @@ t_commands *ft_cmdnew(char *user, int flag)
 	return (new);
 }
 
-static t_commands *ft_cmdlast(t_commands *lst)
+static	t_commands	*ft_cmdlast(t_commands *lst)
 {
 	while (lst && lst->next != NULL)
 		lst = lst->next;
 	return (lst);
 }
 
-void ft_cmdadd_back(t_commands **lst, t_commands *new)
+void	ft_cmdadd_back(t_commands **lst, t_commands *new)
 {
+	t_commands	*temp;
+
 	if (!lst || !new)
-		return;
-	t_commands *temp = ft_cmdlast(*lst);
+		return ;
+	temp = ft_cmdlast(*lst);
 	if (temp != NULL)
 		temp->next = new;
 	else
@@ -47,7 +52,7 @@ void	ft_cmdsdelone(t_commands *cmds)
 		ft_fileclear(&cmds->redirections);
 	if (cmds->args)
 		ft_free_tab(cmds->args);
-	if(cmds->user)
+	if (cmds->user)
 		free(cmds->user);
 	free(cmds);
 }

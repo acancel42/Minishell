@@ -1,10 +1,8 @@
 #include "minishell.h"
 
-#include <unistd.h>
-
 char	*get_color(char *user, char *color)
 {
-	char *prompt;
+	char	*prompt;
 
 	prompt = ft_strdup(color);
 	prompt = ft_strjoin(prompt, user, 1);
@@ -27,15 +25,13 @@ void	free_data(t_data *data)
 	data->pflag = 0;
 }
 
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
 	t_token				*token;
 	t_commands			*cmds;
 	t_data				*data;
 	int					j;
-	t_commands			*head;
 
-	head = NULL;
 	if (!env[0])
 	{
 		printf("no env\n");
@@ -75,17 +71,13 @@ int main(int argc, char **argv, char **env)
 		init_cmd(&cmds, token, data);
 		fill_cmd(&cmds, token, data);
 		data->cmds = cmds;
-		head = cmds;
 		data->token = token;
 		if (ft_is_built_in(data, cmds))
 			continue ;
 		j = -1;
 		data->pflag = false;
 		if (ft_pathfinder(data) == 0)
-		{
-			//free_data(data);
-			continue;
-		}
+			continue ;
 		while (data->line[++j])
 		{
 			if (data->line[j] == '|')
