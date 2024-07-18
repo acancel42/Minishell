@@ -1,9 +1,6 @@
-
 #include "minishell.h"
 
-#include <unistd.h>
-
-char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
+static char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 {
 	int		len;
 	int		i;
@@ -29,13 +26,10 @@ char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 	return (dest);
 }
 
-char	*get_user(t_data *data)
+static char	*ft_get_host(t_data *data)
 {
 	int		i;
 	char	*host;
-	char	*username;
-	char	*user;
-	char	*pwd;
 
 	i = 0;
 	while (ft_strncmp(data->my_env[i], "SESSION_MANAGER=", 16) != 0)
@@ -43,6 +37,14 @@ char	*get_user(t_data *data)
 	host = ft_substr(data->my_env[i], 22, 7);
 	if (host == NULL)
 		return (NULL);
+	return (host);
+}
+
+static char	*ft_get_user(t_data *data, char *host, char	*username)
+{
+	int		i;
+	char	*user;
+
 	i = 0;
 	while (ft_strncmp(data->my_env[i], "LOGNAME=", 8) != 0)
 		i++;
@@ -55,6 +57,14 @@ char	*get_user(t_data *data)
 	user = ft_strjoin_name(username, host, '@', ':');
 	if (!user)
 		return (NULL);
+	return (user);
+}
+
+static char	*ft_get_pwd(t_data *data)
+{
+	int		i;
+	char	*pwd;
+
 	i = 0;
 	while (ft_strncmp(data->my_env[i], "PWD=", 4))
 		i++;
@@ -66,7 +76,28 @@ char	*get_user(t_data *data)
 		pwd = get_home(data->my_env);
 		ft_cd(pwd, data);
 	}
-	pwd = ft_substr(pwd, ft_strlen(username) + 6, ft_strlen(username) + 6 - ft_strlen(pwd));
+	return (pwd);
+}
+
+char	*get_user(t_data *data)
+{
+	char	*host;
+	char	*user;
+	char	*username;
+	char	*pwd;
+
+	username = NULL;
+	host = ft_get_host(data);
+	if (!host)
+		return (NULL);
+	user = ft_get_user(data, host, username);
+	if (!user)
+		return (NULL);
+	pwd = ft_get_pwd(data);
+	if (!pwd)
+		return (NULL);
+	pwd = ft_substr(pwd, ft_strlen(username) + 6, \
+		ft_strlen(username) + 6 - ft_strlen(pwd));
 	user = ft_strjoin_name(user, pwd, '~', '$');
 	user = ft_strjoin(user, " ", 1);
 	free(pwd);
