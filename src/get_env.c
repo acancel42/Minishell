@@ -25,7 +25,3 @@ char	**ft_get_env(char **env)
 	i = 0;
 	return (my_env);
 }
-
-	// ft_shlvl(&my_env);
-	// if (!my_env)
-	// 	return (NULL);
