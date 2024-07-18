@@ -49,7 +49,7 @@ void	ft_cmdsdelone(t_commands *cmds)
 	if (cmds->path)
 		free(cmds->path);
 	if (cmds->redirections)
-		ft_fileclear(&cmds->redirections);
+		ft_free_tab(cmds->redirections);
 	if (cmds->args)
 		ft_free_tab(cmds->args);
 	if (cmds->user)

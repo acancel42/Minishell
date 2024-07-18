@@ -25,7 +25,7 @@ int	ft_wich_redir(t_commands *cmds, int i)
 	{
 		cmds->redirections[i] = \
 			ft_strdup(cmds->redirections[i] + 1);
-		ft_redir_output(cmds);
+		ft_redir_output(cmds, i);
 		temp = ft_strdup(">");
 		cmds->redirections[i] = \
 			ft_strjoin(temp, cmds->redirections[i], 1);
@@ -34,7 +34,7 @@ int	ft_wich_redir(t_commands *cmds, int i)
 	{
 		cmds->redirections[i] = \
 			ft_strdup(cmds->redirections[i] + 1);
-		ft_redir_input(cmds);
+		ft_redir_input(cmds, i);
 		temp = ft_strdup("<");
 		cmds->redirections[i] = \
 			ft_strjoin(temp, cmds->redirections[i], 1);
@@ -42,13 +42,14 @@ int	ft_wich_redir(t_commands *cmds, int i)
 	return (0);
 }
 
-int	ft_redir_or_append(t_commands *cmds)
+void	ft_redir_or_append(t_commands *cmds)
 {
 	int		i;
 
 	i = 0;
 	while (cmds->redirections[i])
 	{
+		printf("------op : %c\n", cmds->redirections[i][0]);
 		if (cmds->redirections[i][0] == '+')
 		{
 			cmds->outfile_fd = open(cmds->redirections[i], \

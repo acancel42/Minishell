@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 23:13:00 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/18 02:34:13 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/19 01:44:30 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 	cmds->next->infile_fd = fd_pipe[0];
 	cmds->outfile_fd = fd_pipe[1];
 	if (cmds->redirections)
-		ft_wich_redir(cmds);
+		ft_redir_or_append(cmds);
 	data->pid = fork();
 	if (data->pid == -1)
 		return (ft_exec_error(token, cmds, data, 1), -1);
@@ -55,7 +55,7 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 	int	status;
 
 	if (cmds->redirections)
-		ft_wich_redir(cmds);
+		ft_redir_or_append(cmds);
 	data->pid = fork();
 	if (data->pid == -1)
 		return (ft_exec_error(token, cmds, data, 1), -1);
