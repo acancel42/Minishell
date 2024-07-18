@@ -100,3 +100,6 @@ void		exit_minishell(t_token **token, t_commands **cmds, t_data *data);
 void		print_my_env(char **my_env);
 
 #endif
+
+// int 	ft_cmd(t_commands *cmds, t_data *data, t_token *token);
+/* int	ft_exec(t_commands *cmds, t_data *data); remplace par ft_exec_cmd */
