@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 14:33:44 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/18 03:41:13 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 03:42:35 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_strcpy(char *dest, const char *src)
 	char	*save;
 
 	save = dest;
-	while (dest)
+	while (*dest && *src)
 	{
 		dest++;
 		src++;
@@ -29,12 +29,18 @@ char	*ft_strncpy(char *dest, const char *src, size_t n)
 {
 	size_t	i;
 
-	for (i = 0; i < n && src[i] != '\0'; i++)
+	i = 0;
+	while (i < n && src[i] != '\0')
+	{
 		dest[i] = src[i];
-	for ( ; i < n; i++)
+		i++;
+	}
+	while (i < n)
+	{
 		dest[i] = '\0';
-
-	return dest;
+		i++;
+	}
+	return (dest);
 }
 
 size_t	ft_strlcpy(char *dest, const char *src, size_t size)
