@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 14:33:44 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/18 03:42:35 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/19 00:05:51 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 char	*ft_strcpy(char *dest, const char *src)
 {
-	char	*save;
+	size_t	i;
 
-	save = dest;
-	while (*dest && *src)
+	i = 0;
+	while (src && dest && src[i])
 	{
-		dest++;
-		src++;
+		dest[i] = src[i];
+		i++;
 	}
-	return (save);
+	dest[i] = '\0';
+	return (dest);
 }
 
 char	*ft_strncpy(char *dest, const char *src, size_t n)

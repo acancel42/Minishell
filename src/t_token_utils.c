@@ -38,7 +38,8 @@ void	ft_tokendelone(t_token *token)
 {
 	if (token->value)
 		free(token->value);
-	free(token);
+	if (token)
+		free(token);
 }
 
 void	ft_tokenclear(t_token **token)
