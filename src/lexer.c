@@ -165,6 +165,7 @@ void	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 			handle_rword(cmds, &token, data, &k);
 		else if (token->type == T_PIPE)
 		{
+			k = 0;
 			i = 0;
 			cmds = &(*cmds)->next;
 		}
