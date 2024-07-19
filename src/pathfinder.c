@@ -40,7 +40,7 @@ int	cmd_path(t_data *data)
 	int		i;
 
 	i = 0;
-	if (ft_is_built_in(data, data->cmds))
+	if (ft_is_built_in(data->cmds) == 1)
 		return (2);
 	while (ft_strncmp(data->my_env[i], "PATH=", 5) != 0)
 		i++;
@@ -76,12 +76,10 @@ int	ft_pathfinder(t_data *data)
 			btflag = cmd_path(data);
 			if (btflag == 0)
 				return (0);
-			else if (btflag == 2)
-				return (1);
 		}
 		else
 			data->cmds->path = ft_strdup(data->cmds->args[0]);
-		if (data->cmds->path)
+		if (data->cmds->path || btflag == 2)
 			data->cmds = data->cmds->next;
 	}
 	return (1);

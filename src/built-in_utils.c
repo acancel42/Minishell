@@ -17,7 +17,7 @@ static void	ft_witch_cd(t_data *data, t_commands *cmds)
 	}
 }
 
-int	ft_is_built_in(t_data *data, t_commands *cmds)
+int	ft_exec_built_in(t_data *data, t_commands *cmds)
 {
 	if (ft_strncmp(cmds->name, "cd", 3) == 0)
 	{
@@ -36,5 +36,15 @@ int	ft_is_built_in(t_data *data, t_commands *cmds)
 	}
 	if (ft_strncmp(cmds->name, "exit", 5) == 0)
 		exit_minishell(&data->token, &data->cmds, data);
+	return (0);
+}
+
+int	ft_is_built_in(t_commands *cmds)
+{
+	if (!ft_strncmp(cmds->name, "cd", 3) || \
+		!ft_strncmp(cmds->name, "exit", 5) || \
+		!ft_strncmp(cmds->name, "echo", 5) || \
+		!ft_strncmp(cmds->name, "export", 7))
+		return (1);
 	return (0);
 }

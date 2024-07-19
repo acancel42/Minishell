@@ -58,7 +58,7 @@ int			count_type_until_pipe(t_token *token, t_token_types type, int flag);
 int			ft_cd(char *path, t_data *data);
 int			ft_echo(t_commands *cmds);
 int			ft_export(char **args, char ***env);
-int			ft_is_built_in(t_data *data, t_commands *cmds);
+int			ft_exec_built_in(t_data *data, t_commands *cmds);
 int			ft_isword(t_token *token);
 int			ft_pathfinder(t_data *data);
 int			ft_pipe(t_commands *cmds, t_data *data, t_token *token);
@@ -96,5 +96,6 @@ void		print_cmds(t_commands *cmds);
 void		print_lst(t_token *token);
 void		print_my_env(char **my_env);
 void		print_type(t_token_types type);
+int			ft_is_built_in(t_commands *cmds);
 
 #endif
