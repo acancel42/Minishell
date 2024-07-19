@@ -73,8 +73,8 @@ int	main(int argc, char **argv, char **env)
 		fill_cmd(&cmds, token, data);
 		data->cmds = cmds;
 		data->token = token;
-		if (ft_is_built_in(data, cmds))
-			continue ;
+		// if (ft_is_built_in(data, cmds))
+		// 	continue ;
 		j = -1;
 		data->pflag = false;
 		if (ft_pathfinder(data) == 0)
