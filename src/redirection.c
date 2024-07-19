@@ -50,7 +50,6 @@ void	ft_redir_or_append(t_commands *cmds)
 	i = 0;
 	while (cmds->redirections[i])
 	{
-		printf("------op : %c\n", cmds->redirections[i][0]);
 		if (cmds->redirections[i][0] == '+')
 		{
 			cmds->redirections[i] = \

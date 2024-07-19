@@ -80,7 +80,7 @@ int	ft_echo(t_commands *cmds)
 	}
 	while (cmds->args[i])
 	{
-		printf("----------%s", cmds->args[i]);
+		printf("%s", cmds->args[i]);
 		if (cmds->args[i + 1] && cmds->args[i + 1][0] != 0)
 			printf(" ");
 		i++;
