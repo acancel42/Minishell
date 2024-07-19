@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	expand_variables(char **dest, char *str, t_data *data)
+int	expand_variables(char **dest, char *src, t_data *data)
 {
 	int		start;
 	int		end;
@@ -9,40 +9,38 @@ int	expand_variables(char **dest, char *str, t_data *data)
 	char	*temp;
 	int		i;
 
+	(*dest) = ft_strdup(src);
 	i = 0;
 	end = 0;
-	if (ft_strncmp(str, "$", 1) == 0 && ft_strlen(str) == 1)
-	{
-		(*dest) = ft_strdup(str);
+	if (ft_strncmp((*dest), "$", 1) == 0 && ft_strlen((*dest)) == 1)
 		return (i);
-	}
-	while (str && str[i])
+	while ((*dest) && (*dest)[i])
 	{
-		if (str[i] == '$')
+		if ((*dest)[i] == '$')
 		{
 			start = i;
 			end = i + 1;
 			i++;
-			while (ft_isalnum(str[i++]) && str[i - 1] != '$')
+			while (ft_isalnum((*dest)[i++]) && (*dest)[i - 1] != '$')
 				end++;
-			name = ft_strndup(str + (start + 1), end - start - 1);
+			name = ft_strndup((*dest) + (start + 1), end - start - 1);
 			value = find_env_var(name, data->my_env);
 			if (value)
 			{
 				i++;
-				temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
-				ft_strncpy(temp, str, start);
+				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + ft_strlen(value) + 1);
+				ft_strncpy(temp, (*dest), start);
 				ft_strcpy(temp + start, value);
-				ft_strcpy(temp + start + ft_strlen(value), str + end);
-				str = ft_strdup(temp);
+				ft_strcpy(temp + start + ft_strlen(value), (*dest) + end);
+				(*dest) = ft_strdup(temp);
 			}
 			else
 			{
 				i = start;
-				temp = malloc(ft_strlen(str) - ft_strlen(name) + ft_strlen(value) + 1);
-				ft_strncpy(temp, str, start);
-				ft_strcpy(temp + start, str + end);
-				str = ft_strdup(temp);
+				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + ft_strlen(value) + 1);
+				ft_strncpy(temp, (*dest), start);
+				ft_strcpy(temp + start, (*dest) + end);
+				(*dest) = ft_strdup(temp);
 			}
 			free(temp);
 			free(name);
@@ -50,8 +48,6 @@ int	expand_variables(char **dest, char *str, t_data *data)
 		else
 			i++;
 	}
-	(*dest) = ft_strdup(str);
-	free(str);
 	return (i);
 }
 
@@ -165,6 +161,7 @@ void	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 			handle_rword(cmds, &token, data, &k);
 		else if (token->type == T_PIPE)
 		{
+			k = 0;
 			i = 0;
 			cmds = &(*cmds)->next;
 		}
