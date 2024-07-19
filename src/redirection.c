@@ -45,6 +45,7 @@ int	ft_wich_redir(t_commands *cmds, int i)
 void	ft_redir_or_append(t_commands *cmds)
 {
 	int		i;
+	char	*temp;
 
 	i = 0;
 	while (cmds->redirections[i])
@@ -52,10 +53,15 @@ void	ft_redir_or_append(t_commands *cmds)
 		printf("------op : %c\n", cmds->redirections[i][0]);
 		if (cmds->redirections[i][0] == '+')
 		{
+			cmds->redirections[i] = \
+			ft_strdup(cmds->redirections[i] + 1);
 			cmds->outfile_fd = open(cmds->redirections[i], \
 			O_WRONLY | O_APPEND | O_CREAT, 0644);
 			if (cmds->outfile_fd == -1)
 				perror(cmds->redirections[i]);
+			temp = ft_strdup("+");
+			cmds->redirections[i] = \
+			ft_strjoin(temp, cmds->redirections[i], 1);
 		}
 		else if (cmds->redirections[i][0] == '<' || \
 					cmds->redirections[i][0] == '>')
