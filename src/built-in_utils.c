@@ -31,7 +31,7 @@ int	ft_exec_built_in(t_data *data, t_commands *cmds)
 	}
 	if (ft_strncmp(cmds->name, "export", 7) == 0)
 	{
-		ft_export(cmds->args, &data->my_env);
+		ft_export(cmds->args, data);
 		return (1);
 	}
 	if (ft_strncmp(cmds->name, "exit", 5) == 0)

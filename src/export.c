@@ -23,7 +23,7 @@ char	**tab_join(char **tab, char *str)
 	return (new_tab);
 }
 
-int	ft_export(char **args, char ***env)
+int	ft_export(char **args, t_data *data)
 {
 	int		i;
 	char	**new_env;
@@ -33,10 +33,10 @@ int	ft_export(char **args, char ***env)
 	{
 		if (ft_strchr(args[i], '='))
 		{
-			new_env = tab_join((*env), args[i]);
+			new_env = tab_join((data->my_env), args[i]);
 			if (!new_env)
 				return (-1);
-			(*env) = new_env;
+			(data->my_env) = new_env;
 		}
 		i++;
 	}

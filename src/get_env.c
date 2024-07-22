@@ -1,27 +1,27 @@
 #include "minishell.h"
 
-char	**ft_get_env(char **env)
+void	ft_get_env(t_data *data, char **env)
 {
-	char	**my_env;
 	size_t	i;
 
 	i = 0;
 	while (env[i])
 		i++;
-	my_env = ft_calloc(i + 1, sizeof(char *));
-	if (!my_env)
-		return (NULL);
+	data->my_env = ft_calloc(i + 1, sizeof(char *));
+	data->export = ft_calloc(i + 1, sizeof(char *));
+	if (!data->my_env || !data->export)
+		return ;
 	i = 0;
 	while (env[i])
 	{
-		my_env[i] = ft_strdup(env[i]);
-		if (!my_env[i])
+		data->my_env[i] = ft_strdup(env[i]);
+		data->export[i] = ft_strjoin("declare -x ", env[i], 0);
+		if (!data->my_env[i] || !data->export[i])
 		{
-			ft_free_tab(my_env);
-			return (NULL);
+			ft_free_tab(data->my_env);
+			ft_free_tab(data->export);
+			return ;
 		}
 		i++;
 	}
-	i = 0;
-	return (my_env);
 }

@@ -39,7 +39,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	data = ft_calloc(1, sizeof(t_data));
 	data->home = get_home(env);
-	data->my_env = ft_get_env(env);
+	ft_get_env(data, env);
 	if (!data->my_env)
 		printf("no env\n");
 	(void)argc;
