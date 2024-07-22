@@ -98,5 +98,7 @@ void		print_lst(t_token *token);
 void		print_my_env(char **my_env);
 void		print_type(t_token_types type);
 int			ft_is_built_in(t_commands *cmds);
+int			ft_pwd(void);
+int			ft_env(t_data *data);
 
 #endif
