@@ -33,7 +33,9 @@ int	ft_exec_built_in(t_data *data, t_commands *cmds)
 	if (ft_strncmp(cmds->name, "echo", 5) == 0)
 		return (ft_echo(cmds), 1);
 	if (ft_strncmp(cmds->name, "export", 7) == 0)
-		return (ft_export(cmds->args, &data->my_env), 1);
+		return (ft_export(cmds->args, data), 1);
+	if (ft_strncmp(cmds->name, "unset", 6) == 0)
+		return (ft_unset(cmds->args, data), 1);
 	if (ft_strncmp(cmds->name, "env", 4) == 0)
 		return (ft_env(data), 1);
 	if (ft_strncmp(cmds->name, "pwd", 4) == 0)
@@ -49,6 +51,7 @@ int	ft_is_built_in(t_commands *cmds)
 		!ft_strncmp(cmds->name, "exit", 5) || \
 		!ft_strncmp(cmds->name, "echo", 5) || \
 		!ft_strncmp(cmds->name, "export", 7) || \
+		!ft_strncmp(cmds->name, "unset", 6) || \
 		!ft_strncmp(cmds->name, "pwd", 4) || \
 		!ft_strncmp(cmds->name, "env", 4))
 		return (1);

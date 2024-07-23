@@ -37,6 +37,7 @@ typedef struct s_data
 	t_commands	*cmds;
 	t_token		*token;
 	char		**my_env;
+	char		**export;
 	char		*line;
 	char		*user;
 	char		*home;
@@ -48,7 +49,7 @@ typedef struct s_data
 	pid_t		pid;
 }				t_data;
 
-char		**ft_get_env(char **env);
+void		ft_get_env(t_data *data, char **env);
 char		**tab_join(char **tab, char *str);
 char		*find_env_var(char *name, char **env);
 char		*get_color(char *user, char *color);
@@ -58,7 +59,7 @@ int			cmd_path(t_data *data);
 int			count_type_until_pipe(t_token *token, t_token_types type, int flag);
 int			ft_cd(char *path, t_data *data);
 int			ft_echo(t_commands *cmds);
-int			ft_export(char **args, char ***env);
+int			ft_export(char **args, t_data *data);
 int			ft_exec_built_in(t_data *data, t_commands *cmds);
 int			ft_isword(t_token *token);
 int			ft_pathfinder(t_data *data);
@@ -100,6 +101,9 @@ void		print_type(t_token_types type);
 int			ft_is_built_in(t_commands *cmds);
 int			ft_pwd(void);
 int			ft_env(t_data *data);
+int			ft_envcmp(char *env, char *variable);
+int			ft_isexport(char *args, char **env);
+int			ft_unset(char **args, t_data *data);
 char		*ft_strjoin_name(char *s1, char *s2, char c1, char c2);
 void		free__monitoring(char *host, char *username, char *pwd);
 
