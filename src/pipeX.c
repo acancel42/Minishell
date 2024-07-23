@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 23:13:00 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/19 03:01:32 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 01:39:13 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,23 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 	return (0);
 }
 
+static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
+{
+	if (ft_exec_built_in(data, cmds) == 1)
+		exit(EXIT_SUCCESS);
+	if (execve(cmds->path, cmds->args, data->my_env) == -1)
+	{
+		ft_putendl_fd("execve failed", 2);
+		exit(EXIT_FAILURE);
+	}
+}
+
 int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 {
 	int	status;
 
+	if (ft_strncmp(cmds->name, "", 1) == 0)
+		return (0);
 	if (cmds->redirections)
 		ft_redir_or_append(cmds);
 	data->pid = fork();
@@ -67,13 +80,7 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 			return (ft_exec_error(token, cmds, data, 2), 1);
 		if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
 			return (ft_exec_error(token, cmds, data, 2), 1);
-		if (ft_exec_built_in(data, cmds) == 1)
-			exit(EXIT_SUCCESS);
-		if (execve(cmds->path, cmds->args, data->my_env) == -1)
-		{
-			ft_putendl_fd("execve failed", 2);
-			exit(EXIT_FAILURE);
-		}
+		ft_builtin_or_exec(data, cmds);
 	}
 	waitpid(data->pid, &status, 0);
 	if (cmds->outfile_fd != 1)
