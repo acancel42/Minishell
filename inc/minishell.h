@@ -100,5 +100,8 @@ void		print_type(t_token_types type);
 int			ft_is_built_in(t_commands *cmds);
 int			ft_pwd(void);
 int			ft_env(t_data *data);
+int			ft_envcmp(char *env, char *variable);
+int			ft_isexport(char *args, char **env);
+int			ft_unset(char **args, t_data *data);
 
 #endif

@@ -26,7 +26,7 @@ int	ft_echo(t_commands *cmds)
 	i = 1;
 	if (cmds->args[i] == NULL)
 		return (0);
-	while (cmds->args[i][0] == 0)
+	while (cmds->args[i] && cmds->args[i][0] == 0)
 		i++;
 	while (cmds->args[i] && is_flagn(cmds->args[i]))
 	{

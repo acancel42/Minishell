@@ -15,7 +15,7 @@ void	ft_get_env(t_data *data, char **env)
 	while (env[i])
 	{
 		data->my_env[i] = ft_strdup(env[i]);
-		data->export[i] = ft_strjoin("declare -x ", env[i], 0);
+		data->export[i] = ft_strdup(env[i]);
 		if (!data->my_env[i] || !data->export[i])
 		{
 			ft_free_tab(data->my_env);
