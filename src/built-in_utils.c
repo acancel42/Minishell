@@ -8,7 +8,7 @@ static void	ft_witch_cd(t_data *data, t_commands *cmds)
 		ft_cd(data->home, data);
 		free_data(data);
 	}
-	else
+	else 
 	{
 		ft_cd(ft_substr(data->line, 3, ft_strlen(data->line) - 3), data);
 		free_data(data);
@@ -72,7 +72,7 @@ int	get_home(t_data *data)
 	i = 0;
 	while (data->my_env[i++])
 	{
-		if (!ft_strncmp(data->my_env[i], "HOME=", 5))
+		if (ft_strncmp(data->my_env[i], "HOME=", 5) != 0)
 		{
 			data->is_home = true;
 			break ;
@@ -82,8 +82,6 @@ int	get_home(t_data *data)
 	if (data->is_home == true)
 	{
 		data->home = ft_substr(data->my_env[i], 5, 6 + 8);
-		printf("%s\n", data->my_env[i]);
-		printf("H = %s\n", data->home);
 		if (data->home == NULL)
 			return (-1);
 	}

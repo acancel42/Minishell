@@ -72,7 +72,7 @@ static char	*ft_get_pwd(t_data *data)
 	if (!pwd)
 	{
 		printf("getcwd: cannot access \
-	parent directories: No such file or directory\n");
+parent directories: No such file or directory\n");
 		ft_cd(data->home, data);
 	}
 	return (pwd);
@@ -90,7 +90,6 @@ char	*get_user(t_data *data)
 	if (!host)
 		return (NULL);
 	user = ft_get_user(data, host, &username);
-	printf("username : %s\n", username);
 	if (!user)
 		return (NULL);
 	pwd = ft_get_pwd(data);
@@ -100,7 +99,6 @@ char	*get_user(t_data *data)
 		ft_strlen(username) + 6 - ft_strlen(pwd));
 	if (!ft_strncmp(username, pwd, 4))
 		pwd = NULL;
-	// printf("pwd %s\n" , pwd);
 	user = ft_strjoin_name(user, pwd, '~', '$');
 	user = ft_strjoin(user, " ", 1);
 	free(pwd);
