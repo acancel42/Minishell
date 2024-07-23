@@ -22,6 +22,5 @@ char	**ft_get_env(char **env)
 		}
 		i++;
 	}
-	i = 0;
 	return (my_env);
 }

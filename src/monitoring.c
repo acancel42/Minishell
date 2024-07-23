@@ -1,31 +1,5 @@
 #include "minishell.h"
 
-static char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
-{
-	int		len;
-	int		i;
-	int		j;
-	char	*dest;
-
-	i = 0;
-	j = 0;
-	while (s2[i] != '.' && s2[i] != '\0')
-		i++;
-	len = ft_strlen(s1) + 1 + i + 1 +1;
-	i = -1;
-	dest = ft_calloc(len + 1, sizeof(char));
-	if (dest == NULL)
-		return (NULL);
-	while (s1[++i])
-		dest[i] = s1[i];
-	dest[i++] = c1;
-	while (s2[j] != '.' && s2[j] != '\0')
-		dest[i++] = s2[j++];
-	dest[i++] = c2;
-	dest[i] = '\0';
-	return (dest);
-}
-
 static char	*ft_get_host(t_data *data)
 {
 	int		i;
@@ -97,13 +71,11 @@ char	*get_user(t_data *data)
 		return (NULL);
 	pwd = ft_substr(pwd, ft_strlen(username) + 6, \
 		ft_strlen(username) + 6 - ft_strlen(pwd));
-	if (!ft_strncmp(username, pwd, 4))
+	if (ft_strncmp(username, pwd, ft_strlen(username)) == 0)
 		pwd = NULL;
 	user = ft_strjoin_name(user, pwd, '~', '$');
 	user = ft_strjoin(user, " ", 1);
-	free(pwd);
-	free(host);
-	free(username);
+	free__monitoring(host, username, pwd);
 	if (!user)
 		return (NULL);
 	return (user);

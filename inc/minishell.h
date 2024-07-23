@@ -100,5 +100,7 @@ void		print_type(t_token_types type);
 int			ft_is_built_in(t_commands *cmds);
 int			ft_pwd(void);
 int			ft_env(t_data *data);
+char		*ft_strjoin_name(char *s1, char *s2, char c1, char c2);
+void		free__monitoring(char *host, char *username, char *pwd);
 
 #endif

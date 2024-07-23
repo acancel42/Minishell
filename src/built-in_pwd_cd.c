@@ -49,5 +49,3 @@ parent directories: No such file or directory\n");
 	data->my_env[i] = ft_strjoin("PWD=", pwd, 0);
 	return (0);
 }
-
-
