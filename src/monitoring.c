@@ -40,7 +40,7 @@ static char	*ft_get_host(t_data *data)
 	return (host);
 }
 
-static char	*ft_get_user(t_data *data, char *host, char	*username)
+static char	*ft_get_user(t_data *data, char *host, char	**username)
 {
 	int		i;
 	char	*user;
@@ -48,13 +48,13 @@ static char	*ft_get_user(t_data *data, char *host, char	*username)
 	i = 0;
 	while (ft_strncmp(data->my_env[i], "LOGNAME=", 8) != 0)
 		i++;
-	username = ft_substr(data->my_env[i], 8, 8);
-	if (username == NULL)
+	*username = ft_substr(data->my_env[i], 8, 8);
+	if (*username == NULL)
 	{
 		free(host);
 		return (NULL);
 	}
-	user = ft_strjoin_name(username, host, '@', ':');
+	user = ft_strjoin_name(*username, host, '@', ':');
 	if (!user)
 		return (NULL);
 	return (user);
@@ -73,8 +73,7 @@ static char	*ft_get_pwd(t_data *data)
 	{
 		printf("getcwd: cannot access \
 	parent directories: No such file or directory\n");
-		pwd = get_home(data->my_env);
-		ft_cd(pwd, data);
+		ft_cd(data->home, data);
 	}
 	return (pwd);
 }
@@ -90,7 +89,8 @@ char	*get_user(t_data *data)
 	host = ft_get_host(data);
 	if (!host)
 		return (NULL);
-	user = ft_get_user(data, host, username);
+	user = ft_get_user(data, host, &username);
+	printf("username : %s\n", username);
 	if (!user)
 		return (NULL);
 	pwd = ft_get_pwd(data);
@@ -98,6 +98,9 @@ char	*get_user(t_data *data)
 		return (NULL);
 	pwd = ft_substr(pwd, ft_strlen(username) + 6, \
 		ft_strlen(username) + 6 - ft_strlen(pwd));
+	if (!ft_strncmp(username, pwd, 4))
+		pwd = NULL;
+	// printf("pwd %s\n" , pwd);
 	user = ft_strjoin_name(user, pwd, '~', '$');
 	user = ft_strjoin(user, " ", 1);
 	free(pwd);

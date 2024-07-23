@@ -6,13 +6,11 @@ static void	ft_witch_cd(t_data *data, t_commands *cmds)
 		ft_strncmp(cmds->args[1], "~", 1) == 0)
 	{
 		ft_cd(data->home, data);
-		ft_echo(cmds);
 		free_data(data);
 	}
 	else
 	{
 		ft_cd(ft_substr(data->line, 3, ft_strlen(data->line) - 3), data);
-		ft_echo(cmds);
 		free_data(data);
 	}
 }
@@ -21,6 +19,11 @@ int	ft_exec_built_in(t_data *data, t_commands *cmds)
 {
 	if (ft_strncmp(cmds->name, "cd", 3) == 0)
 	{
+		if (data->is_home == false)
+		{
+			printf("cd: HOME not set\n");
+			return (1);
+		}
 		ft_witch_cd(data, cmds);
 		return (1);
 	}
@@ -61,16 +64,28 @@ int	ft_is_built_in(t_commands *cmds)
 	return (0);
 }
 
-char	*get_home(char **env)
+int	get_home(t_data *data)
 {
-	char	*home;
 	int		i;
 
+	data->is_home = false;
 	i = 0;
-	while (ft_strncmp(env[i], "HOME=", 5))
+	while (data->my_env[i++])
+	{
+		if (!ft_strncmp(data->my_env[i], "HOME=", 5))
+		{
+			data->is_home = true;
+			break ;
+		}
 		i++;
-	home = ft_substr(env[i], 5, 6 + 8);
-	if (home == NULL)
-		return (NULL);
-	return (home);
+	}
+	if (data->is_home == true)
+	{
+		data->home = ft_substr(data->my_env[i], 5, 6 + 8);
+		printf("%s\n", data->my_env[i]);
+		printf("H = %s\n", data->home);
+		if (data->home == NULL)
+			return (-1);
+	}
+	return (0);
 }

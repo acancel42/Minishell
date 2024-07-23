@@ -40,6 +40,7 @@ typedef struct s_data
 	char		*line;
 	char		*user;
 	char		*home;
+	bool		is_home;
 	int			pflag;
 	int			rflag;
 	int			index_max;
@@ -51,7 +52,7 @@ char		**ft_get_env(char **env);
 char		**tab_join(char **tab, char *str);
 char		*find_env_var(char *name, char **env);
 char		*get_color(char *user, char *color);
-char		*get_home(char **env);
+int			get_home(t_data *data);
 char		*get_user(t_data *data);
 int			cmd_path(t_data *data);
 int			count_type_until_pipe(t_token *token, t_token_types type, int flag);

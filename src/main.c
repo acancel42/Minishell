@@ -38,10 +38,11 @@ int	main(int argc, char **argv, char **env)
 		return (-1);
 	}
 	data = ft_calloc(1, sizeof(t_data));
-	data->home = get_home(env);
 	data->my_env = ft_get_env(env);
 	if (!data->my_env)
 		printf("no env\n");
+	if (get_home(data) == -1)
+		exit_minishell(NULL, NULL, data);
 	(void)argc;
 	(void)argv;
 	while (1)
@@ -72,7 +73,7 @@ int	main(int argc, char **argv, char **env)
 		fill_cmd(&cmds, token, data);
 		data->cmds = cmds;
 		data->token = token;
-		if (ft_is_built_in(cmds) && data->index_max == 0)
+		if (ft_is_built_in(cmds) && data->index_max == 0 && cmds->redirections[0] == NULL)
 		{
 			ft_exec_built_in(data, cmds);
 			continue ;

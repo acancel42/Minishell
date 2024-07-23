@@ -33,7 +33,7 @@ int	ft_cd(char *path, t_data *data)
 		i++;
 	get_pwd(&oldpwd);
 	data->my_env[i] = ft_strjoin("OLDPWD=", oldpwd, 0);
-	if (!data->my_env)
+	if (!data->my_env[i])
 		return (-1);
 	if (chdir(path) == -1)
 		return (-2);
