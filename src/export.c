@@ -91,8 +91,8 @@ int	ft_isexport(char *args, char **env)
 	i = 0;
 	while (args[i] && args[i] != '=')
 		i++;
-	variable = ft_calloc(i, sizeof(char));
-	while (j <= i - 1)
+	variable = ft_calloc(i + 1, sizeof(char));
+	while (j < i)
 	{
 		variable[j] = args[j];
 		j++;
