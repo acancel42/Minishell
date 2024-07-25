@@ -22,7 +22,11 @@ char	**tab_delete(char **tab, char *str)
 	while (tab[i])
 	{
 		if (ft_envcmp(tab[i], str) != 0)
+		{
 			new_tab[j++] = ft_strdup(tab[i]);
+			if (!new_tab[j - 1])
+				return (NULL);
+		}
 		i++;
 	}
 	return (new_tab);

@@ -7,6 +7,8 @@ int	ft_envcmp(char *env, char *variable)
 
 	res = 1;
 	temp = ft_strjoin(variable, "=", 0);
+	if (!temp)
+		return (-1);
 	if (ft_strncmp(env, temp, ft_strlen(temp)) == 0 || \
 		ft_strncmp(env, variable, ft_strlen(variable) + 1) == 0)
 		res = 0;
@@ -29,9 +31,13 @@ char	**tab_join(char **tab, char *str)
 	while (tab[i])
 	{
 		new_tab[i] = ft_strdup(tab[i]);
+		if (!new_tab[i])
+			return (NULL);
 		i++;
 	}
 	new_tab[i] = ft_strdup(str);
+	if (!new_tab[i])
+		return (NULL);
 	new_tab[i + 1] = NULL;
 	return (new_tab);
 }
@@ -57,7 +63,11 @@ char	**tab_replace(char **env, char *args)
 	while (env[k++] && env[k] != NULL)
 	{
 		if (ft_envcmp(env[k], variable) == 0)
+		{
 			env[k] = ft_strdup(args);
+			if (!env[k])
+				return (NULL);
+		}	
 	}
 	free(variable);
 	return (env);

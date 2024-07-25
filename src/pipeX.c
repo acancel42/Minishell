@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 23:13:00 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/25 01:28:04 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/25 16:44:29 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 
 static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 {
-	printf("debug2\n");
 	if (ft_exec_built_in(data, cmds) == 1)
 		exit(EXIT_SUCCESS);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)

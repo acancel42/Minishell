@@ -44,8 +44,9 @@ int	ft_cd(char *path, t_data *data)
 	while (ft_strncmp(data->my_env[i], "PWD=", 4))
 		i++;
 	if (get_pwd(&pwd) == -2)
-		printf("getcwd: cannot access \
-parent directories: No such file or directory\n");
+		printf("getcwd: cannot access parent directories\n");
 	data->my_env[i] = ft_strjoin("PWD=", pwd, 0);
+	if (!data->my_env[i])
+		return (-1);
 	return (0);
 }

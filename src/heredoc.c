@@ -24,32 +24,45 @@ char	*generate_random_name(t_data *data)
 	return ((char *)name);
 }
 
+int	ft_write_heredoc(char *line, t_commands *cmds, char *name, char *delimiter)
+{
+	line = readline(">");
+	cmds->outfile_fd = open(name, O_CREAT, 420);
+	if (cmds->outfile_fd == -1)
+		perror(name);
+	if (line && ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) != 0)
+	{
+		write(cmds->outfile_fd, line, ft_strlen(line));
+		write(cmds->outfile_fd, "\n", 1);
+	}
+	else
+		return (1);
+	return (0);
+}
+
 int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 {
 	char	*name;
 	char	*line;
 
+	line = NULL;
 	delimiter = ft_strdup(delimiter + 1);
 	if (!delimiter)
 		exit_minishell(&data->token, &data->cmds, data);
 	name = generate_random_name(data);
 	name = ft_strjoin("/tmp/", name, 0);
-	printf("%s\n", name);
+	if (!name)
+		return (-1);
 	while (1)
 	{
-		line = readline(">");
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) != 0)
-		{
-			ft_append(data, cmds, name, 0);
-			write(cmds->outfile_fd, line, ft_strlen(line));
-			write(cmds->outfile_fd, "\n", 1);
-			close(cmds->outfile_fd);
-		}
-		else
+		if (ft_write_heredoc(line, cmds, name, delimiter) == 1)
 			break ;
 	}
+	close(cmds->outfile_fd);
 	cmds->outfile_fd = STDOUT_FILENO;
 	cmds->infile_fd = open(name, O_RDONLY);
+	if (cmds->infile_fd == -1)
+		perror(name);
 	free(name);
 	return (0);
 }

@@ -18,6 +18,8 @@ t_commands	*ft_cmdnew(char *user, int flag)
 	new->infile_fd = 0;
 	new->outfile_fd = 1;
 	new->user = ft_strdup(user);
+	if (!new->user)
+		return (NULL);
 	i++;
 	return (new);
 }

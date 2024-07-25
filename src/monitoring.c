@@ -74,9 +74,11 @@ char	*get_user(t_data *data)
 	if (ft_strncmp(username, pwd, ft_strlen(username)) == 0)
 		pwd = NULL;
 	user = ft_strjoin_name(user, pwd, '~', '$');
-	user = ft_strjoin(user, " ", 1);
-	free__monitoring(host, username, pwd);
 	if (!user)
 		return (NULL);
+	user = ft_strjoin(user, " ", 1);
+	if (!user)
+		return (NULL);
+	free__monitoring(host, username, pwd);
 	return (user);
 }

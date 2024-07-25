@@ -10,6 +10,8 @@ int	expand_variables(char **dest, char *src, t_data *data)
 	int		i;
 
 	(*dest) = ft_strdup(src);
+	if (!(*dest))
+		return (-1);
 	i = 0;
 	end = 0;
 	if (ft_strncmp((*dest), "$", 1) == 0 && ft_strlen((*dest)) == 1)
@@ -24,6 +26,8 @@ int	expand_variables(char **dest, char *src, t_data *data)
 			while (ft_isalnum((*dest)[i++]) && (*dest)[i - 1] != '$')
 				end++;
 			name = ft_strndup((*dest) + (start + 1), end - start - 1);
+			if (!name)
+				return (-1);
 			value = find_env_var(name, data->my_env);
 			if (value)
 			{
@@ -33,6 +37,8 @@ int	expand_variables(char **dest, char *src, t_data *data)
 				ft_strcpy(temp + start, value);
 				ft_strcpy(temp + start + ft_strlen(value), (*dest) + end);
 				(*dest) = ft_strdup(temp);
+				if (!(*dest))
+					return (-1);
 			}
 			else
 			{
@@ -41,6 +47,8 @@ int	expand_variables(char **dest, char *src, t_data *data)
 				ft_strncpy(temp, (*dest), start);
 				ft_strcpy(temp + start, (*dest) + end);
 				(*dest) = ft_strdup(temp);
+				if (!(*dest))
+					return (-1);
 			}
 			free(temp);
 			free(name);
@@ -61,8 +69,14 @@ static void	handle_word_utils(t_token **token, t_data *data, char *temp2, int j)
 		if ((*token)->type != T_S_QUOTED_WORD)
 			j = expand_variables(&temp3, (*token)->value, data);
 		else
+		{
 			temp3 = ft_strdup((*token)->value);
+			if (!temp3)
+				exit_minishell(token, &data->cmds, data);
+		}
 		temp2 = ft_strjoin(temp2, temp3, 0);
+		if (!temp2)
+			exit_minishell(token, &data->cmds, data);
 		if (j)
 		{
 			free(temp3);
@@ -82,11 +96,21 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 	if ((*token)->type != T_S_QUOTED_WORD)
 		j = expand_variables(&temp2, (*token)->value, data);
 	else
+	{
 		temp2 = ft_strdup((*token)->value);
+		if (!temp2)
+			exit_minishell(token, cmds, data);
+	}
 	handle_word_utils(token, data, temp2, j);
 	if (*i == 0)
+	{
 		(*cmds)->name = ft_strdup(temp2);
+		if (!(*cmds)->name)
+			exit_minishell(token, cmds, data);
+	}
 	(*cmds)->args[(*i)++] = ft_strdup(temp2);
+	if (!(*cmds)->args[(*i) - 1])
+		exit_minishell(token, cmds, data);
 	free(temp2);
 }
 
@@ -100,8 +124,14 @@ static void	handle_rword_utils(t_token **token, t_data *data, char *temp2, int j
 		if ((*token)->type != T_RS_QUOTED_WORD)
 			j = expand_variables(&temp3, (*token)->value, data);
 		else
+		{
 			temp3 = ft_strdup((*token)->value);
+			if (!temp3)
+				exit_minishell(token, &data->cmds, data);
+		}
 		temp2 = ft_strjoin(temp2, temp3, 0);
+		if (!temp2)
+			exit_minishell(token, &data->cmds, data);
 		if (j)
 		{
 			free(temp3);
@@ -135,14 +165,22 @@ int	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 		return (2);
 	}
 	redir_type = ft_strdup((*token)->value);
+	if (!redir_type)
+		exit_minishell(token, cmds, data);
 	(*token) = (*token)->next;
 	j = 0;
 	if ((*token)->type != T_RS_QUOTED_WORD)
 		j = expand_variables(&temp2, (*token)->value, data);
 	else
+	{
 		temp2 = ft_strdup((*token)->value);
+		if (!temp2)
+			exit_minishell(token, cmds, data);
+	}
 	handle_rword_utils(token, data, temp2, j);
 	(*cmds)->redirections[(*k)++] = ft_strjoin(redir_type, temp2, 0);
+	if (!(*cmds)->redirections[(*k - 1)])
+		exit_minishell(token, cmds, data);
 	free(redir_type);
 	free(temp2);
 	return (0);

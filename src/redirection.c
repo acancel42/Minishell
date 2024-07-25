@@ -19,25 +19,22 @@ int	ft_redir_input(t_commands *cmds, int i)
 
 int	ft_wich_redir(t_commands *cmds, int i)
 {
-	char	*temp;
 
 	if (cmds->redirections[i][0] == '>')
 	{
 		cmds->redirections[i] = \
 			ft_strdup(cmds->redirections[i] + 1);
+		if (!cmds->redirections[i])
+			return (-1);
 		ft_redir_output(cmds, i);
-		temp = ft_strdup(">");
-		cmds->redirections[i] = \
-			ft_strjoin(temp, cmds->redirections[i], 1);
 	}
 	else if (cmds->redirections[i][0] == '<')
 	{
 		cmds->redirections[i] = \
 			ft_strdup(cmds->redirections[i] + 1);
+		if (!cmds->redirections[i])
+			return (-1);
 		ft_redir_input(cmds, i);
-		temp = ft_strdup("<");
-		cmds->redirections[i] = \
-			ft_strjoin(temp, cmds->redirections[i], 1);
 	}
 	return (0);
 }

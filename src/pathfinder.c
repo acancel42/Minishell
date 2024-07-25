@@ -78,7 +78,11 @@ int	ft_pathfinder(t_data *data)
 				return (0);
 		}
 		else
+		{
 			data->cmds->path = ft_strdup(data->cmds->args[0]);
+			if (!data->cmds->path)
+				return (-1);
+		}
 		if (data->cmds->path || btflag == 2)
 			data->cmds = data->cmds->next;
 	}
