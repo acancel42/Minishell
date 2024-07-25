@@ -70,17 +70,18 @@ int	main(int argc, char **argv, char **env)
 		}
 		lexer_init(&token, data);
 		init_cmd(&cmds, token, data);
-		fill_cmd(&cmds, token, data);
+		if (fill_cmd(&cmds, token, data) == 2)
+			continue ;
 		data->cmds = cmds;
 		data->token = token;
-		if (ft_is_built_in(cmds) && data->index_max == 0 && cmds->redirections[0] == NULL)
+		if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 && cmds->redirections[0] == NULL)
 		{
 			ft_exec_built_in(data, cmds);
 			continue ;
 		}
 		j = -1;
 		data->pflag = false;
-		if (ft_pathfinder(data) == 0)
+		if (cmds->name && ft_pathfinder(data) == 0)
 			continue ;
 		while (data->line[++j])
 		{

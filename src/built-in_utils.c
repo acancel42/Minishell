@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void	ft_witch_cd(t_data *data, t_commands *cmds)
+static void	ft_wich_cd(t_data *data, t_commands *cmds)
 {
 	if (cmds->args[1] == NULL || \
 		ft_strncmp(cmds->args[1], "~", 1) == 0)
@@ -22,7 +22,7 @@ int	ft_exec_cd(t_data *data)
 		printf("cd: HOME not set\n");
 		return (1);
 	}
-	ft_witch_cd(data, data->cmds);
+	ft_wich_cd(data, data->cmds);
 	return (1);
 }
 

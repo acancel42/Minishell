@@ -111,13 +111,29 @@ static void	handle_rword_utils(t_token **token, t_data *data, char *temp2, int j
 	}
 }
 
-void	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
+int	ft_is_variable(char *str)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+		if (str[i] == '$')
+			return (1);
+	return (0);
+}
+
+int	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 {
 	char	*redir_type;
 	char	*temp2;
 	int		j;
 
 	temp2 = NULL;
+	if ((*token)->type == T_HEREDOC && ft_is_variable((*token)->next->value) == 1)
+	{
+		printf("syntax error\n");
+		return (2);
+	}
 	redir_type = ft_strdup((*token)->value);
 	(*token) = (*token)->next;
 	j = 0;
@@ -129,9 +145,10 @@ void	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 	(*cmds)->redirections[(*k)++] = ft_strjoin(redir_type, temp2, 0);
 	free(redir_type);
 	free(temp2);
+	return (0);
 }
 
-void	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
+int	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 {
 	int	i;
 	int	k;
@@ -158,7 +175,10 @@ void	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 			handle_word(cmds, &token, data, &i);
 		else if (token->type == T_REDIR_OUT || token->type == T_REDIR_IN \
 				|| token->type == T_APPEND_OUT || token->type == T_HEREDOC)
-			handle_rword(cmds, &token, data, &k);
+		{
+			if (handle_rword(cmds, &token, data, &k) == 2)
+				return (2);
+		}
 		else if (token->type == T_PIPE)
 		{
 			k = 0;
@@ -167,4 +187,5 @@ void	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 		}
 		token = token->next;
 	}
+	return (0);
 }
