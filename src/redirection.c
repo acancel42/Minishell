@@ -19,7 +19,6 @@ int	ft_redir_input(t_commands *cmds, int i)
 
 int	ft_wich_redir(t_commands *cmds, int i)
 {
-
 	if (cmds->redirections[i][0] == '>')
 	{
 		cmds->redirections[i] = \

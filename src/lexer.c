@@ -32,7 +32,8 @@ int	expand_variables(char **dest, char *src, t_data *data)
 			if (value)
 			{
 				i++;
-				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + ft_strlen(value) + 1);
+				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
+							ft_strlen(value) + 1);
 				ft_strncpy(temp, (*dest), start);
 				ft_strcpy(temp + start, value);
 				ft_strcpy(temp + start + ft_strlen(value), (*dest) + end);
@@ -43,7 +44,8 @@ int	expand_variables(char **dest, char *src, t_data *data)
 			else
 			{
 				i = start;
-				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + ft_strlen(value) + 1);
+				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
+						ft_strlen(value) + 1);
 				ft_strncpy(temp, (*dest), start);
 				ft_strcpy(temp + start, (*dest) + end);
 				(*dest) = ft_strdup(temp);
@@ -114,7 +116,8 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 	free(temp2);
 }
 
-static void	handle_rword_utils(t_token **token, t_data *data, char *temp2, int j)
+static void	handle_rword_utils(t_token **token, t_data *data, \
+								char *temp2, int j)
 {
 	char	*temp3;
 
@@ -159,7 +162,8 @@ int	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 	int		j;
 
 	temp2 = NULL;
-	if ((*token)->type == T_HEREDOC && ft_is_variable((*token)->next->value) == 1)
+	if ((*token)->type == T_HEREDOC && \
+		ft_is_variable((*token)->next->value) == 1)
 	{
 		printf("syntax error\n");
 		return (2);
@@ -203,10 +207,11 @@ int	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 		if (!(*cmds)->args)
 			exit_minishell(&token, cmds, data);
 		if (!(*cmds)->redirections)
-			(*cmds)->redirections = ft_calloc(count_type_until_pipe(token, T_RWORD, 0) \
-			+ count_type_until_pipe(token, T_RD_QUOTED_WORD, 0) \
-			+ count_type_until_pipe(token, T_RS_QUOTED_WORD, 0) \
-			+ 1, sizeof(char *));
+			(*cmds)->redirections = \
+				ft_calloc(count_type_until_pipe(token, T_RWORD, 0) \
+				+ count_type_until_pipe(token, T_RD_QUOTED_WORD, 0) \
+				+ count_type_until_pipe(token, T_RS_QUOTED_WORD, 0) \
+				+ 1, sizeof(char *));
 		if (!(*cmds)->redirections)
 			exit_minishell(&token, cmds, data);
 		if (ft_isword(token))

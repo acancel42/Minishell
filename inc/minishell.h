@@ -108,5 +108,8 @@ void		print_cmds(t_commands *cmds);
 void		print_lst(t_token *token);
 void		print_my_env(char **my_env);
 void		print_type(t_token_types type);
+int			ft_print_export(char **args, t_data *data);
+void		ft_replace_export(char ***nenv, char ***nexp, int i, t_data *data);
+char		**tab_replace(char **env, char *args);
 
 #endif

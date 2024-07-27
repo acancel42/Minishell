@@ -63,6 +63,7 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	cmds->infile_fd = open(name, O_RDONLY);
 	if (cmds->infile_fd == -1)
 		perror(name);
+	unlink(name);
 	free(name);
 	return (0);
 }

@@ -1,47 +1,5 @@
 #include "minishell.h"
 
-int	ft_envcmp(char *env, char *variable)
-{
-	char	*temp;
-	int		res;
-
-	res = 1;
-	temp = ft_strjoin(variable, "=", 0);
-	if (!temp)
-		return (-1);
-	if (ft_strncmp(env, temp, ft_strlen(temp)) == 0 || \
-		ft_strncmp(env, variable, ft_strlen(variable) + 1) == 0)
-		res = 0;
-	free(temp);
-	return (res);
-}
-
-char	**tab_join(char **tab, char *str)
-{
-	int		i;
-	char	**new_tab;
-
-	i = 0;
-	while (tab[i])
-		i++;
-	new_tab = malloc(sizeof(char *) * (i + 2));
-	if (!new_tab)
-		return (NULL);
-	i = 0;
-	while (tab[i])
-	{
-		new_tab[i] = ft_strdup(tab[i]);
-		if (!new_tab[i])
-			return (NULL);
-		i++;
-	}
-	new_tab[i] = ft_strdup(str);
-	if (!new_tab[i])
-		return (NULL);
-	new_tab[i + 1] = NULL;
-	return (new_tab);
-}
-
 char	**tab_replace(char **env, char *args)
 {
 	char	*variable;
@@ -67,7 +25,7 @@ char	**tab_replace(char **env, char *args)
 			env[k] = ft_strdup(args);
 			if (!env[k])
 				return (NULL);
-		}	
+		}
 	}
 	free(variable);
 	return (env);
@@ -85,7 +43,6 @@ static int	check_arg(char *args)
 			return (1);
 	return (0);
 }
-
 
 int	ft_isexport(char *args, char **env)
 {
@@ -114,43 +71,6 @@ int	ft_isexport(char *args, char **env)
 	}
 	free(variable);
 	return (is_export);
-}
-
-int	ft_print_export(char **args, t_data *data)
-{
-	int	i;
-
-	i = 0;
-	if (!args[1])
-	{
-		while (data->export[i++] && data->export[i] != NULL)
-			printf("%s\n", data->export[i]);
-		return (1);
-	}
-	return (0);
-}
-
-void ft_replace_export(char ***new_env, char ***new_export, int i, t_data *data)
-{
-	if (ft_isexport(data->cmds->args[i], data->my_env) && \
-				ft_isexport(data->cmds->args[i], data->export))
-	{
-		*new_env = tab_replace((data->my_env), data->cmds->args[i]);
-		*new_export = tab_replace((data->export), data->cmds->args[i]);
-	}
-	else if (!ft_isexport(data->cmds->args[i], data->my_env) && \
-			ft_isexport(data->cmds->args[i], data->export))
-	{
-		*new_env = tab_join((data->my_env), data->cmds->args[i]);
-		*new_export = tab_replace((data->export), data->cmds->args[i]);
-	}
-	else
-	{
-		*new_env = tab_join((data->my_env), data->cmds->args[i]);
-		*new_export = tab_join((data->export), data->cmds->args[i]);
-	}
-	if (!*new_env || !*new_export)
-		exit_minishell(&data->token, &data->cmds, data);
 }
 
 int	ft_export(char **args, t_data *data)
