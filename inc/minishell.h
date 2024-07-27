@@ -48,6 +48,8 @@ typedef struct s_data
 	t_token		*token;
 }				t_data;
 
+extern int	g_sigint;
+
 char		**tab_join(char **tab, char *str);
 char		*find_env_var(char *name, char **env);
 char		*ft_strjoin_name(char *s1, char *s2, char c1, char c2);
@@ -111,5 +113,9 @@ void		print_type(t_token_types type);
 int			ft_print_export(char **args, t_data *data);
 void		ft_replace_export(char ***nenv, char ***nexp, int i, t_data *data);
 char		**tab_replace(char **env, char *args);
+void 		ft_signalhandle(void);
+int			do_nothing(void);
+void		ft_wait_signal(void);
+void		ft_signalhandle_in_child(void);
 
 #endif

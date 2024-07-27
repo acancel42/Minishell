@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+int	g_sigint = 0;
+
 char	*get_color(char *user, char *color)
 {
 	char	*prompt;
@@ -25,6 +27,21 @@ void	free_data(t_data *data)
 	data->pflag = 0;
 }
 
+void	ft_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		g_sigint = 1;
+	}
+	return ;
+}
+
+int	do_nothing(void)
+{
+	return (42);
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_token				*token;
@@ -37,6 +54,7 @@ int	main(int argc, char **argv, char **env)
 		printf("no env\n");
 		return (-1);
 	}
+	rl_event_hook = &do_nothing;
 	data = ft_calloc(1, sizeof(t_data));
 	ft_get_env(data, env);
 	if (!data->my_env)
@@ -47,6 +65,8 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	while (1)
 	{
+		g_sigint = 0;
+		ft_signalhandle();
 		token = NULL;
 		cmds = NULL;
 		data->user = get_user(data);
@@ -57,6 +77,11 @@ int	main(int argc, char **argv, char **env)
 		if (!data->line)
 			exit_minishell(&token, &cmds, data);
 		if (ft_strncmp(data->line, "", 1) == 0)
+		{
+			free_data(data);
+			continue ;
+		}
+		if (g_sigint != 0)
 		{
 			free_data(data);
 			continue ;

@@ -26,18 +26,28 @@ char	*generate_random_name(t_data *data)
 
 int	ft_write_heredoc(char *line, t_commands *cmds, char *name, char *delimiter)
 {
+	int	ret;
+	
+	ret = 0;
+	printf("%d\n", g_sigint);
 	line = readline(">");
 	cmds->outfile_fd = open(name, O_CREAT, 420);
 	if (cmds->outfile_fd == -1)
 		perror(name);
+	if (g_sigint == 2)
+	{
+		free (line);
+		return (1);
+	}
 	if (line && ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) != 0)
 	{
 		write(cmds->outfile_fd, line, ft_strlen(line));
 		write(cmds->outfile_fd, "\n", 1);
 	}
 	else
-		return (1);
-	return (0);
+		ret = 1;
+	free(line);
+	return (ret);
 }
 
 int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
@@ -55,8 +65,10 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 		return (-1);
 	while (1)
 	{
+		ft_signalhandle();
 		if (ft_write_heredoc(line, cmds, name, delimiter) == 1)
 			break ;
+		signal(SIGQUIT, SIG_IGN);
 	}
 	close(cmds->outfile_fd);
 	cmds->outfile_fd = STDOUT_FILENO;
