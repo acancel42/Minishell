@@ -58,27 +58,51 @@ char	*get_user(t_data *data)
 	char	*user;
 	char	*username;
 	char	*pwd;
+	char	*pwd_temp;
+	char	*user_temp;
 
 	username = NULL;
 	host = ft_get_host(data);
 	if (!host)
 		return (NULL);
-	user = ft_get_user(data, host, &username);
-	if (!user)
+	user_temp = ft_get_user(data, host, &username);
+	if (!user_temp)
+	{
+		free(host);
 		return (NULL);
-	pwd = ft_get_pwd(data);
-	if (!pwd)
+	}
+	pwd_temp = ft_get_pwd(data);
+	if (!pwd_temp)
+	{
+		free(host);
+		free(user_temp);
 		return (NULL);
-	pwd = ft_substr(pwd, ft_strlen(username) + 6, \
-		ft_strlen(username) + 6 - ft_strlen(pwd));
+	}
+	pwd = ft_substr(pwd_temp, ft_strlen(username) + 6, \
+		ft_strlen(username) + 6 - ft_strlen(pwd_temp));
+	free(pwd_temp);
 	if (ft_strncmp(username, pwd, ft_strlen(username)) == 0)
+	{
+		free(pwd);
 		pwd = NULL;
-	user = ft_strjoin_name(user, pwd, '~', '$');
+	}
+	user = ft_strjoin_name(user_temp, pwd, '~', '$');
 	if (!user)
+	{
+		free(host);
+		free(user_temp);
+		free(pwd);
 		return (NULL);
-	user = ft_strjoin(user, " ", 1);
-	if (!user)
+	}
+	free(user_temp);
+	user_temp = ft_strjoin(user, " ", 1);
+	if (!user_temp)
+	{
+		free(host);
+		free(user);
+		free(pwd);
 		return (NULL);
+	}
 	free__monitoring(host, username, pwd);
-	return (user);
+	return (user_temp);
 }

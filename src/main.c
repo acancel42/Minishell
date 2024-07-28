@@ -116,6 +116,5 @@ int	main(int argc, char **argv, char **env)
 		exec_cmd(data, cmds);
 		free_data(data);
 	}
-	free(data->home);
 	return (0);
 }

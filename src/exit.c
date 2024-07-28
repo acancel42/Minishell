@@ -24,6 +24,8 @@ void	exit_minishell(t_token **token, t_commands **cmds, t_data *data)
 			free(data->user);
 		if (data->home)
 			free(data->home);
+		if (data->export)
+			ft_free_tab(data->export);
 		free(data);
 	}
 	printf(RED"%s\n"RESET, "exit");
