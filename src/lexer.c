@@ -8,12 +8,15 @@ int	expand_variables(char **dest, char *src, t_data *data)
 	char	*value;
 	char	*temp;
 	int		i;
+	bool	is_itoa;
 
 	(*dest) = ft_strdup(src);
+	//printf("src: %s\n", src);
 	if (!(*dest))
 		return (-1);
 	i = 0;
 	end = 0;
+	is_itoa = false;
 	if (ft_strncmp((*dest), "$", 1) == 0 && ft_strlen((*dest)) == 1)
 		return (i);
 	while ((*dest) && (*dest)[i])
@@ -23,20 +26,46 @@ int	expand_variables(char **dest, char *src, t_data *data)
 			start = i;
 			end = i + 1;
 			i++;
-			while (ft_isalnum((*dest)[i++]) && (*dest)[i - 1] != '$')
+			if ((*dest)[i] == '?')
+			{
+				name = NULL;
+				value = ft_itoa(data->last_error_status);
+				if (!value)
+					return (-1);
 				end++;
-			name = ft_strndup((*dest) + (start + 1), end - start - 1);
-			if (!name)
-				return (-1);
-			value = find_env_var(name, data->my_env);
+				is_itoa = true;
+			}
+			else
+			{
+				if (ft_isdigit((*dest)[i]))
+				{
+					name = ft_strndup((*dest) + start + 1, 1);
+					if (!name)
+						return (-1);
+					i++;
+					end++;
+				}
+				else
+				{
+					while (ft_isalnum((*dest)[i++]) && (*dest)[i - 1] != '$')
+						end++;
+					name = ft_strndup((*dest) + (start + 1), end - start - 1);
+					if (!name)
+						return (-1);
+				}
+				value = find_env_var(name, data->my_env);
+			}
 			if (value)
 			{
-				i++;
+				i = start;
 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
 							ft_strlen(value) + 1);
+				if (!temp)
+					return (-1);
 				ft_strncpy(temp, (*dest), start);
 				ft_strcpy(temp + start, value);
 				ft_strcpy(temp + start + ft_strlen(value), (*dest) + end);
+				free((*dest));
 				(*dest) = ft_strdup(temp);
 				if (!(*dest))
 					return (-1);
@@ -48,12 +77,18 @@ int	expand_variables(char **dest, char *src, t_data *data)
 						ft_strlen(value) + 1);
 				ft_strncpy(temp, (*dest), start);
 				ft_strcpy(temp + start, (*dest) + end);
+				free((*dest));
 				(*dest) = ft_strdup(temp);
 				if (!(*dest))
 					return (-1);
 			}
 			free(temp);
 			free(name);
+			if (is_itoa == true)
+			{
+				is_itoa = false;
+				free(value);
+			}
 		}
 		else
 			i++;
@@ -63,10 +98,15 @@ int	expand_variables(char **dest, char *src, t_data *data)
 
 static void	handle_word_utils(t_token **token, t_data *data, char *temp2, int j)
 {
+	char 	*temp;
 	char	*temp3;
 
+	temp = ft_strdup(temp2);
+	free(temp2);
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
+		if (ft_strncmp((*token)->value, "$",2) == 0 && ft_strncmp((*token)->next->value, "",1) == 0)
+			(*token) = (*token)->next;
 		(*token) = (*token)->next;
 		if ((*token)->type != T_S_QUOTED_WORD)
 			j = expand_variables(&temp3, (*token)->value, data);
@@ -76,16 +116,13 @@ static void	handle_word_utils(t_token **token, t_data *data, char *temp2, int j)
 			if (!temp3)
 				exit_minishell(token, &data->cmds, data);
 		}
-		temp2 = ft_strjoin(temp2, temp3, 0);
-		if (!temp2)
+		temp = ft_strjoin(temp, temp3, 0);
+		if (!temp)
 			exit_minishell(token, &data->cmds, data);
-		if (j)
-		{
-			free(temp3);
-			break ;
-		}
 		free(temp3);
 	}
+	temp2 = ft_strdup(temp);
+	free(temp);
 }
 
 void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
@@ -95,6 +132,8 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 
 	temp2 = NULL;
 	j = 0;
+	if (ft_strncmp((*token)->value, "$",2) == 0 && ft_strncmp((*token)->next->value, "",1) == 0)
+			(*token) = (*token)->next;
 	if ((*token)->type != T_S_QUOTED_WORD)
 		j = expand_variables(&temp2, (*token)->value, data);
 	else
@@ -103,6 +142,8 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 		if (!temp2)
 			exit_minishell(token, cmds, data);
 	}
+	//printf("temp2: '%s'\n", temp2);
+	//if (ft_strncmp(temp2, "", 1) != 0)
 	handle_word_utils(token, data, temp2, j);
 	if (*i == 0)
 	{
@@ -123,6 +164,8 @@ static void	handle_rword_utils(t_token **token, t_data *data, \
 
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
+		if (ft_strncmp((*token)->value, "$",2) == 0 && ft_strncmp((*token)->next->value, "",1) == 0)
+			(*token) = (*token)->next;
 		(*token) = (*token)->next;
 		if ((*token)->type != T_RS_QUOTED_WORD)
 			j = expand_variables(&temp3, (*token)->value, data);
@@ -181,6 +224,8 @@ int	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 		if (!temp2)
 			exit_minishell(token, cmds, data);
 	}
+	if (ft_strncmp((*token)->value, "$",2) == 0 && ft_strncmp((*token)->next->value, "",1) == 0)
+			(*token) = (*token)->next;
 	handle_rword_utils(token, data, temp2, j);
 	(*cmds)->redirections[(*k)++] = ft_strjoin(redir_type, temp2, 0);
 	if (!(*cmds)->redirections[(*k - 1)])
