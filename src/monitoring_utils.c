@@ -25,14 +25,3 @@ char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 	dest[i] = '\0';
 	return (dest);
 }
-
-void	free__monitoring(char *host, char *username, char *pwd)
-{
-	if (pwd)
-		free(pwd);
-	if (host)
-		free(host);
-	if (username)
-		free(username);
-	return ;
-}

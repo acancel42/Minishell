@@ -13,20 +13,6 @@ char	*get_color(char *user, char *color)
 	return (prompt);
 }
 
-void	free_data(t_data *data, t_commands **cmds)
-{
-	if (*cmds)
-		ft_cmdsclear(cmds);
-	if (data->token)
-		ft_tokenclear(&data->token);
-	if (data->line)
-		free(data->line);
-	if (data->user)
-		free(data->user);
-	data->index_max = 0;
-	data->pflag = 0;
-}
-
 void	ft_handler(int sig)
 {
 	if (sig == SIGINT)

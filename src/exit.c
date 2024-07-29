@@ -1,15 +1,5 @@
 #include "minishell.h"
 
-void	ft_free_tab(char **arr)
-{
-	int	i;
-
-	i = -1;
-	while (arr[++i])
-		free(arr[i]);
-	free(arr);
-}
-
 void	exit_minishell(t_token **token, t_commands **cmds, t_data *data)
 {
 	ft_cmdsclear(cmds);
@@ -29,7 +19,7 @@ void	exit_minishell(t_token **token, t_commands **cmds, t_data *data)
 		free(data);
 	}
 	printf(RED"%s\n"RESET, "exit");
-	exit(EXIT_SUCCESS);
+	return ;
 }
 
 void	ft_exec_error(t_token *token, t_commands *cmds, t_data *data, int flag)
@@ -41,4 +31,14 @@ void	ft_exec_error(t_token *token, t_commands *cmds, t_data *data, int flag)
 	else if (flag == 2)
 		perror("dup2");
 	exit_minishell(&token, &cmds, data);
+}
+
+void	ft_exit(t_token *token, t_commands *cmds, t_data *data)
+{
+	exit_minishell(&token, &cmds, data);
+	if (cmds->args[1])
+		exit(cmds->args[1]);
+	else
+		exit(data->last_error_status);
+
 }
