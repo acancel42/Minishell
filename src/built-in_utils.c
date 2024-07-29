@@ -6,12 +6,12 @@ static void	ft_wich_cd(t_data *data, t_commands *cmds)
 		ft_strncmp(cmds->args[1], "~", 1) == 0)
 	{
 		ft_cd(data->home, data);
-		free_data(data);
+		free_data(data, &cmds);
 	}
 	else
 	{
 		ft_cd(ft_substr(data->line, 3, ft_strlen(data->line) - 3), data);
-		free_data(data);
+		free_data(data, &cmds);
 	}
 }
 

@@ -13,10 +13,10 @@ char	*get_color(char *user, char *color)
 	return (prompt);
 }
 
-void	free_data(t_data *data)
+void	free_data(t_data *data, t_commands **cmds)
 {
-	if (data->cmds)
-		ft_cmdsclear(&data->cmds);
+	if (*cmds)
+		ft_cmdsclear(cmds);
 	if (data->token)
 		ft_tokenclear(&data->token);
 	if (data->line)
@@ -78,19 +78,19 @@ int	main(int argc, char **argv, char **env)
 			exit_minishell(&token, &cmds, data);
 		if (ft_strncmp(data->line, "", 1) == 0)
 		{
-			free_data(data);
+			free_data(data, &cmds);
 			continue ;
 		}
 		if (g_sigint != 0)
 		{
-			free_data(data);
+			free_data(data, &cmds);
 			continue ;
 		}
 		if (data->line)
 			add_history(data->line);
 		if (prelexer_check(data) == 2)
 		{
-			free_data(data);
+			free_data(data, &cmds);
 			continue ;
 		}
 		lexer_init(&token, data);
@@ -102,6 +102,7 @@ int	main(int argc, char **argv, char **env)
 		if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 && cmds->redirections[0] == NULL)
 		{
 			ft_exec_built_in(data, cmds);
+			free_data(data, &cmds);
 			continue ;
 		}
 		j = -1;
@@ -114,7 +115,7 @@ int	main(int argc, char **argv, char **env)
 				data->pflag = 1;
 		}
 		exec_cmd(data, cmds);
-		free_data(data);
+		free_data(data, &cmds);
 	}
 	return (0);
 }
