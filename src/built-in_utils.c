@@ -41,9 +41,10 @@ int	ft_exec_built_in(t_data *data, t_commands *cmds)
 	if (ft_strncmp(cmds->name, "pwd", 4) == 0)
 		return (ft_pwd(), 1);
 	if (ft_strncmp(cmds->name, "exit", 5) == 0)
-		(&data->token, &data->cmds, data);
+		exit_minishell(&data->token, &cmds, data);
 	return (0);
 }
+		// ft_exit(&data->token, &cmds, data);
 
 int	ft_is_built_in(t_commands *cmds)
 {

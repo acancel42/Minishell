@@ -117,6 +117,6 @@ void		ft_signalhandle(void);
 int			do_nothing(void);
 void		ft_wait_signal(void);
 void		ft_signalhandle_in_child(void);
-void		ft_exit(t_token *token, t_commands *cmds, t_data *data);
+void		ft_exit(t_token **token, t_commands **cmds, t_data *data);
 
 #endif
