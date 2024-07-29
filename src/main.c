@@ -96,7 +96,10 @@ int	main(int argc, char **argv, char **env)
 		lexer_init(&token, data);
 		init_cmd(&cmds, token, data);
 		if (fill_cmd(&cmds, token, data) == 2)
+		{
+			free_data(data, &cmds);
 			continue ;
+		}
 		data->cmds = cmds;
 		data->token = token;
 		if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 && cmds->redirections[0] == NULL)

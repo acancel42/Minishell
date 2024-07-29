@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 16:51:48 by acancel           #+#    #+#             */
-/*   Updated: 2024/06/28 18:21:42 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 13:16:19 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ char	*ft_strjoin(char *s1, char *s2, int flag)
 		free(s1);
 	return (dest);
 }
-//redirection not malloc'd, so free problem
 
 char	*ft_charjoin(char *s1, char const s2)
 {
