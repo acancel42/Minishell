@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 11:06:30 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/18 03:39:24 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/30 17:31:11 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ int	ft_strchr_b(char *str, char c)
 	size_t	i;
 
 	i = 0;
-	while (str[i] && str[i] != c)
+	while (str[i])
+	{
+		if (str[i] == c)
+			return (0);	
 		i++;
-	if (str[i] == c)
-		return (0);
+	}
 	return (1);
 }

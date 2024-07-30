@@ -42,6 +42,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	rl_event_hook = &do_nothing;
 	data = ft_calloc(1, sizeof(t_data));
+	data->last_error_status = 0;
 	ft_get_env(data, env);
 	if (!data->my_env)
 		printf("no env\n");

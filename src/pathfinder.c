@@ -65,7 +65,7 @@ int	cmd_path(t_data *data)
 
 int	ft_pathfinder(t_data *data)
 {
-	int	btflag;
+	int			btflag;
 
 	btflag = 0;
 	while (data->cmds)
@@ -82,7 +82,6 @@ int	ft_pathfinder(t_data *data)
 			data->cmds->path = ft_strdup(data->cmds->args[0]);
 			if (!data->cmds->path)
 				ft_exit(data->token, data->cmds, data);
-				
 			if (access(data->cmds->path, F_OK | X_OK) == -1)
 			{
 				perror(data->cmds->path);
