@@ -81,6 +81,17 @@ int	ft_pathfinder(t_data *data)
 		{
 			data->cmds->path = ft_strdup(data->cmds->args[0]);
 			if (!data->cmds->path)
+				ft_exit(data->token, data->cmds, data);
+				
+			if (access(data->cmds->path, F_OK | X_OK) == -1)
+			{
+				perror(data->cmds->path);
+				data->last_error_status = 127;
+				if (errno == 13)
+					data->last_error_status--;
+				return (0);
+			}
+			if (!data->cmds->path)
 				return (-1);
 		}
 		if (data->cmds->path || btflag == 2)

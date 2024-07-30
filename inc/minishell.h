@@ -11,6 +11,7 @@
 # include <string.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <errno.h>
 # include "lexer.h"
 # define RED "\033[1;91m\033[1m"
 # define BLUE "\033[1;96m\033[1m"
