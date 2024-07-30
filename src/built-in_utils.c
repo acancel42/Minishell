@@ -26,7 +26,7 @@ int	ft_exec_cd(t_data *data)
 	return (1);
 }
 
-int	ft_exec_built_in(t_data *data, t_commands *cmds)
+int	ft_exec_built_in(t_token *token, t_commands *cmds, t_data *data)
 {
 	if (ft_strncmp(cmds->name, "cd", 3) == 0)
 		return (ft_exec_cd(data));
@@ -41,10 +41,10 @@ int	ft_exec_built_in(t_data *data, t_commands *cmds)
 	if (ft_strncmp(cmds->name, "pwd", 4) == 0)
 		return (ft_pwd(), 1);
 	if (ft_strncmp(cmds->name, "exit", 5) == 0)
-		exit_minishell(&data->token, &cmds, data);
+		ft_exit(token, cmds, data);
 	return (0);
 }
-		// ft_exit(&data->token, &cmds, data);
+		// exit_minishell(&token, &cmds, data);
 
 int	ft_is_built_in(t_commands *cmds)
 {

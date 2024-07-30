@@ -19,9 +19,9 @@ void	exit_minishell(t_token **token, t_commands **cmds, t_data *data)
 		free(data);
 	}
 	printf(RED"%s\n"RESET, "exit");
-	exit(EXIT_SUCCESS);
+	return ;
 }
-	// return ;
+	// exit(EXIT_SUCCESS);
 
 void	ft_exec_error(t_token *token, t_commands *cmds, t_data *data, int flag)
 {
@@ -31,19 +31,18 @@ void	ft_exec_error(t_token *token, t_commands *cmds, t_data *data, int flag)
 		perror("fork");
 	else if (flag == 2)
 		perror("dup2");
-	exit_minishell(&token, &cmds, data);
+	ft_exit(token, cmds, data);
 }
 
-void	ft_exit(t_token **token, t_commands **cmds, t_data *data)
+void	ft_exit(t_token *token, t_commands *cmds, t_data *data)
 {
-	data->last_error_status = 10;
-	printf ("%d\n", ft_atoi((*cmds)->args[1]));
-	exit_minishell(token, cmds, data);
-	if ((*cmds)->args[1])
-	{
-		printf ("%d\n", ft_atoi((*cmds)->args[1]));
-		exit(ft_atoi((*cmds)->args[1]));
-	}
+	int	exit_stat;
+
+	data->last_error_status = 1;
+	if (cmds && cmds->args[1])
+		exit_stat = ft_atoi(cmds->args[1]);
 	else
-		exit(data->last_error_status);
+		exit_stat = data->last_error_status;
+	exit_minishell(&token, &cmds, data);
+	exit(exit_stat);
 }

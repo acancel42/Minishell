@@ -20,7 +20,7 @@ void	ft_replace_export(char ***nenv, char ***nexp, int i, t_data *data)
 		*nexp = tab_join((data->export), data->cmds->args[i]);
 	}
 	if (!*nenv || !*nexp)
-		exit_minishell(&data->token, &data->cmds, data);
+		ft_exit(data->token, data->cmds, data);
 }
 
 int	ft_print_export(char **args, t_data *data)

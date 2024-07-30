@@ -11,7 +11,7 @@ char	*generate_random_name(t_data *data)
 	i = 0;
 	name = ft_calloc((size + 1), sizeof(unsigned char));
 	if (!name)
-		exit_minishell(&data->token, &data->cmds, data);
+		ft_exit(data->token, data->cmds, data);
 	fd = open("/dev/urandom", O_RDONLY);
 	read(fd, name, size);
 	while (name[i] && name[i] != '\0')
@@ -27,7 +27,7 @@ char	*generate_random_name(t_data *data)
 int	ft_write_heredoc(char *line, t_commands *cmds, char *name, char *delimiter)
 {
 	int	ret;
-	
+
 	ret = 0;
 	printf("%d\n", g_sigint);
 	line = readline(">");
@@ -58,7 +58,7 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	line = NULL;
 	delimiter = ft_strdup(delimiter + 1);
 	if (!delimiter)
-		exit_minishell(&data->token, &data->cmds, data);
+		ft_exit(data->token, data->cmds, data);
 	name = generate_random_name(data);
 	name = ft_strjoin("/tmp/", name, 0);
 	if (!name)

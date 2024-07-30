@@ -64,7 +64,7 @@ int			ft_cd(char *path, t_data *data);
 int			ft_echo(t_commands *cmds);
 int			ft_env(t_data *data);
 int			ft_envcmp(char *env, char *variable);
-int			ft_exec_built_in(t_data *data, t_commands *cmds);
+int			ft_exec_built_in(t_token *token, t_commands *cmds, t_data *data);
 int			ft_export(char **args, t_data *data);
 int			ft_is_built_in(t_commands *cmds);
 int			ft_isexport(char *args, char **env);
@@ -117,6 +117,6 @@ void		ft_signalhandle(void);
 int			do_nothing(void);
 void		ft_wait_signal(void);
 void		ft_signalhandle_in_child(void);
-void		ft_exit(t_token **token, t_commands **cmds, t_data *data);
+void		ft_exit(t_token *token, t_commands *cmds, t_data *data);
 
 #endif

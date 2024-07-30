@@ -81,7 +81,7 @@ int	ft_append(t_data *data, t_commands *cmds, char *file, int flag)
 	{
 		temp = ft_strdup(file + 1);
 		if (!temp)
-			exit_minishell(&data->token, &data->cmds, data);
+			ft_exit(data->token, data->cmds, data);
 	}
 	cmds->outfile_fd = open(temp, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (cmds->outfile_fd == -1)

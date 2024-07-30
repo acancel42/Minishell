@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 23:13:00 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/27 19:15:43 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/07/30 14:42:31 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 		ft_exec_error(data->token, cmds, data, 2);
 	if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
 		ft_exec_error(data->token, cmds, data, 2);
-	if (ft_exec_built_in(data, cmds))
+	if (ft_exec_built_in(data->token, cmds, data))
 		exit(EXIT_SUCCESS);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
@@ -47,6 +47,7 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 	if (data->pid == 0)
 		exec_child(fd_pipe, data, cmds);
 	waitpid(data->pid, &status, 0);
+	data->last_error_status = status;
 	if (cmds->outfile_fd != 1)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)
@@ -56,7 +57,7 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 
 static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 {
-	if (ft_exec_built_in(data, cmds) == 1)
+	if (ft_exec_built_in(data->token, cmds, data) == 1)
 		exit(EXIT_SUCCESS);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
@@ -81,18 +82,13 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 	{
 		ft_signalhandle_in_child();
 		if (dup2(cmds->outfile_fd, STDOUT_FILENO) == -1)
-		{
 			return (ft_exec_error(token, cmds, data, 2), 1);
-			printf("debug\n");
-		}
 		if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
-		{
 			return (ft_exec_error(token, cmds, data, 2), 1);
-			printf("debug1\n");
-		}
 		ft_builtin_or_exec(data, cmds);
 	}
 	waitpid(data->pid, &status, 0);
+	data->last_error_status = status;
 	if (cmds->outfile_fd != 1)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)

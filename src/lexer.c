@@ -114,11 +114,11 @@ static char	*handle_w_utils(t_token **token, t_data *data, char *temp2, int j)
 		{
 			temp3 = ft_strdup((*token)->value);
 			if (!temp3)
-				exit_minishell(token, &data->cmds, data);
+				ft_exit(*token, data->cmds, data);
 		}
 		temp = ft_strjoin(temp, temp3, 1);
 		if (!temp)
-			exit_minishell(token, &data->cmds, data);
+			ft_exit(*token, data->cmds, data);
 		free(temp3);
 	}
 	return (temp);
@@ -140,18 +140,18 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 	{
 		temp2 = ft_strdup((*token)->value);
 		if (!temp2)
-			exit_minishell(token, cmds, data);
+			ft_exit(*token, *cmds, data);
 	}
 	temp2 = handle_w_utils(token, data, temp2, j);
 	if (*i == 0)
 	{
 		(*cmds)->name = ft_strdup(temp2);
 		if (!(*cmds)->name)
-			exit_minishell(token, cmds, data);
+			ft_exit(*token, *cmds, data);
 	}
 	(*cmds)->args[(*i)++] = ft_strdup(temp2);
 	if (!(*cmds)->args[(*i) - 1])
-		exit_minishell(token, cmds, data);
+		ft_exit(*token, *cmds, data);
 	free(temp2);
 }
 
@@ -174,11 +174,11 @@ static char	*handle_rword_utils(t_token **token, t_data *data, char *temp2, int 
 		{
 			temp3 = ft_strdup((*token)->value);
 			if (!temp3)
-				exit_minishell(token, &data->cmds, data);
+				ft_exit(*token, data->cmds, data);
 		}
 		temp = ft_strjoin(temp, temp3, 1);
 		if (!temp)
-			exit_minishell(token, &data->cmds, data);
+			ft_exit(*token, data->cmds, data);
 		free(temp3);
 	}
 	return (temp);
@@ -210,7 +210,7 @@ int	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 	}
 	redir_type = ft_strdup((*token)->value);
 	if (!redir_type)
-		exit_minishell(token, cmds, data);
+		ft_exit(*token, *cmds, data);
 	(*token) = (*token)->next;
 	j = 0;
 	if (ft_strncmp((*token)->value, "$", 2) == 0 && \
@@ -222,12 +222,12 @@ int	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 	{
 		temp2 = ft_strdup((*token)->value);
 		if (!temp2)
-			exit_minishell(token, cmds, data);
+			ft_exit(*token, *cmds, data);
 	}
 	temp2 = handle_rword_utils(token, data, temp2, j);
 	(*cmds)->redirections[(*k)++] = ft_strjoin(redir_type, temp2, 0);
 	if (!(*cmds)->redirections[(*k - 1)])
-		exit_minishell(token, cmds, data);
+		ft_exit(*token, *cmds, data);
 	free(redir_type);
 	free(temp2);
 	return (0);
@@ -248,7 +248,7 @@ int	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 			+ count_type_until_pipe(token, T_S_QUOTED_WORD, 0) \
 			+ 1, sizeof(char *));
 		if (!(*cmds)->args)
-			exit_minishell(&token, cmds, data);
+			ft_exit(token, *cmds, data);
 		if (!(*cmds)->redirections)
 			(*cmds)->redirections = \
 				ft_calloc(count_type_until_pipe(token, T_RWORD, 0) \
@@ -256,7 +256,7 @@ int	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 				+ count_type_until_pipe(token, T_RS_QUOTED_WORD, 0) \
 				+ 1, sizeof(char *));
 		if (!(*cmds)->redirections)
-			exit_minishell(&token, cmds, data);
+			ft_exit(token, *cmds, data);
 		if (ft_isword(token))
 			handle_word(cmds, &token, data, &i);
 		else if (token->type == T_REDIR_OUT || token->type == T_REDIR_IN \

@@ -46,7 +46,7 @@ int	main(int argc, char **argv, char **env)
 	if (!data->my_env)
 		printf("no env\n");
 	if (get_home(data) == -1)
-		exit_minishell(NULL, NULL, data);
+		ft_exit(NULL, NULL, data);
 	(void)argc;
 	(void)argv;
 	while (1)
@@ -61,7 +61,7 @@ int	main(int argc, char **argv, char **env)
 		data->user = get_color(data->user, BLUE);
 		data->line = readline(data->user);
 		if (!data->line)
-			exit_minishell(&token, &cmds, data);
+			ft_exit(token, cmds, data);
 		if (ft_strncmp(data->line, "", 1) == 0)
 		{
 			free_data(data, &cmds);
@@ -88,9 +88,10 @@ int	main(int argc, char **argv, char **env)
 		}
 		data->cmds = cmds;
 		data->token = token;
-		if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 && cmds->redirections[0] == NULL)
+		if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 \
+			&& cmds->redirections[0] == NULL)
 		{
-			ft_exec_built_in(data, cmds);
+			ft_exec_built_in(token, cmds, data);
 			free_data(data, &cmds);
 			continue ;
 		}
