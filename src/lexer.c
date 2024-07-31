@@ -56,7 +56,7 @@ int	expand_variables(char **dest, char *src, t_data *data)
 			}
 			if (value)
 			{
-				i = start;
+				i = end;
 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
 							ft_strlen(value) + 1);
 				if (!temp)
@@ -71,7 +71,7 @@ int	expand_variables(char **dest, char *src, t_data *data)
 			}
 			else
 			{
-				i = start;
+				i = end;
 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
 						ft_strlen(value) + 1);
 				ft_strncpy(temp, (*dest), start);

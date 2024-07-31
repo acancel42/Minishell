@@ -13,7 +13,10 @@ int	ft_redir_input(t_commands *cmds, int i)
 {
 	cmds->infile_fd = open(cmds->redirections[i], O_RDONLY);
 	if (cmds->infile_fd == -1)
+	{
 		perror(cmds->redirections[i]);
+		return (-1);
+	}
 	return (0);
 }
 
@@ -66,7 +69,10 @@ int	ft_wich_redir(t_commands *cmds, int i)
 	if (redir_type == '>')
 		ft_redir_output(cmds, i);
 	else
-		ft_redir_input(cmds, i);
+	{
+		if (ft_redir_input(cmds, i) == -1)
+			return (-1);
+	}
 	if (temp)
 		free(temp);
 	return (0);
@@ -91,7 +97,7 @@ int	ft_append(t_data *data, t_commands *cmds, char *file, int flag)
 	return (0);
 }
 
-void	ft_redir_or_append(t_data *data, t_commands *cmds)
+int	ft_redir_or_append(t_data *data, t_commands *cmds)
 {
 	int		i;
 
@@ -104,7 +110,11 @@ void	ft_redir_or_append(t_data *data, t_commands *cmds)
 			handle_heredoc(data, cmds, cmds->redirections[i]);
 		else if (cmds->redirections[i][0] == '<' || \
 					cmds->redirections[i][0] == '>')
-			ft_wich_redir(cmds, i);
+		{
+			if (ft_wich_redir(cmds, i) == -1)
+				return (-1);
+		}
 		i++;
 	}
+	return (0);
 }

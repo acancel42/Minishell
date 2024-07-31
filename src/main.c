@@ -28,17 +28,40 @@ int	do_nothing(void)
 	return (42);
 }
 
+void	ft_is_env_op(t_data *data)
+{
+	char	*buf;
+	char	*temp;
+
+	buf = NULL;
+	if (!find_env_var("PWD", data->my_env))
+	{
+		temp = ft_strjoin("PWD=", getcwd(buf, 0), 0);
+		data->my_env = tab_join(data->my_env, temp);
+		free(buf);
+		free(temp);
+	}
+	if (!find_env_var("LOGNAME", data->my_env))
+		data->my_env = tab_join(data->my_env, "LOGNAME=?");
+	if (!find_env_var("SESSION_MANAGER", data->my_env))
+		data->my_env = tab_join(data->my_env, "SESSION_MANAGER=?");
+	if (!find_env_var("PATH", data->my_env))
+		data->my_env = tab_join(data->my_env, "PATH=/usr/bin/");
+}
+
 int	main(int argc, char **argv, char **env)
 {
 	t_token				*token;
 	t_commands			*cmds;
 	t_data				*data;
 	int					j;
+	char				*buf;
 
+	buf = NULL;
 	if (!env[0])
 	{
 		printf("no env\n");
-		return (-1);
+		printf("%s\n", getcwd(buf, 0));
 	}
 	rl_event_hook = &do_nothing;
 	data = ft_calloc(1, sizeof(t_data));
@@ -52,6 +75,7 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	while (1)
 	{
+		ft_is_env_op(data);
 		g_sigint = 0;
 		ft_signalhandle();
 		token = NULL;

@@ -83,7 +83,8 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 	if (cmds->name && ft_strncmp(cmds->name, "", 1) == 0)
 		return (0);
 	if (cmds->redirections)
-		ft_redir_or_append(data, cmds);
+		if (ft_redir_or_append(data, cmds) == -1)
+			return (0);
 	ft_wait_signal();
 	data->pid = fork();
 	if (data->pid == -1)

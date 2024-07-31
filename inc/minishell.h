@@ -102,7 +102,7 @@ void		ft_exec_error(t_token *token, t_commands *cmds, \
 							t_data *data, int flag);
 void		ft_free_tab(char **arr);
 void		ft_get_env(t_data *data, char **env);
-void		ft_redir_or_append(t_data *data, t_commands *cmds);
+int			ft_redir_or_append(t_data *data, t_commands *cmds);
 void		ft_tokadd_back(t_token **lst, t_token *new);
 void		ft_tokenclear(t_token **token);
 void		init_cmd(t_commands **cmds, t_token *token, t_data *data);

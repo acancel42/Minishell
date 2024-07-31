@@ -57,7 +57,8 @@ int	cmd_path(t_data *data)
 	ft_free_tab(all_paths);
 	if (data->cmds->path == NULL || ft_strncmp(data->cmds->name, "", 1) == 0)
 	{
-		printf("command '%s' not found\n", data->cmds->name);
+		//printf("command '%s' not found\n", data->cmds->name);
+		printf("%s: command not found\n", data->cmds->name);
 		return (0);
 	}
 	return (1);
