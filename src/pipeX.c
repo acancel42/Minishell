@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   pipeX.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/16 23:13:00 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/31 10:24:51 by acancel          ###   ########lyon.fr   */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -60,7 +49,6 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 		exec_child(fd_pipe, data, cmds);
 	wait(&status);
 	data->last_error_status = WEXITSTATUS(status);
-	printf("err pipe : %d\n", data->last_error_status);
 	if (cmds->outfile_fd != 1)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)
@@ -112,7 +100,6 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 	}
 	wait(&status);
 	data->last_error_status = WEXITSTATUS(status);
-	printf("err : %d\n", data->last_error_status);
 	if (cmds->outfile_fd != 1)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)

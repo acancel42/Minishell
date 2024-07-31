@@ -44,6 +44,7 @@ minishell
 *.su
 *.idb
 *.pdb
+tester-minishell/
 
 # Kernel Module Compile Results
 *.mod*
