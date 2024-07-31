@@ -131,11 +131,11 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 
 	temp2 = NULL;
 	j = 0;
-	if (ft_strncmp((*token)->value, "", 1) == 0)
+	if (ft_strncmp((*token)->value, "", 1 == 0) && (*token)->is_separated == 0)
 		temp2 = ft_strdup((*token)->value);
 	else
 	{
-		if (ft_strncmp((*token)->value, "$", 2) == 0 && \
+		if ((*token)->next && ft_strncmp((*token)->value, "$", 2) == 0 && \
 			ft_strncmp((*token)->next->value, "", 1) == 0)
 			(*token) = (*token)->next;
 		if ((*token)->type != T_S_QUOTED_WORD)

@@ -60,12 +60,13 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 		ft_exit(data->token, data->cmds, data);
 	name = generate_random_name(data);
 	name = ft_strjoin("/tmp/", name, 0);
+	//printf("name = %s\n", name);
 	if (!name)
 		return (-1);
 	cmds->infile_fd = open(name, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, 0644);
 	while (1)
 	{
-		ft_signalhandle();
+		//ft_signalhandle();
 		if (ft_write_heredoc(line, cmds, name, delimiter) == 1)
 			break ;
 	}
@@ -73,7 +74,7 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	cmds->infile_fd = open(name, O_RDONLY);
 	if (cmds->infile_fd == -1)
 		perror(name);
-	unlink(name);
+	//unlink(name);
 	free(name);
 	return (0);
 }
