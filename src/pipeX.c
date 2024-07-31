@@ -16,8 +16,8 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 	{
 		if (ft_strchr_b(cmds->name, '/') == 0 && stat(cmds->args[0], &sb) == 0)
 		{
-			if (dup2(STDOUT_FILENO, 1) == -1)
-				ft_exec_error(data->token, cmds, data, 2);
+			// if (dup2(STDOUT_FILENO, 1) == -1)
+			// 	ft_exec_error(data->token, cmds, data, 2);
 			if (cmds->name[ft_strlen(cmds->name) - 1] == '/' || \
 				cmds->name[ft_strlen(cmds->name) - 1] == '.')
 				printf("%s : Is a directory\n", cmds->name);
@@ -96,6 +96,7 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 		if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
 			return (ft_exec_error(token, cmds, data, 2), 1);
 		ft_builtin_or_exec(data, cmds);
+		exit(data->last_error_status);
 	}
 	wait(&status);
 	data->last_error_status = WEXITSTATUS(status);

@@ -29,10 +29,9 @@ int	ft_write_heredoc(char *line, t_commands *cmds, char *name, char *delimiter)
 	int	ret;
 
 	ret = 0;
-	printf("%d\n", g_sigint);
+	// printf("%d\n", g_sigint);
 	line = readline(">");
-	cmds->outfile_fd = open(name, O_CREAT, 420);
-	if (cmds->outfile_fd == -1)
+	if (cmds->infile_fd == -1)
 		perror(name);
 	if (g_sigint == 2)
 	{
@@ -41,8 +40,8 @@ int	ft_write_heredoc(char *line, t_commands *cmds, char *name, char *delimiter)
 	}
 	if (line && ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) != 0)
 	{
-		write(cmds->outfile_fd, line, ft_strlen(line));
-		write(cmds->outfile_fd, "\n", 1);
+		write(cmds->infile_fd, line, ft_strlen(line));
+		write(cmds->infile_fd, "\n", 1);
 	}
 	else
 		ret = 1;
@@ -63,15 +62,14 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	name = ft_strjoin("/tmp/", name, 0);
 	if (!name)
 		return (-1);
+	cmds->infile_fd = open(name, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, 0644);
 	while (1)
 	{
 		ft_signalhandle();
 		if (ft_write_heredoc(line, cmds, name, delimiter) == 1)
 			break ;
-		signal(SIGQUIT, SIG_IGN);
 	}
-	close(cmds->outfile_fd);
-	cmds->outfile_fd = STDOUT_FILENO;
+	close(cmds->infile_fd);
 	cmds->infile_fd = open(name, O_RDONLY);
 	if (cmds->infile_fd == -1)
 		perror(name);
@@ -79,3 +77,4 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	free(name);
 	return (0);
 }
+
