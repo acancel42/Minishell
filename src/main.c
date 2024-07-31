@@ -94,14 +94,18 @@ int	main(int argc, char **argv, char **env)
 		if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 \
 			&& cmds->redirections[0] == NULL)
 		{
-			ft_exec_built_in(token, cmds, data);
+			if (ft_exec_built_in(token, cmds, data) == 1)
+				data->last_error_status = 0;
 			free_data(data, &cmds);
 			continue ;
 		}
 		j = -1;
 		data->pflag = false;
 		if (cmds->name && ft_pathfinder(data) == 0)
+		{
+			data->last_error_status = 127;
 			continue ;
+		}
 		while (data->line[++j])
 		{
 			if (data->line[j] == '|')

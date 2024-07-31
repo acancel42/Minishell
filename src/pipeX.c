@@ -6,7 +6,7 @@
 /*   By: talibert <talibert@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 23:13:00 by acancel           #+#    #+#             */
-/*   Updated: 2024/07/31 10:49:12 by talibert         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:00:57 by talibert         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 	{
 		if (ft_strchr_b(cmds->name, '/') == 0 && stat(cmds->args[0], &sb) == 0)
 		{
-			if (cmds->name[ft_strlen(cmds->name) - 1] == '/')		//A revoir demain !
+			if (dup2(STDOUT_FILENO, 1) == -1)
+				ft_exec_error(data->token, cmds, data, 2);
+			if (cmds->name[ft_strlen(cmds->name) - 1] == '/' || \
+				cmds->name[ft_strlen(cmds->name) - 1] == '.')
 				printf("%s : Is a directory\n", cmds->name);
 			data->last_error_status = 126;
-			ft_putendl_fd("Is a directory", 2);
 		}
 		else
 			ft_putendl_fd("execve failed", 2);
@@ -76,7 +78,8 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 	{
 		if (ft_strchr_b(cmds->name, '/') == 0 && stat(cmds->args[0], &sb) == 0)
 		{
-			if (cmds->name[ft_strlen(cmds->name) - 1] == '/')
+			if (cmds->name[ft_strlen(cmds->name) - 1] == '/' || \
+				cmds->name[ft_strlen(cmds->name) - 1] == '.')
 				printf ("%s : Is a directory\n", cmds->name);
 			data->last_error_status = 126;
 		}
