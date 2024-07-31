@@ -81,14 +81,12 @@ int	main(int argc, char **argv, char **env)
 			continue ;
 		}
 		lexer_init(&token, data);
-		print_lst(token);
 		init_cmd(&cmds, token, data);
 		if (fill_cmd(&cmds, token, data) == 2)
 		{
 			free_data(data, &cmds);
 			continue ;
 		}
-		print_cmds(cmds);
 		data->cmds = cmds;
 		data->token = token;
 		if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 \

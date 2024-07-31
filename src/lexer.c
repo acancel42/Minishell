@@ -131,7 +131,7 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 
 	temp2 = NULL;
 	j = 0;
-	if (ft_strncmp((*token)->value, "", 1))
+	if (ft_strncmp((*token)->value, "", 1) == 0)
 		temp2 = ft_strdup((*token)->value);
 	else
 	{
@@ -139,7 +139,9 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 			ft_strncmp((*token)->next->value, "", 1) == 0)
 			(*token) = (*token)->next;
 		if ((*token)->type != T_S_QUOTED_WORD)
+		{
 			j = expand_variables(&temp2, (*token)->value, data);
+		}
 		else
 		{
 			temp2 = ft_strdup((*token)->value);
