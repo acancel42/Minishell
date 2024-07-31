@@ -131,18 +131,23 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 
 	temp2 = NULL;
 	j = 0;
-	if (ft_strncmp((*token)->value, "$", 2) == 0 && \
-		ft_strncmp((*token)->next->value, "", 1) == 0)
-		(*token) = (*token)->next;
-	if ((*token)->type != T_S_QUOTED_WORD)
-		j = expand_variables(&temp2, (*token)->value, data);
+	if (ft_strncmp((*token)->value, "", 1))
+		temp2 = ft_strdup((*token)->value);
 	else
 	{
-		temp2 = ft_strdup((*token)->value);
-		if (!temp2)
-			ft_exit(*token, *cmds, data);
+		if (ft_strncmp((*token)->value, "$", 2) == 0 && \
+			ft_strncmp((*token)->next->value, "", 1) == 0)
+			(*token) = (*token)->next;
+		if ((*token)->type != T_S_QUOTED_WORD)
+			j = expand_variables(&temp2, (*token)->value, data);
+		else
+		{
+			temp2 = ft_strdup((*token)->value);
+			if (!temp2)
+				ft_exit(*token, *cmds, data);
+		}
+		temp2 = handle_w_utils(token, data, temp2, j);
 	}
-	temp2 = handle_w_utils(token, data, temp2, j);
 	if (*i == 0)
 	{
 		(*cmds)->name = ft_strdup(temp2);
