@@ -107,7 +107,7 @@ void		ft_tokadd_back(t_token **lst, t_token *new);
 void		ft_tokenclear(t_token **token);
 void		init_cmd(t_commands **cmds, t_token *token, t_data *data);
 void		init_cmd(t_commands **cmds, t_token *token, t_data *data);
-void		lexer_init(t_token **token, t_data *data);
+int			lexer_init(t_token **token, t_data *data);
 void		print_cmds(t_commands *cmds);
 void		print_lst(t_token *token);
 void		print_my_env(char **my_env);

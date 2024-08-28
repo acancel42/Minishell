@@ -8,13 +8,18 @@ int	ft_isword(t_token *token)
 	return (0);
 }
 
-void	lexer_init(t_token **token, t_data *data)
+int	lexer_init(t_token **token, t_data *data)
 {
 	int	i;
 
 	i = 0;
 	while (data->line[i])
+	{
 		i = token_init(data->line, i, token, data);
+		if (i == -1)
+			return (-1);
+	}
+	return (1);
 }
 
 void	init_cmd(t_commands **cmds, t_token *token, t_data *data)

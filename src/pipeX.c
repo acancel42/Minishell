@@ -16,8 +16,6 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 	{
 		if (ft_strchr_b(cmds->name, '/') == 0 && stat(cmds->args[0], &sb) == 0)
 		{
-			// if (dup2(STDOUT_FILENO, 1) == -1)
-			// 	ft_exec_error(data->token, cmds, data, 2);
 			if (cmds->name[ft_strlen(cmds->name) - 1] == '/' || \
 				cmds->name[ft_strlen(cmds->name) - 1] == '.')
 				printf("%s : Is a directory\n", cmds->name);
@@ -32,7 +30,6 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 {
 	int		fd_pipe[2];
-	int		status;
 
 	if (pipe(fd_pipe) == -1)
 		return (ft_exec_error(token, cmds, data, 0), -1);
@@ -46,8 +43,6 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 		return (ft_exec_error(token, cmds, data, 1), -1);
 	if (data->pid == 0)
 		exec_child(fd_pipe, data, cmds);
-	wait(&status);
-	data->last_error_status = WEXITSTATUS(status);
 	if (cmds->outfile_fd != 1)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)
@@ -78,8 +73,6 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 
 int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 {
-	int	status;
-
 	if (cmds->name && ft_strncmp(cmds->name, "", 1) == 0)
 		return (0);
 	if (cmds->redirections)
@@ -99,8 +92,6 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 		ft_builtin_or_exec(data, cmds);
 		exit(data->last_error_status);
 	}
-	wait(&status);
-	data->last_error_status = WEXITSTATUS(status);
 	if (cmds->outfile_fd != 1)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)
@@ -111,6 +102,7 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 void	exec_cmd(t_data *data, t_commands *cmds)
 {
 	t_commands	*temp;
+	int			status;
 
 	temp = cmds;
 	while (temp)
@@ -126,4 +118,8 @@ void	exec_cmd(t_data *data, t_commands *cmds)
 			ft_exec_cmd(temp, data, data->token);
 		temp = temp->next;
 	}
+	waitpid(data->pid, &status, 0);
+	while (wait(0) != -1)
+		;
+	data->last_error_status = WEXITSTATUS(status);
 }

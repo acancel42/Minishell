@@ -40,10 +40,8 @@ int	handle_double_quote(char *src, t_token **token, t_data *data)
 	}
 	if (src[i] != '"')
 	{
-		printf("%d\n", i);
-		printf("%c\n", src[i]);
-		printf("%s\n", "Interactive mode");
-		exit(EXIT_FAILURE);
+		printf("syntax error\n");
+		return (-1);
 	}
 	else if (!ft_iswspace(src[++i]) && !ft_isoperator(src[i]))
 		temp->is_separated = 1;
@@ -90,8 +88,8 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 	}
 	if (src[i] != '\'')
 	{
-		printf("%s\n", "Interactive mode");
-		exit(EXIT_FAILURE);
+		printf("syntax error\n");
+		return(-1);
 	}
 	else if (!ft_iswspace(src[++i]) && !ft_isoperator(src[i]))
 		temp->is_separated = 1;
@@ -100,14 +98,28 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 
 int	token_init(char *src, int i, t_token **token, t_data *data)
 {
+	int	j;
+
 	while (ft_iswspace(src[i]))
 		i++;
 	if (!src[i])
 		return (i);
 	if (src[i] == '"')
-		i += handle_double_quote(src + i, token, data);
+	{
+		j = handle_double_quote(src + i, token, data);
+		if (j == -1)
+			return (j);
+		else
+			i += j;
+	}
 	else if (src[i] == '\'')
-		i += handle_single_quote(src + i, token, data);
+	{
+		j = handle_single_quote(src + i, token, data);
+		if (j == -1)
+			return (j);
+		else
+			i += j;
+	}
 	else if (src[i] == '>')
 		i += handle_output(src + i, token, data);
 	else if (src[i] == '<')

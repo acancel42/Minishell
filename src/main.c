@@ -104,7 +104,11 @@ int	main(int argc, char **argv, char **env)
 			free_data(data, &cmds);
 			continue ;
 		}
-		lexer_init(&token, data);
+		if (lexer_init(&token, data) == -1)
+		{
+			free_data(data, &cmds);
+			continue;
+		}
 		init_cmd(&cmds, token, data);
 		if (fill_cmd(&cmds, token, data) == 2)
 		{

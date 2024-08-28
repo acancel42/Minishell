@@ -29,7 +29,6 @@ int	ft_write_heredoc(char *line, t_commands *cmds, char *name, char *delimiter)
 	int	ret;
 
 	ret = 0;
-	// printf("%d\n", g_sigint);
 	line = readline(">");
 	if (cmds->infile_fd == -1)
 		perror(name);
@@ -60,7 +59,6 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 		ft_exit(data->token, data->cmds, data);
 	name = generate_random_name(data);
 	name = ft_strjoin("/tmp/", name, 0);
-	//printf("name = %s\n", name);
 	if (!name)
 		return (-1);
 	cmds->infile_fd = open(name, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, 0644);

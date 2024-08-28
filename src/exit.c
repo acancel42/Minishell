@@ -21,7 +21,6 @@ void	exit_minishell(t_token **token, t_commands **cmds, t_data *data)
 	printf(RED"%s\n"RESET, "exit");
 	return ;
 }
-	// exit(EXIT_SUCCESS);
 
 void	ft_exec_error(t_token *token, t_commands *cmds, t_data *data, int flag)
 {
@@ -38,7 +37,6 @@ void	ft_exit(t_token *token, t_commands *cmds, t_data *data)
 {
 	int	exit_stat;
 
-	// data->last_error_status = 1;
 	if (cmds && ft_strncmp(cmds->name, "exit", 5) == 0 && cmds->args[1])
 		exit_stat = ft_atoi(cmds->args[1]);
 	else

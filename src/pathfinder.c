@@ -57,7 +57,6 @@ int	cmd_path(t_data *data)
 	ft_free_tab(all_paths);
 	if (data->cmds->path == NULL || ft_strncmp(data->cmds->name, "", 1) == 0)
 	{
-		//printf("command '%s' not found\n", data->cmds->name);
 		printf("%s: command not found\n", data->cmds->name);
 		return (0);
 	}
@@ -66,13 +65,15 @@ int	cmd_path(t_data *data)
 
 int	ft_pathfinder(t_data *data)
 {
+	int			exit_ret;
 	int			btflag;
 
 	btflag = 0;
+	exit_ret = 1;
 	while (data->cmds)
 	{
 		data->cmds->valid_path = access(data->cmds->args[0], F_OK | X_OK);
-		if (data->cmds->valid_path == -1 && ft_strchr_b(data->cmds->name, '/'))
+		if (data->cmds->valid_path == -1 && !ft_strchr_b(data->cmds->name, '/'))
 		{
 			btflag = cmd_path(data);
 			if (btflag == 0)
@@ -89,7 +90,7 @@ int	ft_pathfinder(t_data *data)
 				data->last_error_status = 127;
 				if (errno == 13)
 					data->last_error_status--;
-				return (0);
+				exit_ret = 0;
 			}
 			if (!data->cmds->path)
 				return (-1);
@@ -97,5 +98,5 @@ int	ft_pathfinder(t_data *data)
 		if (data->cmds->path || btflag == 2)
 			data->cmds = data->cmds->next;
 	}
-	return (1);
+	return (exit_ret);
 }
