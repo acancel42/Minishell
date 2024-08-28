@@ -14,11 +14,9 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 		exit(EXIT_SUCCESS);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
-		if (ft_strchr_b(cmds->name, '/') == 0 && stat(cmds->args[0], &sb) == 0)
+		if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
 		{
-			if (cmds->name[ft_strlen(cmds->name) - 1] == '/' || \
-				cmds->name[ft_strlen(cmds->name) - 1] == '.')
-				printf("%s : Is a directory\n", cmds->name);
+			printf ("%s : Is a directory\n", cmds->name);
 			data->last_error_status = 126;
 		}
 		else
@@ -58,11 +56,9 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 		exit(EXIT_SUCCESS);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
-		if (ft_strchr_b(cmds->name, '/') == 0 && stat(cmds->args[0], &sb) == 0)
+		if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
 		{
-			if (cmds->name[ft_strlen(cmds->name) - 1] == '/' || \
-				cmds->name[ft_strlen(cmds->name) - 1] == '.')
-				printf ("%s : Is a directory\n", cmds->name);
+			printf ("%s : Is a directory\n", cmds->name);
 			data->last_error_status = 126;
 		}
 		else
