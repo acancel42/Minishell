@@ -56,13 +56,13 @@ int	expand_variables(char **dest, char *src, t_data *data)
 			}
 			if (value)
 			{
-				i = end;
 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
 							ft_strlen(value) + 1);
 				if (!temp)
 					return (-1);
 				ft_strncpy(temp, (*dest), start);
 				ft_strcpy(temp + start, value);
+				i = start + ft_strlen(value);
 				ft_strcpy(temp + start + ft_strlen(value), (*dest) + end);
 				free((*dest));
 				(*dest) = ft_strdup(temp);
@@ -71,7 +71,7 @@ int	expand_variables(char **dest, char *src, t_data *data)
 			}
 			else
 			{
-				i = end;
+				i = start;
 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
 						ft_strlen(value) + 1);
 				ft_strncpy(temp, (*dest), start);
@@ -80,6 +80,12 @@ int	expand_variables(char **dest, char *src, t_data *data)
 				(*dest) = ft_strdup(temp);
 				if (!(*dest))
 					return (-1);
+				if (!(*dest)[0])
+				{
+					free(temp);
+					free(name);
+					break ;
+				}
 			}
 			free(temp);
 			free(name);
