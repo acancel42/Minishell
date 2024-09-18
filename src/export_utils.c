@@ -5,17 +5,20 @@ void	ft_replace_export(char ***nenv, char ***nexp, int i, t_data *data)
 	if (ft_isexport(data->cmds->args[i], data->my_env) && \
 				ft_isexport(data->cmds->args[i], data->export))
 	{
+		printf("1\n");
 		*nenv = tab_replace((data->my_env), data->cmds->args[i]);
 		*nexp = tab_replace((data->export), data->cmds->args[i]);
 	}
 	else if (!ft_isexport(data->cmds->args[i], data->my_env) && \
 			ft_isexport(data->cmds->args[i], data->export))
 	{
+		printf("2\n");
 		*nenv = tab_join((data->my_env), data->cmds->args[i]);
 		*nexp = tab_replace((data->export), data->cmds->args[i]);
 	}
 	else
 	{
+		printf("3\n");
 		*nenv = tab_join((data->my_env), data->cmds->args[i]);
 		*nexp = tab_join((data->export), data->cmds->args[i]);
 	}
