@@ -131,7 +131,8 @@ int	main(int argc, char **argv, char **env)
 		data->pflag = false;
 		if (cmds->name && ft_pathfinder(data) == 0)
 		{
-			data->last_error_status = 127;
+			//data->last_error_status = 127;
+			free_data(data, &cmds);
 			continue ;
 		}
 		while (data->line[++j])

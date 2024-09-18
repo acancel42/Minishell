@@ -72,10 +72,9 @@ static int	ft_given_path(t_data *data, int exit_ret)
 	{
 		perror(data->cmds->path);
 		data->last_error_status = 127;
-		free(data->cmds->path);
 		if (errno == 13)
 			data->last_error_status--;
-		exit_ret = 0;
+		exit_ret = 1;
 	}
 	return (exit_ret);
 }
@@ -83,27 +82,28 @@ static int	ft_given_path(t_data *data, int exit_ret)
 int	ft_pathfinder(t_data *data)
 {
 	int			exit_ret;
-	int			btflag;
 
-	btflag = 0;
-	exit_ret = 1;
+	exit_ret = 0;
 	while (data->cmds)
 	{
 		data->cmds->valid_path = access(data->cmds->args[0], F_OK | X_OK);
 		if (data->cmds->valid_path == -1 && !ft_strchr_b(data->cmds->name, '/'))
 		{
-			btflag = cmd_path(data);
-			if (btflag == 0)
+			exit_ret = cmd_path(data);
+			if (exit_ret == 0)
+			{
+				data->last_error_status = 127;
 				return (0);
+			}
 		}
 		else
 		{
 			exit_ret = ft_given_path(data, exit_ret);
-			if (!data->cmds->path)
-				return (-1);
+			if (exit_ret == 1)
+				return (0);
 		}
-		if (data->cmds->path || btflag == 2)
+		if (data->cmds->path || exit_ret == 2)
 			data->cmds = data->cmds->next;
 	}
-	return (exit_ret);
+	return (1);
 }
