@@ -33,8 +33,11 @@ int	ft_print_export(char **args, t_data *data)
 	i = 0;
 	if (!args[1])
 	{
-		while (data->export[i++] && data->export[i] != NULL)
+		while (data->export[i] && data->export[i] != NULL)
+		{
 			printf("%s\n", data->export[i]);
+			i++;
+		}
 		return (1);
 	}
 	return (0);

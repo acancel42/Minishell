@@ -14,6 +14,7 @@ char	**tab_dup(char **env)
 	i = -1;
 	while (env[++i])
 	{
+		printf("%s\n", env[i]);
 		new_env[i] = ft_strdup(env[i]);
 		if (!new_env[i])
 		{
