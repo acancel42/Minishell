@@ -1,13 +1,36 @@
 #include "minishell.h"
 
+char	**tab_dup(char **env)
+{
+	char	**new_env;
+	int		i;
+
+	i = 0;
+	while (env[i++])
+		;
+	new_env = ft_calloc(i + 1, sizeof(char *));
+	if (!new_env)
+		return (NULL);
+	i = -1;
+	while (env[++i])
+	{
+		new_env[i] = ft_strdup(env[i]);
+		if (!new_env[i])
+			return (NULL);
+	}
+	return (new_env);
+}
+
 char	**tab_replace(char **env, char *args)
 {
+	char	**new_env;
 	char	*variable;
 	int		j;
 	int		k;
 	int		i;
 
-	j = -1;
+	new_env = tab_dup(env);
+	j = 0;
 	k = 0;
 	i = 0;
 	while (args[i] && args[i++] != '=')
@@ -15,18 +38,22 @@ char	**tab_replace(char **env, char *args)
 	variable = ft_calloc(i + 1, sizeof(char));
 	while (++j < i - 1)
 		variable[j] = args[j];
-	while (env[k++] && env[k] != NULL)
+		j++;
+	}
+	while (new_env[k++] && new_env[k] != NULL)
 	{
-		if (ft_envcmp(env[k], variable) == 0)
+		if (ft_envcmp(new_env[k], variable) == 0)
 		{
-			env[k] = ft_strdup(args);
-			if (!env[k])
+			free(new_env[k]);
+			new_env[k] = ft_strdup(args);
+			if (!new_env[k])
 				return (NULL);
 		}
 	}
 	free(variable);
-	return (env);
+	return (new_env);
 }
+
 
 static int	check_arg(char *args)
 {
@@ -92,8 +119,10 @@ int	ft_export(char **args, t_data *data)
 		if (ft_strchr(args[i], '='))
 		{
 			ft_replace_export(&new_env, &new_export, i, data);
-			(data->my_env) = new_env;
-			(data->export) = new_export;
+			ft_free_tab(data->my_env);
+			data->my_env = tab_dup(new_env);
+			ft_free_tab(data->export);
+			data->export = tab_dup(new_export);
 		}
 		else
 		{
@@ -105,9 +134,15 @@ int	ft_export(char **args, t_data *data)
 			new_export = tab_join((data->export), args[i]);
 			if (!new_export)
 				return (-1);
-			(data->export) = new_export;
+			ft_free_tab(data->export);
+			data->export = tab_dup(new_export);
 		}
 		i++;
 	}
+	if (new_env)
+		ft_free_tab(new_env);
+	if (new_export)
+		ft_free_tab(new_export);
+	//ft_free_tab(new_export);
 	return (0);
 }
