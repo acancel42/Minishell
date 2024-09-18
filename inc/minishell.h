@@ -52,6 +52,7 @@ typedef struct s_data
 
 extern int	g_sigint;
 
+char		**tab_dup(char **env);
 char		**tab_join(char **tab, char *str);
 char		*find_env_var(char *name, char **env);
 char		*ft_strjoin_name(char *s1, char *s2, char c1, char c2);

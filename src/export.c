@@ -16,7 +16,10 @@ char	**tab_dup(char **env)
 	{
 		new_env[i] = ft_strdup(env[i]);
 		if (!new_env[i])
+		{
+			ft_free_tab(new_env);
 			return (NULL);
+		}
 	}
 	return (new_env);
 }
@@ -36,7 +39,8 @@ char	**tab_replace(char **env, char *args)
 	while (args[i] && args[i++] != '=')
 		;
 	variable = ft_calloc(i + 1, sizeof(char));
-	while (++j < i - 1)
+	while (j < i - 1)
+	{
 		variable[j] = args[j];
 		j++;
 	}
@@ -143,6 +147,5 @@ int	ft_export(char **args, t_data *data)
 		ft_free_tab(new_env);
 	if (new_export)
 		ft_free_tab(new_export);
-	//ft_free_tab(new_export);
 	return (0);
 }

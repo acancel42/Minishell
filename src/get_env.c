@@ -28,32 +28,11 @@ void	ft_get_env(t_data *data, char **env)
 	}
 	else
 	{
-		while (env[i])
-			i++;
-		data->my_env = ft_calloc(i + 1, sizeof(char *));
-		data->export = ft_calloc(i + 1, sizeof(char *));
-		if (!data->my_env || !data->export)
-		{
-			if (data->my_env)
-				ft_free_tab(data->my_env);
-			return ;
-		}
-		i = -1;
-		while (env[++i])
-		{
-			data->my_env[i] = ft_strdup(env[i]);
-			if (!data->my_env[i])
-			{
-				ft_free_tab(data->my_env);
-				return ;
-			}
-			data->export[i] = ft_strdup(env[i]);
-			if (!data->export[i])
-			{
-				ft_free_tab(data->my_env);
-				ft_free_tab(data->export);
-				return ;
-			}
-		}
+		data->my_env = tab_dup(env);
+		if (!data->my_env)
+			ft_free_tab(data->my_env);
+		data->export = tab_dup(env);
+		if (!data->export)
+			ft_free_tab(data->export);
 	}
 }
