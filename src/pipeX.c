@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-void	free_child(t_data *data, t_commands *cmds)
-{
-	free_data(data, &cmds);
-	if (data->home)
-		free(data->home);
-	if (data->export)
-		ft_free_tab(data->export);
-	if (data->my_env)
-		ft_free_tab(data->my_env);
-	exit(data->last_error_status);
-}
-
 static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 {
 	struct stat	sb;

@@ -76,4 +76,3 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	free(name);
 	return (0);
 }
-

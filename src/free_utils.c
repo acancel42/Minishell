@@ -24,7 +24,7 @@ void	free_data(t_data *data, t_commands **cmds)
 	data->pflag = 0;
 }
 
-void	free__monitoring(char *host, char *username, char *pwd)
+void	free_monitoring(char *host, char *username, char *pwd)
 {
 	if (pwd)
 		free(pwd);
@@ -33,4 +33,16 @@ void	free__monitoring(char *host, char *username, char *pwd)
 	if (username)
 		free(username);
 	return ;
+}
+
+void	free_child(t_data *data, t_commands *cmds)
+{
+	free_data(data, &cmds);
+	if (data->home)
+		free(data->home);
+	if (data->export)
+		ft_free_tab(data->export);
+	if (data->my_env)
+		ft_free_tab(data->my_env);
+	exit(data->last_error_status);
 }

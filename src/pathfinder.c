@@ -63,6 +63,23 @@ int	cmd_path(t_data *data)
 	return (1);
 }
 
+static int	ft_given_path(t_data *data, int exit_ret)
+{
+	data->cmds->path = ft_strdup(data->cmds->args[0]);
+	if (!data->cmds->path)
+		ft_exit(data->token, data->cmds, data);
+	if (access(data->cmds->path, F_OK | X_OK) == -1)
+	{
+		perror(data->cmds->path);
+		data->last_error_status = 127;
+		free(data->cmds->path);
+		if (errno == 13)
+			data->last_error_status--;
+		exit_ret = 0;
+	}
+	return (exit_ret);
+}
+
 int	ft_pathfinder(t_data *data)
 {
 	int			exit_ret;
@@ -81,17 +98,7 @@ int	ft_pathfinder(t_data *data)
 		}
 		else
 		{
-			data->cmds->path = ft_strdup(data->cmds->args[0]);
-			if (!data->cmds->path)
-				ft_exit(data->token, data->cmds, data);
-			if (access(data->cmds->path, F_OK | X_OK) == -1)
-			{
-				perror(data->cmds->path);
-				data->last_error_status = 127;
-				if (errno == 13)
-					data->last_error_status--;
-				exit_ret = 0;
-			}
+			exit_ret = ft_given_path(data, exit_ret);
 			if (!data->cmds->path)
 				return (-1);
 		}

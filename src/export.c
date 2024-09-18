@@ -7,17 +7,14 @@ char	**tab_replace(char **env, char *args)
 	int		k;
 	int		i;
 
-	j = 0;
+	j = -1;
 	k = 0;
 	i = 0;
 	while (args[i] && args[i++] != '=')
 		;
 	variable = ft_calloc(i + 1, sizeof(char));
-	while (j < i - 1)
-	{
+	while (++j < i - 1)
 		variable[j] = args[j];
-		j++;
-	}
 	while (env[k++] && env[k] != NULL)
 	{
 		if (ft_envcmp(env[k], variable) == 0)

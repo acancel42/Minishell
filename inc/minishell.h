@@ -94,8 +94,9 @@ t_commands	*ft_cmdnew(int flag);
 t_token		*ft_toknew(char content, t_token_types type);
 void		exec_cmd(t_data *data, t_commands *cmds);
 void		exit_minishell(t_token **token, t_commands **cmds, t_data *data);
-void		free__monitoring(char *host, char *username, char *pwd);
+void		free_child(t_data *data, t_commands *cmds);
 void		free_data(t_data *data, t_commands **cmds);
+void		free_monitoring(char *host, char *username, char *pwd);
 void		ft_cmdadd_back(t_commands **lst, t_commands *new);
 void		ft_cmdsclear(t_commands **lst);
 void		ft_exec_error(t_token *token, t_commands *cmds, \

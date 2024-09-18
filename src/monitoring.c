@@ -103,6 +103,6 @@ char	*get_user(t_data *data)
 		free(pwd);
 		return (NULL);
 	}
-	free__monitoring(host, username, pwd);
+	free_monitoring(host, username, pwd);
 	return (user_temp);
 }
