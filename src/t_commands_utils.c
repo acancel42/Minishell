@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-t_commands	*ft_cmdnew(char *user, int flag)
+t_commands	*ft_cmdnew(int flag)
 {
 	t_commands	*new;
 	static int	i;
@@ -17,9 +17,6 @@ t_commands	*ft_cmdnew(char *user, int flag)
 	new->index = i;
 	new->infile_fd = 0;
 	new->outfile_fd = 1;
-	new->user = ft_strdup(user);
-	if (!new->user)
-		return (NULL);
 	i++;
 	return (new);
 }
@@ -54,8 +51,6 @@ void	ft_cmdsdelone(t_commands *cmds)
 		ft_free_tab(cmds->redirections);
 	if (cmds->args)
 		ft_free_tab(cmds->args);
-	if (cmds->user)
-		free(cmds->user);
 	free(cmds);
 }
 

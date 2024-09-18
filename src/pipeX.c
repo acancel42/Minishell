@@ -1,5 +1,17 @@
 #include "minishell.h"
 
+void	free_child(t_data *data, t_commands *cmds)
+{
+	free_data(data, &cmds);
+	if (data->home)
+		free(data->home);
+	if (data->export)
+		ft_free_tab(data->export);
+	if (data->my_env)
+		ft_free_tab(data->my_env);
+	exit(data->last_error_status);
+}
+
 static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 {
 	struct stat	sb;
@@ -10,6 +22,10 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 		ft_exec_error(data->token, cmds, data, 2);
 	if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
 		ft_exec_error(data->token, cmds, data, 2);
+	if (cmds->outfile_fd != 1)
+		close(cmds->outfile_fd);
+	if (cmds->infile_fd != 0)
+		close(cmds->infile_fd);
 	if (ft_exec_built_in(data->token, cmds, data))
 		exit(EXIT_SUCCESS);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
@@ -21,7 +37,7 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 		}
 		else
 			ft_putendl_fd("execve failed", 2);
-		exit(EXIT_FAILURE);
+		free_child(data, cmds);
 	}
 }
 
@@ -52,8 +68,12 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 {
 	struct stat	sb;
 
+	if (cmds->outfile_fd != 1)
+		close(cmds->outfile_fd);
+	if (cmds->infile_fd != 0)
+		close(cmds->infile_fd);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
-		exit(EXIT_SUCCESS);
+		free_child(data, cmds);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
 		if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
@@ -63,7 +83,7 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 		}
 		else
 			ft_putendl_fd("execve failed", 2);
-		exit(data->last_error_status);
+		free_child(data, cmds);
 	}
 }
 

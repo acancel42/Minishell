@@ -90,7 +90,7 @@ int			oredir_handle(char *line, int *i);
 int			pipe_handle(char *line, int *i);
 int			prelexer_check(t_data *data);
 int			token_init(char *src, int i, t_token **token, t_data *data);
-t_commands	*ft_cmdnew(char *user, int flag);
+t_commands	*ft_cmdnew(int flag);
 t_token		*ft_toknew(char content, t_token_types type);
 void		exec_cmd(t_data *data, t_commands *cmds);
 void		exit_minishell(t_token **token, t_commands **cmds, t_data *data);

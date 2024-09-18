@@ -32,7 +32,7 @@ void	init_cmd(t_commands **cmds, t_token *token, t_data *data)
 	{
 		if (token->type == T_PIPE)
 			token = token->next;
-		temp = ft_cmdnew(data->user, flag++);
+		temp = ft_cmdnew(flag++);
 		ft_cmdadd_back(cmds, temp);
 		data->index_max = temp->index;
 		while (token && token->type != T_PIPE)
