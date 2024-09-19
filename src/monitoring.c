@@ -74,8 +74,7 @@ char	*get_user(t_data *data)
 	pwd_temp = ft_get_pwd(data);
 	if (!pwd_temp)
 	{
-		free(host);
-		free(user_temp);
+		free_monitoring(host, user_temp, NULL);
 		return (NULL);
 	}
 	pwd = ft_substr(pwd_temp, ft_strlen(username) + 6, \
@@ -89,18 +88,14 @@ char	*get_user(t_data *data)
 	user = ft_strjoin_name(user_temp, pwd, '~', '$');
 	if (!user)
 	{
-		free(host);
-		free(user_temp);
-		free(pwd);
+		free_monitoring(host, user_temp, pwd);
 		return (NULL);
 	}
 	free(user_temp);
 	user_temp = ft_strjoin(user, " ", 1);
 	if (!user_temp)
 	{
-		free(host);
-		free(user);
-		free(pwd);
+		free_monitoring(host, user, pwd);
 		return (NULL);
 	}
 	free_monitoring(host, username, pwd);
