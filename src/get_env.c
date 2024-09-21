@@ -29,7 +29,6 @@ void	ft_get_env(t_data *data, char **env)
 {
 	if (!env[0])
 	{
-		printf("1\n");
 		ft_empty_env(data);
 		data->export = tab_dup(data->my_env);
 		if (!data->export)
@@ -37,7 +36,6 @@ void	ft_get_env(t_data *data, char **env)
 	}
 	else
 	{
-		printf("2\n");
 		data->my_env = tab_dup(env);
 		if (!data->my_env)
 			ft_free_tab(data->my_env);
