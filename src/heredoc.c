@@ -25,7 +25,6 @@ char	*generate_random_name(t_data *data)
 	free(name);
 	if (!res)
 		return (NULL);
-	printf("%s\n", res);
 	return (res);
 }
 
@@ -59,9 +58,9 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	char	*line;
 
 	line = NULL;
-	delimiter = ft_strdup(delimiter + 1);
-	if (!delimiter)
-		ft_exit(data->token, data->cmds, data);
+	// delimiter = ft_strdup(delimiter + 1);
+	// if (!delimiter)
+	// 	ft_exit(data->token, data->cmds, data);
 	name = generate_random_name(data);
 	if (!name)
 		return (-1);
@@ -78,6 +77,7 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 		perror(name);
 	unlink(name);
 	free(name);
-	close(cmds->infile_fd);
+	if (!cmds->name)
+		close(cmds->infile_fd);
 	return (0);
 }

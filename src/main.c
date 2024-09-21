@@ -26,9 +26,9 @@ int	main(int argc, char **argv, char **env)
 	(void)argv;
 	if (argc != 1)
 		return (-1);
-	data = ft_init_shell(env);
 	token = NULL;
 	cmds = NULL;
+	data = ft_init_shell(env);
 	while (1)
 		ft_routine(token, cmds, data);
 	return (0);

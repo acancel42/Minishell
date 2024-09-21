@@ -82,6 +82,8 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, t_data *data, t_token *token
 	if (cmds->redirections)
 		if (ft_redir_or_append(data, cmds) == -1)
 			return (0);
+	if (!cmds->name)
+		return (0);
 	ft_wait_signal();
 	data->pid = fork();
 	if (data->pid == -1)
@@ -107,6 +109,7 @@ void	exec_cmd(t_data *data, t_commands *cmds)
 	t_commands	*temp;
 	int			status;
 
+	status = 0;
 	temp = cmds;
 	while (temp)
 	{
