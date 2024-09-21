@@ -32,20 +32,26 @@ int	ft_cd(char *path, t_data *data)
 	while (ft_strncmp(data->my_env[i], "OLDPWD=", 7))
 		i++;
 	get_pwd(&oldpwd);
+	free(data->my_env[i]);
 	data->my_env[i] = ft_strjoin("OLDPWD=", oldpwd, 0);
 	if (!data->my_env[i])
 		return (-1);
+	free(oldpwd);
 	if (chdir(path) == -1)
 	{
 		printf("cd: %s: No such file or directory\n", path);
+		free(path);
 		return (-2);
 	}
+	free(path);
 	i = 0;
 	while (ft_strncmp(data->my_env[i], "PWD=", 4))
 		i++;
 	if (get_pwd(&pwd) == -2)
 		printf("getcwd: cannot access parent directories\n");
+	free(data->my_env[i]);
 	data->my_env[i] = ft_strjoin("PWD=", pwd, 0);
+	free(pwd);
 	if (!data->my_env[i])
 		return (-1);
 	return (0);
