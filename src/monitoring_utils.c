@@ -25,3 +25,16 @@ char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 	dest[i] = '\0';
 	return (dest);
 }
+
+char	*get_color(t_data *data, char *color)
+{
+	char	*prompt;
+
+	prompt = ft_strdup(color);
+	if (!prompt)
+		ft_exit(NULL, NULL, data);
+	prompt = ft_strjoin(prompt, data->user, 1);
+	prompt = ft_strjoin(prompt, RESET, 1);
+	free(data->user);
+	return (prompt);
+}

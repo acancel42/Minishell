@@ -29,6 +29,7 @@ void	ft_get_env(t_data *data, char **env)
 {
 	if (!env[0])
 	{
+		printf("1\n");
 		ft_empty_env(data);
 		data->export = tab_dup(data->my_env);
 		if (!data->export)
@@ -36,6 +37,7 @@ void	ft_get_env(t_data *data, char **env)
 	}
 	else
 	{
+		printf("2\n");
 		data->my_env = tab_dup(env);
 		if (!data->my_env)
 			ft_free_tab(data->my_env);
@@ -43,4 +45,25 @@ void	ft_get_env(t_data *data, char **env)
 		if (!data->export)
 			ft_free_tab(data->export);
 	}
+}
+
+void	ft_is_env_op(t_data *data)
+{
+	char	*buf;
+	char	*temp;
+
+	buf = NULL;
+	if (!find_env_var("PWD", data->my_env))
+	{
+		temp = ft_strjoin("PWD=", getcwd(buf, 0), 0);
+		data->my_env = tab_join(data->my_env, temp);
+		free(buf);
+		free(temp);
+	}
+	if (!find_env_var("LOGNAME", data->my_env))
+		data->my_env = tab_join(data->my_env, "LOGNAME=?");
+	if (!find_env_var("SESSION_MANAGER", data->my_env))
+		data->my_env = tab_join(data->my_env, "SESSION_MANAGER=?");
+	if (!find_env_var("PATH", data->my_env))
+		data->my_env = tab_join(data->my_env, "PATH=/usr/bin/");
 }

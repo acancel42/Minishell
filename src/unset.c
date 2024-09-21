@@ -43,6 +43,29 @@ char	**tab_delete(char **tab, char *str)
 	return (new_tab);
 }
 
+int	ft_unset_util(t_data *data, char **new_env, char **new_export)
+{
+	ft_free_tab(data->my_env);
+	data->my_env = tab_dup(new_env);
+	if (!data->my_env)
+	{
+		ft_free_tab(new_env);
+		ft_free_tab(new_export);
+		return (-1);
+	}
+	ft_free_tab(data->export);
+	data->export = tab_dup(new_export);
+	if (!data->export)
+	{
+		ft_free_tab(new_env);
+		ft_free_tab(new_export);
+		return (-1);
+	}
+	ft_free_tab(new_env);
+	ft_free_tab(new_export);
+	return (0);
+}
+
 int	ft_unset(char **args, t_data *data)
 {
 	int		i;
@@ -61,24 +84,8 @@ int	ft_unset(char **args, t_data *data)
 			ft_free_tab(new_env);
 			return (-1);
 		}
-		ft_free_tab(data->my_env);
-		data->my_env = tab_dup(new_env);
-		if (!data->my_env)
-		{
-			ft_free_tab(new_env);
-			ft_free_tab(new_export);
+		if (ft_unset_util(data, new_env, new_export) == -1)
 			return (-1);
-		}
-		ft_free_tab(data->export);
-		data->export = tab_dup(new_export);
-		if (!data->export)
-		{
-			ft_free_tab(new_env);
-			ft_free_tab(new_export);
-			return (-1);
-		}
-		ft_free_tab(new_env);
-		ft_free_tab(new_export);
 		i++;
 	}
 	return (0);
