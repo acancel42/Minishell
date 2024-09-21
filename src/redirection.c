@@ -20,38 +20,6 @@ int	ft_redir_input(t_commands *cmds, int i)
 	return (0);
 }
 
-/*int	ft_wich_redir(t_commands *cmds, int i)
-{
-	char	*temp;
-
-	temp = NULL;
-	if (cmds->redirections[i][0] == '>')
-	{
-		temp = ft_strdup(cmds->redirections[i] + 1);
-		if (!temp)
-			return (-1);
-		free(cmds->redirections[i]);
-		cmds->redirections[i] = ft_strdup(temp);
-		if (!cmds->redirections[i])
-			return (-1);
-		ft_redir_output(cmds, i);
-	}
-	else if (cmds->redirections[i][0] == '<')
-	{
-		temp = ft_strdup(cmds->redirections[i] + 1);
-		if (!temp)
-			return (-1);
-		free(cmds->redirections[i]);
-		cmds->redirections[i] = ft_strdup(temp);
-		if (!cmds->redirections[i])
-			return (-1);
-		ft_redir_input(cmds, i);
-	}
-	if (temp)
-		free(temp);
-	return (0);
-}*/
-
 int	ft_wich_redir(t_commands *cmds, int i)
 {
 	char	*temp;

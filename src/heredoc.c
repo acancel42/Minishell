@@ -21,6 +21,7 @@ char	*generate_random_name(t_data *data)
 			name[i] = name[i] + 10;
 		i++;
 	}
+	close(fd);
 	return ((char *)name);
 }
 

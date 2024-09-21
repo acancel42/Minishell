@@ -16,6 +16,7 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 		close(cmds->infile_fd);
 	if (ft_exec_built_in(data->token, cmds, data))
 		exit(EXIT_SUCCESS);
+	close(fd_pipe[1]);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
 		if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
