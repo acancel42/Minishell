@@ -4,16 +4,15 @@ char	*generate_random_name(t_data *data)
 {
 	int				fd;
 	unsigned char	*name;
-	size_t			size;
+	char			*res;
 	int				i;
 
-	size = 8;
 	i = 0;
-	name = ft_calloc((size + 1), sizeof(unsigned char));
+	name = ft_calloc((9), sizeof(unsigned char));
 	if (!name)
 		ft_exit(data->token, data->cmds, data);
 	fd = open("/dev/urandom", O_RDONLY);
-	read(fd, name, size);
+	read(fd, name, 8);
 	while (name[i] && name[i] != '\0')
 	{
 		name[i] = name[i] % 74 + 48;
@@ -22,7 +21,12 @@ char	*generate_random_name(t_data *data)
 		i++;
 	}
 	close(fd);
-	return ((char *)name);
+	res = ft_strjoin("/tmp/", (char *)name, 0);
+	free(name);
+	if (!res)
+		return (NULL);
+	printf("%s\n", res);
+	return (res);
 }
 
 int	ft_write_heredoc(char *line, t_commands *cmds, char *name, char *delimiter)
@@ -59,7 +63,6 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	if (!delimiter)
 		ft_exit(data->token, data->cmds, data);
 	name = generate_random_name(data);
-	name = ft_strjoin("/tmp/", name, 0);
 	if (!name)
 		return (-1);
 	cmds->infile_fd = open(name, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, 0644);
@@ -75,5 +78,6 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 		perror(name);
 	unlink(name);
 	free(name);
+	close(cmds->infile_fd);
 	return (0);
 }
