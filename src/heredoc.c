@@ -58,9 +58,6 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	char	*line;
 
 	line = NULL;
-	// delimiter = ft_strdup(delimiter + 1);
-	// if (!delimiter)
-	// 	ft_exit(data->token, data->cmds, data);
 	name = generate_random_name(data);
 	if (!name)
 		return (-1);
