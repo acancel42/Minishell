@@ -17,17 +17,16 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 	if (ft_exec_built_in(data->token, cmds, data))
 		exit(EXIT_SUCCESS);
 	close(fd_pipe[1]);
-	if (execve(cmds->path, cmds->args, data->my_env) == -1)
+	if (execve(cmds->path, cmds->args, data->my_env) != -1)
+		return ;
+	if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
 	{
-		if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
-		{
-			printf ("%s : Is a directory\n", cmds->name);
-			data->last_error_status = 126;
-		}
-		else
-			ft_putendl_fd("execve failed", 2);
-		free_child(data, cmds);
+		printf ("%s : Is a directory\n", cmds->name);
+		data->last_error_status = 126;
 	}
+	else
+		ft_putendl_fd("execve failed", 2);
+	free_child(data, cmds);
 }
 
 int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
