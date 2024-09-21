@@ -44,12 +44,12 @@ int	ft_wich_redir(t_commands *cmds, int i)
 	if (redir_type == '>')
 	{
 		if (ft_redir_output(cmds, i) == -1)
-			return (-1);
+			return (2);
 	}
 	else if (cmds->name)
 	{
 		if (ft_redir_input(cmds, i) == -1)
-			return (-1);
+			return (2);
 	}
 	return (0);
 }
@@ -67,7 +67,11 @@ int	ft_append(t_data *data, t_commands *cmds, char *file, int flag)
 	}
 	cmds->outfile_fd = open(temp, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (cmds->outfile_fd == -1)
+	{
 		perror(temp);
+		free(temp);
+		return (-1);
+	}
 	if (temp)
 		free(temp);
 	if (!cmds->name)
@@ -78,21 +82,24 @@ int	ft_append(t_data *data, t_commands *cmds, char *file, int flag)
 int	ft_redir_or_append(t_data *data, t_commands *cmds)
 {
 	int		i;
+	int		j;
 
+	j = 0;
 	i = 0;
 	while (cmds->redirections[i])
 	{
 		if (cmds->redirections[i][0] == '+')
 			ft_append(data, cmds, cmds->redirections[i], 1);
 		else if (cmds->redirections[i][0] == '-')
-		{
 			handle_heredoc(data, cmds, cmds->redirections[i] + 1);
-		}
 		else if (cmds->redirections[i][0] == '<' || \
 					cmds->redirections[i][0] == '>')
 		{
-			if (ft_wich_redir(cmds, i) == -1)
+			j = ft_wich_redir(cmds, i);
+			if (j == -1)
 				ft_exit(data->token, data->cmds, data);
+			else if (j == 2)
+				return (-1);
 		}
 		i++;
 	}
