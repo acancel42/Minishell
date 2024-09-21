@@ -7,7 +7,11 @@ int	handle_double_quote(char *src, t_token **token, t_data *data)
 	t_token	*temp;
 
 	i = 0;
-	(void)(data);
+	if (src[i] == '"' && src[i + 1] == '\0')
+	{
+		printf("syntax error\n");
+		return (-1);
+	}
 	if (src[i] == '"' && src[i + 1] == '"')
 	{
 		if (data->rflag == 0)
@@ -55,7 +59,11 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 	t_token	*temp;
 
 	i = 0;
-	(void)(data);
+	if (src[i] == '\'' && src[i + 1] == '\0')
+	{
+		printf("syntax error\n");
+		return (-1);
+	}
 	if (src[i] == '\'' && src[i + 1] == '\'')
 	{
 		if (data->rflag == 0)

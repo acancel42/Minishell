@@ -35,14 +35,18 @@ void	free_monitoring(char *host, char *username, char *pwd)
 	return ;
 }
 
-void	free_child(t_data *data, t_commands *cmds)
+void	free_child(t_data *data, t_commands **cmds)
 {
-	free_data(data, &cmds);
+	int exit_status;
+
+	free_data(data, cmds);
 	if (data->home)
 		free(data->home);
 	if (data->export)
 		ft_free_tab(data->export);
 	if (data->my_env)
 		ft_free_tab(data->my_env);
-	exit(data->last_error_status);
+	exit_status = data->last_error_status;
+	free(data);
+	exit(exit_status);
 }

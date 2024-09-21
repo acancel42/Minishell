@@ -61,6 +61,7 @@ void	ft_cmdsclear(t_commands **lst)
 	temp = NULL;
 	while (*lst)
 	{
+		printf("freeing %s\n", (*lst)->name);
 		temp = (*lst)->next;
 		ft_cmdsdelone(*lst);
 		*lst = temp;

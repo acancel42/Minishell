@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
+static void	exec_child(t_commands *head, int *fd_pipe, t_data *data, t_commands *cmds)
 {
 	struct stat	sb;
 
@@ -14,8 +14,8 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)
 		close(cmds->infile_fd);
-	if (ft_exec_built_in(data->token, cmds, data))
-		exit(EXIT_SUCCESS);
+	if (ft_exec_built_in(data->token, cmds, data) == 1)
+		free_child(data, &head);
 	close(fd_pipe[1]);
 	if (execve(cmds->path, cmds->args, data->my_env) != -1)
 		return ;
@@ -26,10 +26,10 @@ static void	exec_child(int *fd_pipe, t_data *data, t_commands *cmds)
 	}
 	else
 		ft_putendl_fd("execve failed", 2);
-	free_child(data, cmds);
+	free_child(data, &head);
 }
 
-int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
+int	ft_pipe(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
 {
 	int		fd_pipe[2];
 
@@ -44,7 +44,7 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 	if (data->pid == -1)
 		return (ft_exec_error(token, cmds, data, 1), -1);
 	if (data->pid == 0)
-		exec_child(fd_pipe, data, cmds);
+		exec_child(head, fd_pipe, data, cmds);
 	if (cmds->outfile_fd != 1)
 		close(cmds->outfile_fd);
 	if (cmds->infile_fd != 0)
@@ -52,7 +52,7 @@ int	ft_pipe(t_commands *cmds, t_data *data, t_token *token)
 	return (0);
 }
 
-static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
+static void	ft_builtin_or_exec(t_data *data, t_commands *cmds, t_commands *head)
 {
 	struct stat	sb;
 
@@ -61,7 +61,7 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 	if (cmds->infile_fd != 0)
 		close(cmds->infile_fd);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
-		free_child(data, cmds);
+		free_child(data, &head);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
 	{
 		if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
@@ -71,11 +71,11 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds)
 		}
 		else
 			ft_putendl_fd("execve failed", 2);
-		free_child(data, cmds);
+		free_child(data, &head);
 	}
 }
 
-int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
+int	ft_exec_cmd(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
 {
 	if (cmds->name && ft_strncmp(cmds->name, "", 1) == 0)
 		return (0);
@@ -93,8 +93,7 @@ int	ft_exec_cmd(t_commands *cmds, t_data *data, t_token *token)
 			return (ft_exec_error(token, cmds, data, 2), 1);
 		if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
 			return (ft_exec_error(token, cmds, data, 2), 1);
-		ft_builtin_or_exec(data, cmds);
-		exit(data->last_error_status);
+		ft_builtin_or_exec(data, cmds, head);
 	}
 	if (cmds->outfile_fd != 1)
 		close(cmds->outfile_fd);
@@ -114,12 +113,12 @@ void	exec_cmd(t_data *data, t_commands *cmds)
 		if (data->pflag != 0)
 		{
 			if (temp->index >= data->index_max)
-				ft_exec_cmd(temp, data, data->token);
+				ft_exec_cmd(cmds, temp, data, data->token);
 			else
-				ft_pipe(temp, data, data->token);
+				ft_pipe(cmds, temp, data, data->token);
 		}
 		else
-			ft_exec_cmd(temp, data, data->token);
+			ft_exec_cmd(cmds, temp, data, data->token);
 		temp = temp->next;
 	}
 	waitpid(data->pid, &status, 0);
