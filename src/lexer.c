@@ -44,6 +44,14 @@ int	expand_variables(char **dest, char *src, t_data *data)
 					i++;
 					end++;
 				}
+				else if ((*dest)[i] == '$')
+				{
+					name = ft_strndup((*dest) + start + 1, 1);
+					if (!name)
+						return (-1);
+					i++;
+					end++;
+				}
 				else
 				{
 					while (ft_isalnum((*dest)[i++]) && (*dest)[i - 1] != '$')

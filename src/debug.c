@@ -32,7 +32,7 @@ void	print_lst(t_token *token)
 	while (token)
 	{
 		print_type(token->type);
-		printf("%s\n", token->value);
+		printf("'%s'\n", token->value);
 		token = token->next;
 	}
 }

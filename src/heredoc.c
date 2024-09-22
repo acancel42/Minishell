@@ -62,6 +62,8 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	if (!name)
 		return (-1);
 	cmds->infile_fd = open(name, O_WRONLY | O_APPEND | O_CREAT | O_TRUNC, 0644);
+	if (cmds->infile_fd == -1)
+		perror(name);
 	while (1)
 	{
 		ft_signalhandle();

@@ -66,7 +66,7 @@ int			do_nothing(void);
 int			fill_cmd(t_commands **cmds, t_token *token, t_data *data);
 int			ft_append(t_data *data, t_commands *cmds, char *file, int flag);
 int			ft_cd(char *path, t_data *data);
-int			ft_data_init(t_data *data);
+int			ft_data_init(t_data *data, t_commands **cmds);
 int			ft_echo(t_commands *cmds);
 int			ft_env(t_data *data);
 int			ft_envcmp(char *env, char *variable);
@@ -127,5 +127,6 @@ void		print_cmds(t_commands *cmds);
 void		print_lst(t_token *token);
 void		print_my_env(char **my_env);
 void		print_type(t_token_types type);
+void		ft_exit_monitoring(char *host, char *user, char *pwd, t_data *data);
 
 #endif

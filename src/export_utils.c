@@ -1,5 +1,34 @@
 #include "minishell.h"
 
+int	ft_isexport(char *args, char **env)
+{
+	char	*variable;
+	int		is_export;
+	int		j;
+	int		k;
+	int		i;
+
+	is_export = 0;
+	j = 0;
+	k = 0;
+	i = 0;
+	while (args[i] && args[i] != '=')
+		i++;
+	variable = ft_calloc(i + 1, sizeof(char));
+	while (j < i)
+	{
+		variable[j] = args[j];
+		j++;
+	}
+	while (env[k++] && env[k] != NULL)
+	{
+		if (ft_envcmp(env[k], variable) == 0)
+			is_export = 1;
+	}
+	free(variable);
+	return (is_export);
+}
+
 void	ft_replace_export(char ***nenv, char ***nexp, int i, t_data *data)
 {
 	if (ft_isexport(data->cmds->args[i], data->my_env) && \

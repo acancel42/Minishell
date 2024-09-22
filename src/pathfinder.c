@@ -84,7 +84,7 @@ int	ft_pathfinder(t_data *data)
 	int			exit_ret;
 
 	exit_ret = 0;
-	while (data->cmds)
+	while (data->cmds && data->cmds->name)
 	{
 		data->cmds->valid_path = access(data->cmds->args[0], F_OK | X_OK);
 		if (data->cmds->valid_path == -1 && !ft_strchr_b(data->cmds->name, '/'))

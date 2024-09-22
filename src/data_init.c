@@ -24,7 +24,7 @@ t_data	*ft_init_shell(char **env)
 	return (data);
 }
 
-int	ft_data_init(t_data *data)
+int	ft_data_init(t_data *data, t_commands **cmds)
 {
 	g_sigint = 0;
 	ft_signalhandle();
@@ -35,19 +35,19 @@ int	ft_data_init(t_data *data)
 		ft_exit(NULL, NULL, data);
 	if (ft_strncmp(data->line, "", 1) == 0)
 	{
-		free_data(data, &data->cmds);
+		free_data(data, cmds);
 		return (-1);
 	}
 	if (g_sigint != 0)
 	{
-		free_data(data, &data->cmds);
+		free_data(data, cmds);
 		return (-1);
 	}
 	if (data->line)
 		add_history(data->line);
 	if (prelexer_check(data) == 2)
 	{
-		free_data(data, &data->cmds);
+		free_data(data, cmds);
 		return (-1);
 	}
 	return (0);

@@ -22,11 +22,10 @@ int	ft_pwd(void)
 	return (-2);
 }
 
-int	ft_cd(char *path, t_data *data)
+static int	ft_get_oldpwd(t_data *data)
 {
 	int		i;
 	char	*oldpwd;
-	char	*pwd;
 
 	i = 0;
 	while (ft_strncmp(data->my_env[i], "OLDPWD=", 7))
@@ -37,13 +36,21 @@ int	ft_cd(char *path, t_data *data)
 	if (!data->my_env[i])
 		return (-1);
 	free(oldpwd);
+	return (0);
+}
+
+int	ft_cd(char *path, t_data *data)
+{
+	int		i;
+	char	*pwd;
+
+	if (ft_get_oldpwd(data) == -1)
+		return (-1);
 	if (chdir(path) == -1)
 	{
 		printf("cd: %s: No such file or directory\n", path);
-		free(path);
 		return (-2);
 	}
-	free(path);
 	i = 0;
 	while (ft_strncmp(data->my_env[i], "PWD=", 4))
 		i++;

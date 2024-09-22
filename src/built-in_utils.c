@@ -2,6 +2,9 @@
 
 static void	ft_wich_cd(t_data *data, t_commands *cmds)
 {
+	char	*temp;
+
+	temp = NULL;
 	if (cmds->args[1] == NULL || \
 		ft_strncmp(cmds->args[1], "~", 2) == 0)
 	{
@@ -9,7 +12,11 @@ static void	ft_wich_cd(t_data *data, t_commands *cmds)
 	}
 	else
 	{
-		ft_cd(ft_substr(data->line, 3, ft_strlen(data->line) - 3), data);
+		temp = ft_substr(data->line, 3, ft_strlen(data->line) - 3);
+		if (temp == NULL)
+			ft_exit(data->token, cmds, data);
+		ft_cd(temp, data);
+		free(temp);
 	}
 }
 

@@ -85,7 +85,13 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 		if (ft_redir_or_append(data, cmds) == -1)
 			return (0);
 	if (!cmds->name)
+	{
+		if (cmds->outfile_fd != 1)
+			close(cmds->outfile_fd);
+		if (cmds->infile_fd != 0)
+			close(cmds->infile_fd);
 		return (0);
+	}
 	ft_wait_signal();
 	data->pid = fork();
 	if (data->pid == -1)

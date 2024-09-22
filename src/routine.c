@@ -25,10 +25,10 @@ static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 void	ft_routine(t_token *token, t_commands *cmds, t_data *data)
 {
 	ft_is_env_op(data);
-	if (ft_data_init(data) == -1)
-		return ;
 	token = NULL;
 	cmds = NULL;
+	if (ft_data_init(data, &cmds) == -1)
+		return ;
 	if (lexer_init(&token, data) == -1)
 	{
 		free_data(data, &cmds);

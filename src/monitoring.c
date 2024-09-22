@@ -52,21 +52,17 @@ parent directories: No such file or directory\n");
 	return (pwd);
 }
 
-char	*get_user(t_data *data)
+static char	*ft_get_user_util(t_data *data, char **username, \
+							char **user_temp, char **pwd)
 {
 	char	*host;
-	char	*user;
-	char	*username;
-	char	*pwd;
 	char	*pwd_temp;
-	char	*user_temp;
 
-	username = NULL;
 	host = ft_get_host(data);
 	if (!host)
 		ft_exit(NULL, NULL, data);
-	user_temp = ft_get_user(data, host, &username);
-	if (!user_temp)
+	*user_temp = ft_get_user(data, host, username);
+	if (!(*user_temp))
 	{
 		free(host);
 		ft_exit(NULL, NULL, data);
@@ -74,12 +70,25 @@ char	*get_user(t_data *data)
 	pwd_temp = ft_get_pwd(data);
 	if (!pwd_temp)
 	{
-		free_monitoring(host, user_temp, NULL);
+		free_monitoring(host, *user_temp, NULL);
 		ft_exit(NULL, NULL, data);
 	}
-	pwd = ft_substr(pwd_temp, ft_strlen(username) + 6, \
-		ft_strlen(username) + 6 - ft_strlen(pwd_temp));
+	*pwd = ft_substr(pwd_temp, ft_strlen(*username) + 6, \
+		ft_strlen(*username) + 6 - ft_strlen(pwd_temp));
 	free(pwd_temp);
+	return (host);
+}
+
+char	*get_user(t_data *data)
+{
+	char	*host;
+	char	*user;
+	char	*username;
+	char	*pwd;
+	char	*user_temp;
+
+	username = NULL;
+	host = ft_get_user_util(data, &username, &user_temp, &pwd);
 	if (ft_strncmp(username, pwd, ft_strlen(username)) == 0)
 	{
 		free(pwd);
@@ -87,17 +96,11 @@ char	*get_user(t_data *data)
 	}
 	user = ft_strjoin_name(user_temp, pwd, '~', '$');
 	if (!user)
-	{
-		free_monitoring(host, user_temp, pwd);
-		ft_exit(NULL, NULL, data);
-	}
+		ft_exit_monitoring(host, user_temp, pwd, data);
 	free(user_temp);
 	user_temp = ft_strjoin(user, " ", 1);
 	if (!user_temp)
-	{
-		free_monitoring(host, user, pwd);
-		ft_exit(NULL, NULL, data);
-	}
+		ft_exit_monitoring(host, user, pwd, data);
 	free_monitoring(host, username, pwd);
 	return (user_temp);
 }
