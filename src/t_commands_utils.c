@@ -11,6 +11,7 @@ t_commands	*ft_cmdnew(int flag)
 	if (!flag)
 		i = 0;
 	new->next = NULL;
+	new->args = NULL;
 	new->path = NULL;
 	new->valid_path = 0;
 	new->name = NULL;

@@ -15,11 +15,17 @@ int	handle_double_quote(char *src, t_token **token, t_data *data)
 	if (src[i] == '"' && src[i + 1] == '"')
 	{
 		if (data->rflag == 0)
+		{
 			temp = ft_toknew(0, T_D_QUOTED_WORD);
+			if (!temp)
+				ft_exit(*token, NULL, data);
+		}
 		else
 		{
 			data->rflag = 0;
 			temp = ft_toknew(0, T_RD_QUOTED_WORD);
+			if (!temp)
+				ft_exit(*token, NULL, data);
 		}
 		ft_tokadd_back(token, temp);
 		if (!ft_iswspace(src[i + 2]) && !ft_isoperator(src[i + 2]))
@@ -28,7 +34,11 @@ int	handle_double_quote(char *src, t_token **token, t_data *data)
 	}
 	i++;
 	if (data->rflag == 0)
+	{
 		temp = ft_toknew(src[i], T_D_QUOTED_WORD);
+		if (!temp)
+			ft_exit(*token, NULL, data);
+	}
 	else
 	{
 		data->rflag = 0;
@@ -67,11 +77,17 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 	if (src[i] == '\'' && src[i + 1] == '\'')
 	{
 		if (data->rflag == 0)
+		{
 			temp = ft_toknew(0, T_S_QUOTED_WORD);
+			if (!temp)
+				ft_exit(*token, NULL, data);
+		}
 		else
 		{
 			data->rflag = 0;
 			temp = ft_toknew(0, T_RS_QUOTED_WORD);
+			if (!temp)
+				ft_exit(*token, NULL, data);
 		}
 		ft_tokadd_back(token, temp);
 		if (!ft_iswspace(src[i + 2]) && !ft_isoperator(src[i + 2]))
@@ -80,11 +96,18 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 	}
 	i++;
 	if (data->rflag == 0)
+	{
 		temp = ft_toknew(src[i], T_S_QUOTED_WORD);
+		if (!temp)
+			ft_exit(*token, NULL, data);
+	}
+
 	else
 	{
 		data->rflag = 0;
 		temp = ft_toknew(src[i], T_RS_QUOTED_WORD);
+		if (!temp)
+			ft_exit(*token, NULL, data);
 	}
 	ft_tokadd_back(token, temp);
 	i++;

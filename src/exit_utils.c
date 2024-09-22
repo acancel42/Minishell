@@ -2,8 +2,12 @@
 
 void	exit_minishell(t_token **token, t_commands **cmds, t_data *data)
 {
-	ft_cmdsclear(cmds);
-	ft_tokenclear(token);
+	if (cmds)
+		if (*cmds)
+			ft_cmdsclear(cmds);
+	if (token)
+		if (*token)
+			ft_tokenclear(token);
 	if (data)
 	{
 		if (data->line)
@@ -42,6 +46,9 @@ void	ft_exit(t_token *token, t_commands *cmds, t_data *data)
 		exit_stat = ft_atoi(cmds->args[1]);
 	else
 		exit_stat = data->last_error_status;
-	exit_minishell(&token, &cmds, data);
+	if (cmds && token)
+		exit_minishell(&token, &cmds, data);
+	else
+		exit_minishell(NULL, NULL, data);
 	exit(exit_stat);
 }

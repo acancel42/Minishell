@@ -261,7 +261,7 @@ int	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 
 	k = 0;
 	i = 0;
-	while (token)
+	while (token && *cmds)
 	{
 		if (!(*cmds)->args)
 			(*cmds)->args = ft_calloc(count_type_until_pipe(token, T_WORD, 0) \
