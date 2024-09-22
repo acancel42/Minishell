@@ -37,7 +37,7 @@ void	free_monitoring(char *host, char *username, char *pwd)
 
 void	free_child(t_data *data, t_commands **cmds)
 {
-	int exit_status;
+	int	exit_status;
 
 	free_data(data, cmds);
 	if (data->home)

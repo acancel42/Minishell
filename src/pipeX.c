@@ -1,6 +1,7 @@
 #include "minishell.h"
 
-static void	exec_child(t_commands *head, int *fd_pipe, t_data *data, t_commands *cmds)
+static void	exec_child(t_commands *head, int *fd_pipe, \
+						t_data *data, t_commands *cmds)
 {
 	struct stat	sb;
 
@@ -75,7 +76,8 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds, t_commands *head)
 	}
 }
 
-int	ft_exec_cmd(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
+int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
+				t_data *data, t_token *token)
 {
 	if (cmds->name && ft_strncmp(cmds->name, "", 1) == 0)
 		return (0);

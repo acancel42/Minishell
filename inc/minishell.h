@@ -76,7 +76,8 @@ int			ft_is_built_in(t_commands *cmds);
 int			ft_isexport(char *args, char **env);
 int			ft_isword(t_token *token);
 int			ft_pathfinder(t_data *data);
-int			ft_pipe(t_commands *temp, t_commands *cmds, t_data *data, t_token *token);
+int			ft_pipe(t_commands *temp, t_commands *cmds, \
+				t_data *data, t_token *token);
 int			ft_print_export(char **args, t_data *data);
 int			ft_pwd(void);
 int			ft_redir_or_append(t_data *data, t_commands *cmds);
