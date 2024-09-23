@@ -6,11 +6,11 @@ t_data	*ft_init_shell(char **env)
 	char	*buf;
 
 	buf = NULL;
-	if (!env[0])
-	{
-		printf("no env\n");
-		printf("%s\n", getcwd(buf, 0));
-	}
+	// if (!env[0])
+	// {
+	// 	printf("no env\n");
+	// 	printf("%s\n", getcwd(buf, 0));
+	// }
 	rl_event_hook = &do_nothing;
 	data = ft_calloc(1, sizeof(t_data));
 	if (!data)

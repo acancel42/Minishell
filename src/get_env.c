@@ -27,6 +27,7 @@ static void	ft_empty_env(t_data *data)
 
 void	ft_get_env(t_data *data, char **env)
 {
+	dprintf(2, "SECURISE TES MORTS\n");
 	if (!env[0])
 	{
 		ft_empty_env(data);

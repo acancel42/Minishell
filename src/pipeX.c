@@ -6,15 +6,15 @@ static void	exec_child(t_commands *head, int *fd_pipe, \
 	struct stat	sb;
 
 	ft_signalhandle_in_child();
-	close(fd_pipe[0]);
+	ft_close(fd_pipe[0], data, cmds, 2);
 	if (dup2(cmds->outfile_fd, STDOUT_FILENO) == -1)
 		ft_exec_error(data->token, cmds, data, 2);
 	if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
 		ft_exec_error(data->token, cmds, data, 2);
-	close_files(cmds);
+	close_files(cmds, data);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
 		free_child(data, &head);
-	close(fd_pipe[1]);
+	ft_close(fd_pipe[1], data, cmds, 2);
 	if (execve(cmds->path, cmds->args, data->my_env) != -1)
 		return ;
 	if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
@@ -40,8 +40,7 @@ int	ft_pipe(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
 			return (0);
 	if (!cmds->name)
 	{
-		dprintf(2, "minishell: '%s': command not found\n", cmds->name);
-		close(fd_pipe[1]);
+		ft_close(fd_pipe[1], data, cmds, 2);
 		return (0);
 	}
 	ft_wait_signal();
@@ -50,7 +49,7 @@ int	ft_pipe(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
 		return (ft_exec_error(token, cmds, data, 1), -1);
 	if (data->pid == 0)
 		exec_child(head, fd_pipe, data, cmds);
-	close_files(cmds);
+	close_files(cmds, data);
 	return (0);
 }
 
@@ -58,7 +57,7 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds, t_commands *head)
 {
 	struct stat	sb;
 
-	close_files(cmds);
+	close_files(cmds, data);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
 		free_child(data, &head);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
@@ -84,7 +83,7 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 			return (0);
 	if (!cmds->name)
 	{
-		close_files(cmds);
+		close_files(cmds, data);
 		return (0);
 	}
 	ft_wait_signal();
@@ -100,7 +99,7 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 			return (ft_exec_error(token, cmds, data, 2), 1);
 		ft_builtin_or_exec(data, cmds, head);
 	}
-	close_files(cmds);
+	close_files(cmds, data);
 	return (0);
 }
 
@@ -122,6 +121,8 @@ void	exec_cmd(t_data *data, t_commands *cmds)
 		}
 		else
 			ft_exec_cmd(cmds, temp, data, data->token);
+		if (g_sigint == 2)
+			break ;
 		temp = temp->next;
 	}
 	waitpid(data->pid, &status, 0);

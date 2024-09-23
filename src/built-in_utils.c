@@ -44,7 +44,7 @@ int	ft_exec_built_in(t_token *token, t_commands *cmds, t_data *data)
 	if (ft_strncmp(cmds->name, "env", 4) == 0)
 		return (ft_env(data), 1);
 	if (ft_strncmp(cmds->name, "pwd", 4) == 0)
-		return (ft_pwd(), 1);
+		return (ft_pwd(data), 1);
 	if (ft_strncmp(cmds->name, "exit", 5) == 0)
 		ft_exit(token, cmds, data);
 	return (0);

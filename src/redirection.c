@@ -1,7 +1,8 @@
 #include "minishell.h"
 
-int	ft_redir_output(t_commands *cmds, int i)
+static int	ft_redir_output(t_data *data, t_commands *cmds, int i)
 {
+	ft_close(cmds->outfile_fd, data, cmds, 1);
 	cmds->outfile_fd = open(cmds->redirections[i], \
 			O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (cmds->outfile_fd == -1)
@@ -10,12 +11,13 @@ int	ft_redir_output(t_commands *cmds, int i)
 		return (-1);
 	}
 	if (!cmds->name)
-		close(cmds->outfile_fd);
+		ft_close(cmds->outfile_fd, data, cmds, 1);
 	return (0);
 }
 
-int	ft_redir_input(t_commands *cmds, int i)
+static int	ft_redir_input(t_commands *cmds, t_data *data, int i)
 {
+	ft_close(cmds->infile_fd, data, cmds, 0);
 	cmds->infile_fd = open(cmds->redirections[i], O_RDONLY);
 	if (cmds->infile_fd == -1)
 	{
@@ -25,7 +27,7 @@ int	ft_redir_input(t_commands *cmds, int i)
 	return (0);
 }
 
-int	ft_wich_redir(t_commands *cmds, int i)
+int	ft_wich_redir(t_data *data, t_commands *cmds, int i)
 {
 	char	*temp;
 	char	redir_type;
@@ -43,12 +45,12 @@ int	ft_wich_redir(t_commands *cmds, int i)
 		free(temp);
 	if (redir_type == '>')
 	{
-		if (ft_redir_output(cmds, i) == -1)
+		if (ft_redir_output(data, cmds, i) == -1)
 			return (2);
 	}
 	else if (cmds->name)
 	{
-		if (ft_redir_input(cmds, i) == -1)
+		if (ft_redir_input(cmds, data, i) == -1)
 			return (2);
 	}
 	return (0);
@@ -65,6 +67,7 @@ int	ft_append(t_data *data, t_commands *cmds, char *file, int flag)
 		if (!temp)
 			ft_exit(data->token, data->cmds, data);
 	}
+	ft_close(cmds->outfile_fd, data, cmds, 1);
 	cmds->outfile_fd = open(temp, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (cmds->outfile_fd == -1)
 	{
@@ -75,7 +78,7 @@ int	ft_append(t_data *data, t_commands *cmds, char *file, int flag)
 	if (temp)
 		free(temp);
 	if (!cmds->name)
-		close(cmds->outfile_fd);
+		ft_close(cmds->outfile_fd, data, cmds, 1);
 	return (0);
 }
 
@@ -85,23 +88,25 @@ int	ft_redir_or_append(t_data *data, t_commands *cmds)
 	int		j;
 
 	j = 0;
-	i = 0;
-	while (cmds->redirections[i])
+	i = -1;
+	while (cmds->redirections[++i])
 	{
 		if (cmds->redirections[i][0] == '+')
 			ft_append(data, cmds, cmds->redirections[i], 1);
 		else if (cmds->redirections[i][0] == '-')
-			handle_heredoc(data, cmds, cmds->redirections[i] + 1);
+		{
+			if (handle_heredoc(data, cmds, cmds->redirections[i] + 1) == 2)
+				return (-1);
+		}
 		else if (cmds->redirections[i][0] == '<' || \
 					cmds->redirections[i][0] == '>')
 		{
-			j = ft_wich_redir(cmds, i);
+			j = ft_wich_redir(data, cmds, i);
 			if (j == -1)
 				ft_exit(data->token, data->cmds, data);
 			else if (j == 2)
 				return (-1);
 		}
-		i++;
 	}
 	return (0);
 }

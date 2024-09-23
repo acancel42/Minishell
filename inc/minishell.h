@@ -33,6 +33,14 @@ typedef struct s_commands
 	struct s_commands	*next;
 }						t_commands;
 
+typedef struct s_expand
+{
+	int		s;
+	int		e;
+	int		i;
+	bool	is_itoa;
+}			t_expand;
+
 typedef struct s_data
 {
 	bool		is_home;
@@ -45,10 +53,13 @@ typedef struct s_data
 	int			last_error_status;
 	int			pflag;
 	int			rflag;
+	t_expand	exp;
 	pid_t		pid;
 	t_commands	*cmds;
 	t_token		*token;
 }				t_data;
+
+
 
 extern int	g_sigint;
 
@@ -57,7 +68,7 @@ char		**tab_join(char **tab, char *str);
 char		**tab_replace(char **env, char *args);
 char		*find_env_var(char *name, char **env);
 char		*ft_strjoin_name(char *s1, char *s2, char c1, char c2);
-char		*generate_random_name(t_data *data);
+char		*generate_random_name(t_data *data, t_commands *cmds);
 char		*get_color(t_data *data, char *color);
 char		*get_user(t_data *data);
 int			cmd_path(t_data *data);
@@ -79,10 +90,11 @@ int			ft_pathfinder(t_data *data);
 int			ft_pipe(t_commands *temp, t_commands *cmds, \
 				t_data *data, t_token *token);
 int			ft_print_export(char **args, t_data *data);
-int			ft_pwd(void);
+int			ft_pwd(t_data *data);
 int			ft_redir_or_append(t_data *data, t_commands *cmds);
 int			ft_unset(char **args, t_data *data);
-int			ft_wich_redir(t_commands *cmds, int i);
+int			ft_wich_redir(t_data *data, t_commands *cmds, int i);
+int			ft_wrong_path(t_data *data, int *exit_ret);
 int			get_home(t_data *data);
 int			get_pwd(char **pwd);
 int			handle_else(char *src, t_token **token, t_data *data);
@@ -107,6 +119,7 @@ void		free_child(t_data *data, t_commands **cmds);
 void		free_data(t_data *data, t_commands **cmds);
 void		free_monitoring(char *host, char *username, char *pwd);
 void		ft_cmdadd_back(t_commands **lst, t_commands *new);
+void		ft_close(int fd, t_data *data, t_commands *cmds, int flag);
 void		ft_cmdsclear(t_commands **lst);
 void		ft_exec_error(t_token *token, t_commands *cmds, \
 				t_data *data, int flag);
@@ -128,6 +141,8 @@ void		print_lst(t_token *token);
 void		print_my_env(char **my_env);
 void		print_type(t_token_types type);
 void		ft_exit_monitoring(char *host, char *user, char *pwd, t_data *data);
-void		close_files(t_commands *cmds);
+void		close_files(t_commands *cmds, t_data *data);
+void		try_acces(t_data *data, char **all_paths, int i);
+void		build_path(t_data *data, char *s1, char *s2);
 
 #endif

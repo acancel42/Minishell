@@ -1,113 +1,259 @@
 #include "minishell.h"
 
+int	ft_assign_value_util(char **name, char **dst, t_data *dt)
+{
+	if (ft_isdigit((*dst)[dt->exp.i]))
+	{
+		*name = ft_strndup((*dst) + dt->exp.s + 1, 1);
+		if (!(*name))
+			return (-1);
+		dt->exp.i++;
+		dt->exp.e++;
+	}
+	else if ((*dst)[dt->exp.i] == '$')
+	{
+		*name = ft_strndup((*dst) + dt->exp.s + 1, 1);
+		if (!(*name))
+			return (-1);
+		dt->exp.i++;
+		dt->exp.e++;
+	}
+	else
+	{
+		while (ft_isalnum((*dst)[dt->exp.i++]) && (*dst)[dt->exp.i - 1] != '$')
+			dt->exp.e++;
+		*name = ft_strndup((*dst) + (dt->exp.s + 1), dt->exp.e - dt->exp.s - 1);
+		if (!(*name))
+			return (-1);
+	}
+	return (0);
+}
+
+int	ft_assign_value(char **name, char **value, char **dest, t_data *data)
+{
+	if ((*dest)[data->exp.i] == '?')
+	{
+		*name = NULL;
+		*value = ft_itoa(data->last_error_status);
+		if (!(*value))
+			return (-1);
+		data->exp.e++;
+		data->exp.is_itoa = true;
+	}
+	else
+	{
+		if (ft_assign_value_util(name, dest, data) == -1)
+			return (-1);
+		*value = find_env_var(*name, data->my_env);
+	}
+	return (0);
+}
+
+int	ft_replace_value(char **dest, char **value, char **name, t_data *data)
+{
+	char	*tmp;
+
+	if (*value)
+	{
+		tmp = malloc(ft_strlen((*dest)) - ft_strlen(*name) + \
+					ft_strlen(*value) + 1);
+		if (!tmp)
+			return (-1);
+		ft_strncpy(tmp, (*dest), data->exp.s);
+		ft_strcpy(tmp + data->exp.s, *value);
+		data->exp.i = data->exp.s + ft_strlen(*value);
+		ft_strcpy(tmp + data->exp.s + ft_strlen(*value), (*dest) + data->exp.e);
+		free((*dest));
+		(*dest) = ft_strdup(tmp);
+		if (!(*dest))
+			return (-1);
+	}
+	else
+	{
+		data->exp.i = data->exp.s;
+		tmp = malloc(ft_strlen((*dest)) - ft_strlen(*name) + \
+				ft_strlen(*value) + 1);
+		ft_strncpy(tmp, (*dest), data->exp.s);
+		ft_strcpy(tmp + data->exp.s, (*dest) + data->exp.e);
+		free((*dest));
+		(*dest) = ft_strdup(tmp);
+		if (!(*dest))
+			return (-1);
+		if (!(*dest)[0])
+		{
+			free(tmp);
+			free(*name);
+			return (2);
+		}
+	}
+	free(tmp);
+	free(*name);
+	return (0);
+}
+
+int	ft_expand_loop(char **dest, char **name, char **value, t_data *data)
+{
+	int	ret;
+
+	if ((*dest)[data->exp.i] == '$')
+	{
+		data->exp.s = data->exp.i;
+		data->exp.e = data->exp.i + 1;
+		data->exp.i++;
+		if (ft_assign_value(name, value, dest, data) == -1)
+			return (-1);
+		ret = ft_replace_value(dest, value, name, data);
+		if (ret == 2)
+			return (2);
+		if (ret == -1)
+			return (-1);
+		if (data->exp.is_itoa == true)
+		{
+			data->exp.is_itoa = false;
+			free(*value);
+		}
+	}
+	else
+		data->exp.i++;
+	return (0);
+}
+
 int	expand_variables(char **dest, char *src, t_data *data)
 {
-	int		start;
-	int		end;
-	char	*name;
-	char	*value;
-	char	*temp;
-	int		i;
-	bool	is_itoa;
+	char		*name;
+	char		*value;
+	int			ret;
 
 	(*dest) = ft_strdup(src);
 	if (!(*dest))
 		return (-1);
-	i = 0;
-	end = 0;
-	is_itoa = false;
+	value = NULL;
+	name = NULL;
+	data->exp.i = 0;
+	data->exp.e = 0;
+	data->exp.is_itoa = false;
 	if (ft_strncmp((*dest), "$", 1) == 0 && ft_strlen((*dest)) == 1)
-		return (i);
-	while ((*dest) && (*dest)[i])
+		return (data->exp.i);
+	while ((*dest) && (*dest)[data->exp.i])
 	{
-		if ((*dest)[i] == '$')
-		{
-			start = i;
-			end = i + 1;
-			i++;
-			if ((*dest)[i] == '?')
-			{
-				name = NULL;
-				value = ft_itoa(data->last_error_status);
-				if (!value)
-					return (-1);
-				end++;
-				is_itoa = true;
-			}
-			else
-			{
-				if (ft_isdigit((*dest)[i]))
-				{
-					name = ft_strndup((*dest) + start + 1, 1);
-					if (!name)
-						return (-1);
-					i++;
-					end++;
-				}
-				else if ((*dest)[i] == '$')
-				{
-					name = ft_strndup((*dest) + start + 1, 1);
-					if (!name)
-						return (-1);
-					i++;
-					end++;
-				}
-				else
-				{
-					while (ft_isalnum((*dest)[i++]) && (*dest)[i - 1] != '$')
-						end++;
-					name = ft_strndup((*dest) + (start + 1), end - start - 1);
-					if (!name)
-						return (-1);
-				}
-				value = find_env_var(name, data->my_env);
-			}
-			if (value)
-			{
-				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
-							ft_strlen(value) + 1);
-				if (!temp)
-					return (-1);
-				ft_strncpy(temp, (*dest), start);
-				ft_strcpy(temp + start, value);
-				i = start + ft_strlen(value);
-				ft_strcpy(temp + start + ft_strlen(value), (*dest) + end);
-				free((*dest));
-				(*dest) = ft_strdup(temp);
-				if (!(*dest))
-					return (-1);
-			}
-			else
-			{
-				i = start;
-				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
-						ft_strlen(value) + 1);
-				ft_strncpy(temp, (*dest), start);
-				ft_strcpy(temp + start, (*dest) + end);
-				free((*dest));
-				(*dest) = ft_strdup(temp);
-				if (!(*dest))
-					return (-1);
-				if (!(*dest)[0])
-				{
-					free(temp);
-					free(name);
-					break ;
-				}
-			}
-			free(temp);
-			free(name);
-			if (is_itoa == true)
-			{
-				is_itoa = false;
-				free(value);
-			}
-		}
-		else
-			i++;
+		ret = ft_expand_loop(dest, &name, &value, data);
+		if (ret == -1)
+			return (-1);
+		else if (ret == 2)
+			break ;
 	}
-	return (i);
+	return (data->exp.i);
 }
+
+// int	expand_variables(char **dest, char *src, t_data *data)
+// {
+// 	int		start;
+// 	int		end;
+// 	char	*name;
+// 	char	*value;
+// 	char	*temp;
+// 	int		i;
+// 	bool	is_itoa;
+
+// 	(*dest) = ft_strdup(src);
+// 	if (!(*dest))
+// 		return (-1);
+// 	i = 0;
+// 	end = 0;
+// 	is_itoa = false;
+// 	if (ft_strncmp((*dest), "$", 1) == 0 && ft_strlen((*dest)) == 1)
+// 		return (i);
+// 	while ((*dest) && (*dest)[i])
+// 	{
+// 		if ((*dest)[i] == '$')
+// 		{
+// 			start = i;
+// 			end = i + 1;
+// 			i++;
+// 			if ((*dest)[i] == '?')
+// 			{
+// 				name = NULL;
+// 				value = ft_itoa(data->last_error_status);
+// 				if (!value)
+// 					return (-1);
+// 				end++;
+// 				is_itoa = true;
+// 			}
+// 			else
+// 			{
+// 				if (ft_isdigit((*dest)[i]))
+// 				{
+// 					name = ft_strndup((*dest) + start + 1, 1);
+// 					if (!name)
+// 						return (-1);
+// 					i++;
+// 					end++;
+// 				}
+// 				else if ((*dest)[i] == '$')
+// 				{
+// 					name = ft_strndup((*dest) + start + 1, 1);
+// 					if (!name)
+// 						return (-1);
+// 					i++;
+// 					end++;
+// 				}
+// 				else
+// 				{
+// 					while (ft_isalnum((*dest)[i++]) && (*dest)[i - 1] != '$')
+// 						end++;
+// 					name = ft_strndup((*dest) + (start + 1), end - start - 1);
+// 					if (!name)
+// 						return (-1);
+// 				}
+// 				value = find_env_var(name, data->my_env);
+// 			}
+// 			if (value)
+// 			{
+// 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
+// 							ft_strlen(value) + 1);
+// 				if (!temp)
+// 					return (-1);
+// 				ft_strncpy(temp, (*dest), start);
+// 				ft_strcpy(temp + start, value);
+// 				i = start + ft_strlen(value);
+// 				ft_strcpy(temp + start + ft_strlen(value), (*dest) + end);
+// 				free((*dest));
+// 				(*dest) = ft_strdup(temp);
+// 				if (!(*dest))
+// 					return (-1);
+// 			}
+// 			else
+// 			{
+// 				i = start;
+// 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
+// 						ft_strlen(value) + 1);
+// 				ft_strncpy(temp, (*dest), start);
+// 				ft_strcpy(temp + start, (*dest) + end);
+// 				free((*dest));
+// 				(*dest) = ft_strdup(temp);
+// 				if (!(*dest))
+// 					return (-1);
+// 				if (!(*dest)[0])
+// 				{
+// 					free(temp);
+// 					free(name);
+// 					break ;
+// 				}
+// 			}
+// 			free(temp);
+// 			free(name);
+// 			if (is_itoa == true)
+// 			{
+// 				is_itoa = false;
+// 				free(value);
+// 			}
+// 		}
+// 		else
+// 			i++;
+// 	}
+// 	return (i);
+// }
+
 
 static char	*handle_w_utils(t_token **token, t_data *data, char *temp2, int j)
 {
