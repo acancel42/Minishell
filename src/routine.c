@@ -2,6 +2,13 @@
 
 static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 {
+	if (!cmds->name && !cmds->redirections[0])
+	{
+		data->last_error_status = 2;
+		printf("syntax error\n");
+		free_data(data, &cmds);
+		return (-1);
+	}
 	if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 \
 		&& cmds->redirections[0] == NULL)
 	{
@@ -11,7 +18,7 @@ static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 		return (-1);
 	}
 	data->pflag = 0;
-	if (cmds->name && ft_pathfinder(data) == 0)
+	if (ft_pathfinder(data) == 0)
 	{
 		free_data(data, &cmds);
 		return (-1);
@@ -24,6 +31,7 @@ static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 
 void	ft_routine(t_token *token, t_commands *cmds, t_data *data)
 {
+	g_sigint = 0;
 	ft_is_env_op(data);
 	token = NULL;
 	cmds = NULL;

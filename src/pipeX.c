@@ -11,10 +11,7 @@ static void	exec_child(t_commands *head, int *fd_pipe, \
 		ft_exec_error(data->token, cmds, data, 2);
 	if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
 		ft_exec_error(data->token, cmds, data, 2);
-	if (cmds->outfile_fd != 1)
-		close(cmds->outfile_fd);
-	if (cmds->infile_fd != 0)
-		close(cmds->infile_fd);
+	close_files(cmds);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
 		free_child(data, &head);
 	close(fd_pipe[1]);
@@ -39,17 +36,21 @@ int	ft_pipe(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
 	cmds->next->infile_fd = fd_pipe[0];
 	cmds->outfile_fd = fd_pipe[1];
 	if (cmds->redirections)
-		ft_redir_or_append(data, cmds);
+		if (ft_redir_or_append(data, cmds) == -1)
+			return (0);
+	if (!cmds->name)
+	{
+		dprintf(2, "minishell: '%s': command not found\n", cmds->name);
+		close(fd_pipe[1]);
+		return (0);
+	}
 	ft_wait_signal();
 	data->pid = fork();
 	if (data->pid == -1)
 		return (ft_exec_error(token, cmds, data, 1), -1);
 	if (data->pid == 0)
 		exec_child(head, fd_pipe, data, cmds);
-	if (cmds->outfile_fd != 1)
-		close(cmds->outfile_fd);
-	if (cmds->infile_fd != 0)
-		close(cmds->infile_fd);
+	close_files(cmds);
 	return (0);
 }
 
@@ -57,10 +58,7 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds, t_commands *head)
 {
 	struct stat	sb;
 
-	if (cmds->outfile_fd != 1)
-		close(cmds->outfile_fd);
-	if (cmds->infile_fd != 0)
-		close(cmds->infile_fd);
+	close_files(cmds);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
 		free_child(data, &head);
 	if (execve(cmds->path, cmds->args, data->my_env) == -1)
@@ -86,10 +84,7 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 			return (0);
 	if (!cmds->name)
 	{
-		if (cmds->outfile_fd != 1)
-			close(cmds->outfile_fd);
-		if (cmds->infile_fd != 0)
-			close(cmds->infile_fd);
+		close_files(cmds);
 		return (0);
 	}
 	ft_wait_signal();
@@ -105,10 +100,7 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 			return (ft_exec_error(token, cmds, data, 2), 1);
 		ft_builtin_or_exec(data, cmds, head);
 	}
-	if (cmds->outfile_fd != 1)
-		close(cmds->outfile_fd);
-	if (cmds->infile_fd != 0)
-		close(cmds->infile_fd);
+	close_files(cmds);
 	return (0);
 }
 

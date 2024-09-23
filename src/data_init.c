@@ -26,7 +26,6 @@ t_data	*ft_init_shell(char **env)
 
 int	ft_data_init(t_data *data, t_commands **cmds)
 {
-	g_sigint = 0;
 	ft_signalhandle();
 	data->user = get_user(data);
 	data->user = get_color(data, BLUE);
@@ -47,6 +46,7 @@ int	ft_data_init(t_data *data, t_commands **cmds)
 		add_history(data->line);
 	if (prelexer_check(data) == 2)
 	{
+		data->last_error_status = 2;
 		free_data(data, cmds);
 		return (-1);
 	}

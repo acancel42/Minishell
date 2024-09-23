@@ -284,7 +284,10 @@ int	fill_cmd(t_commands **cmds, t_token *token, t_data *data)
 				|| token->type == T_APPEND_OUT || token->type == T_HEREDOC)
 		{
 			if (handle_rword(cmds, &token, data, &k) == 2)
+			{
+				data->last_error_status = 2;
 				return (2);
+			}
 		}
 		else if (token->type == T_PIPE)
 		{

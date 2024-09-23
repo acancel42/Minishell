@@ -17,7 +17,10 @@ int	lexer_init(t_token **token, t_data *data)
 	{
 		i = token_init(data->line, i, token, data);
 		if (i == -1)
+		{
+			data->last_error_status = 2;
 			return (-1);
+		}
 	}
 	return (1);
 }

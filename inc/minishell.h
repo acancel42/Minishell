@@ -128,5 +128,6 @@ void		print_lst(t_token *token);
 void		print_my_env(char **my_env);
 void		print_type(t_token_types type);
 void		ft_exit_monitoring(char *host, char *user, char *pwd, t_data *data);
+void		close_files(t_commands *cmds);
 
 #endif
