@@ -31,7 +31,7 @@ static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 
 void	ft_routine(t_token *token, t_commands *cmds, t_data *data)
 {
-	g_sigint = 0;
+	ft_signalhandle();
 	ft_is_env_op(data);
 	token = NULL;
 	cmds = NULL;

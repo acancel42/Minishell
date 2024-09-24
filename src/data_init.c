@@ -26,18 +26,18 @@ t_data	*ft_init_shell(char **env)
 
 int	ft_data_init(t_data *data, t_commands **cmds)
 {
-	ft_signalhandle();
+	if (g_sigint != 0)
+	{
+		g_sigint = 0;
+		data->last_error_status = 130;
+		return (-1);
+	}
 	data->user = get_user(data);
 	data->user = get_color(data, BLUE);
 	data->line = readline(data->user);
 	if (!data->line)
 		ft_exit(NULL, NULL, data);
 	if (ft_strncmp(data->line, "", 1) == 0)
-	{
-		free_data(data, cmds);
-		return (-1);
-	}
-	if (g_sigint != 0)
 	{
 		free_data(data, cmds);
 		return (-1);

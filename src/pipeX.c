@@ -6,6 +6,7 @@ static void	exec_child(t_commands *head, int *fd_pipe, \
 	struct stat	sb;
 
 	ft_signalhandle_in_child();
+	(void)fd_pipe;
 	ft_close(fd_pipe[0], data, cmds, 2);
 	if (dup2(cmds->outfile_fd, STDOUT_FILENO) == -1)
 		ft_exec_error(data->token, cmds, data, 2);
@@ -14,7 +15,6 @@ static void	exec_child(t_commands *head, int *fd_pipe, \
 	close_files(cmds, data);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
 		free_child(data, &head);
-	ft_close(fd_pipe[1], data, cmds, 2);
 	if (execve(cmds->path, cmds->args, data->my_env) != -1)
 		return ;
 	if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)

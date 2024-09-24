@@ -57,8 +57,8 @@ void	ft_close(int fd, t_data *data, t_commands *cmds, int flag)
 	{
 		if (close(fd) == -1)
 		{
-			printf("close file descriptor %d failed\n", fd);
-			perror("Error fd :");
+			dprintf(2, "close file descriptor %d failed\n", fd);
+			perror("Error fd ");
 			ft_exit(data->token, cmds, data);
 		}
 		if (flag == 0)	

@@ -28,6 +28,7 @@ int	main(int argc, char **argv, char **env)
 		return (-1);
 	token = NULL;
 	cmds = NULL;
+	g_sigint = 0;
 	data = ft_init_shell(env);
 	while (1)
 		ft_routine(token, cmds, data);
