@@ -36,7 +36,10 @@ void	ft_routine(t_token *token, t_commands *cmds, t_data *data)
 	token = NULL;
 	cmds = NULL;
 	if (ft_data_init(data, &cmds) == -1)
+	{
+		free_data(data, &cmds);
 		return ;
+	}
 	if (lexer_init(&token, data) == -1)
 	{
 		free_data(data, &cmds);

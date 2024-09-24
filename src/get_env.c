@@ -62,18 +62,32 @@ void	ft_get_env(t_data *data, char **env)
 	}
 }
 
-void	ft_variable_missing(t_data *data, char *variable)
+void	ft_variable_missing(t_data *data, char *variable, int flag)
 {
 	char	**new_env;
 
-	new_env = tab_join(data->my_env, variable);
-	if (!new_env)
-		ft_exit(NULL, NULL, data);
-	ft_free_tab(data->my_env);
-	data->my_env = tab_dup(new_env);
-	ft_free_tab(new_env);
-	if (!data->my_env)
-		ft_exit(NULL, NULL, data);
+	if (flag == 0)
+	{
+		new_env = tab_join(data->my_env, variable);
+		if (!new_env)
+			ft_exit(NULL, NULL, data);
+		ft_free_tab(data->my_env);
+		data->my_env = tab_dup(new_env);
+		ft_free_tab(new_env);
+		if (!data->my_env)
+			ft_exit(NULL, NULL, data);
+	}
+	else
+	{
+		new_env = tab_join(data->export, variable);
+		if (!new_env)
+			ft_exit(NULL, NULL, data);
+		ft_free_tab(data->export);
+		data->export = tab_dup(new_env);
+		ft_free_tab(new_env);
+		if (!data->export)
+			ft_exit(NULL, NULL, data);
+	}
 }
 
 void	ft_pwd_missing(t_data *data)
@@ -89,7 +103,8 @@ void	ft_pwd_missing(t_data *data)
 	free(buf);
 	if (!temp)
 		ft_exit(NULL, NULL, data);
-	ft_variable_missing(data, temp);
+	ft_variable_missing(data, temp, 0);
+	ft_variable_missing(data, temp, 1);
 	free(temp);
 }
 
@@ -98,13 +113,15 @@ void	ft_is_env_op(t_data *data)
 	if (!find_env_var("PWD", data->my_env))
 		ft_pwd_missing(data);
 	if (!find_env_var("LOGNAME", data->my_env))
-		ft_variable_missing(data, "LOGNAME=?");
+		ft_variable_missing(data, "LOGNAME=?", 0);
 	if (!find_env_var("SESSION_MANAGER", data->my_env))
-		ft_variable_missing(data, "SESSION_MANAGER=?");
+		ft_variable_missing(data, "SESSION_MANAGER=?", 0);
 	if (!find_env_var("PATH", data->my_env))
-		ft_variable_missing(data, "PATH=?");
-	ft_free_tab(data->export);
-	data->export = tab_dup(data->my_env);
-	if (!data->export)
-		ft_free_tab(data->export);
+		ft_variable_missing(data, "PATH=?", 0);
+	if (!find_env_var("LOGNAME", data->export))
+		ft_variable_missing(data, "LOGNAME=?", 1);
+	if (!find_env_var("SESSION_MANAGER", data->export))
+		ft_variable_missing(data, "SESSION_MANAGER=?", 1);
+	if (!find_env_var("PATH", data->export))
+		ft_variable_missing(data, "PATH=?", 1);
 }

@@ -6,11 +6,6 @@ t_data	*ft_init_shell(char **env)
 	char	*buf;
 
 	buf = NULL;
-	// if (!env[0])
-	// {
-	// 	printf("no env\n");
-	// 	printf("%s\n", getcwd(buf, 0));
-	// }
 	rl_event_hook = &do_nothing;
 	data = ft_calloc(1, sizeof(t_data));
 	if (!data)
@@ -26,28 +21,25 @@ t_data	*ft_init_shell(char **env)
 
 int	ft_data_init(t_data *data, t_commands **cmds)
 {
+	(void)cmds;
+	data->user = get_user(data);
+	get_color(data, BLUE);
+	data->line = readline(data->user);
 	if (g_sigint != 0)
 	{
 		g_sigint = 0;
 		data->last_error_status = 130;
 		return (-1);
 	}
-	data->user = get_user(data);
-	data->user = get_color(data, BLUE);
-	data->line = readline(data->user);
 	if (!data->line)
 		ft_exit(NULL, NULL, data);
 	if (ft_strncmp(data->line, "", 1) == 0)
-	{
-		free_data(data, cmds);
 		return (-1);
-	}
 	if (data->line)
 		add_history(data->line);
 	if (prelexer_check(data) == 2)
 	{
 		data->last_error_status = 2;
-		free_data(data, cmds);
 		return (-1);
 	}
 	return (0);

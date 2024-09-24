@@ -4,17 +4,21 @@ static void	exec_child(t_commands *head, int *fd_pipe, \
 						t_data *data, t_commands *cmds)
 {
 	struct stat	sb;
+	int			ret;
 
+	ret = 0;
 	ft_signalhandle_in_child();
-	(void)fd_pipe;
-	ft_close(fd_pipe[0], data, cmds, 2);
 	if (dup2(cmds->outfile_fd, STDOUT_FILENO) == -1)
 		ft_exec_error(data->token, cmds, data, 2);
 	if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
 		ft_exec_error(data->token, cmds, data, 2);
 	close_files(cmds, data);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
+	{
+		ft_close(fd_pipe[0], data, cmds, 2);
 		free_child(data, &head);
+	}
+	ft_close(fd_pipe[0], data, cmds, 2);
 	if (execve(cmds->path, cmds->args, data->my_env) != -1)
 		return ;
 	if (access(cmds->name, F_OK) == 0 && stat(cmds->args[0], &sb) == 0)
@@ -36,12 +40,12 @@ int	ft_pipe(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
 	cmds->next->infile_fd = fd_pipe[0];
 	cmds->outfile_fd = fd_pipe[1];
 	if (cmds->redirections)
-		if (ft_redir_or_append(data, cmds) == -1)
-			return (0);
-	if (!cmds->name)
 	{
-		ft_close(fd_pipe[1], data, cmds, 2);
-		return (0);
+		if (ft_redir_or_append(data, cmds) == -1 || !cmds->name)
+		{
+			close_files(cmds, data);
+			return (0);
+		}
 	}
 	ft_wait_signal();
 	data->pid = fork();
@@ -79,13 +83,18 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 	if (cmds->name && ft_strncmp(cmds->name, "", 1) == 0)
 		return (0);
 	if (cmds->redirections)
-		if (ft_redir_or_append(data, cmds) == -1)
-			return (0);
-	if (!cmds->name)
 	{
-		close_files(cmds, data);
-		return (0);
+		if (ft_redir_or_append(data, cmds) == -1 || !cmds->name)
+		{
+			close_files(cmds, data);
+			return (0);
+		}
 	}
+	// if (!cmds->name)
+	// {
+	// 	close_files(cmds, data);
+	// 	return (0);
+	// }
 	ft_wait_signal();
 	data->pid = fork();
 	if (data->pid == -1)

@@ -47,7 +47,10 @@ static char	*ft_get_pwd(t_data *data)
 	{
 		printf("getcwd: cannot access \
 parent directories: No such file or directory\n");
-		ft_cd(data->home, data);
+		pwd = find_env_var("HOME", data->my_env);
+		if (!pwd)
+			printf("cd: HOME not set\n");
+		ft_cd(pwd, data, NULL);
 	}
 	return (pwd);
 }

@@ -42,7 +42,7 @@ void	ft_exit(t_token *token, t_commands *cmds, t_data *data)
 	int	exit_stat;
 
 	exit_stat = 0;
-	if (cmds && ft_strncmp(cmds->name, "exit", 5) == 0 && cmds->args[1])
+	if (cmds && cmds->name && ft_strncmp(cmds->name, "exit", 5) == 0 && cmds->args[1])
 		exit_stat = ft_atoi(cmds->args[1]);
 	else
 		exit_stat = data->last_error_status;

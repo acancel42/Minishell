@@ -51,7 +51,7 @@ void	print_cmds(t_commands *cmds) // dprintf for pipes debug !
 		while (cmds->args[++i])
 			dprintf(2, "args : '%s'\n", cmds->args[i]);
 		while (cmds->redirections[++j])
-			dprintf(2, "args : '%s'\n", cmds->redirections[j]);
+			dprintf(2, "redir : '%s'\n", cmds->redirections[j]);
 		dprintf(2, "path : '%s'\n", cmds->path);
 		dprintf(2, "%c", '\n');
 		cmds = cmds->next;

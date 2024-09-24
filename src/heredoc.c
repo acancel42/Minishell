@@ -25,7 +25,6 @@ char	*generate_random_name(t_data *data, t_commands *cmds)
 	free(name);
 	if (!res)
 		return (NULL);
-	ft_close(cmds->infile_fd, data, cmds, 0);
 	return (res);
 }
 
@@ -57,8 +56,10 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 {
 	char	*name;
 	char	*line;
+	int		ret;
 
 	line = NULL;
+	ft_close(cmds->infile_fd, data, cmds, 0);
 	name = generate_random_name(data, cmds);
 	if (!name)
 		return (-1);
@@ -77,7 +78,7 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 		perror(name);
 	unlink(name);
 	free(name);
-	if (!cmds->name)
-		ft_close(cmds->infile_fd, data, cmds, 0);
-	return (g_sigint);
+	ret = g_sigint;
+	g_sigint = 0;
+	return (ret);
 }

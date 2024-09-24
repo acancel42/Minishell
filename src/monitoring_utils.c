@@ -26,7 +26,7 @@ char	*ft_strjoin_name(char *s1, char *s2, char c1, char c2)
 	return (dest);
 }
 
-char	*get_color(t_data *data, char *color)
+void	get_color(t_data *data, char *color)
 {
 	char	*prompt;
 
@@ -34,9 +34,14 @@ char	*get_color(t_data *data, char *color)
 	if (!prompt)
 		ft_exit(NULL, NULL, data);
 	prompt = ft_strjoin(prompt, data->user, 1);
+	if (!prompt)
+		ft_exit(NULL, NULL, data);
 	prompt = ft_strjoin(prompt, RESET, 1);
+	if (!prompt)
+		ft_exit(NULL, NULL, data);
 	free(data->user);
-	return (prompt);
+	data->user = ft_strdup(prompt);
+	free(prompt);
 }
 
 void	ft_exit_monitoring(char *host, char *user, char *pwd, t_data *data)

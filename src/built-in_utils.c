@@ -8,31 +8,37 @@ static void	ft_wich_cd(t_data *data, t_commands *cmds)
 	if (cmds->args[1] == NULL || \
 		ft_strncmp(cmds->args[1], "~", 2) == 0)
 	{
-		ft_cd(data->home, data);
+		temp = find_env_var("HOME", data->my_env);
+		if (temp == NULL)
+			printf("cd: HOME not set\n");
+		else
+			ft_cd(temp, data, cmds);
 	}
 	else
 	{
 		temp = ft_substr(data->line, 3, ft_strlen(data->line) - 3);
 		if (temp == NULL)
 			ft_exit(data->token, cmds, data);
-		ft_cd(temp, data);
+		ft_cd(temp, data, cmds);
 		free(temp);
 	}
 }
 
 int	ft_exec_cd(t_data *data)
 {
-	if (data->is_home == false)
-	{
-		printf("cd: HOME not set\n");
-		return (1);
-	}
+	// if (data->is_home == false)
+	// {
+	// 	printf("cd: HOME not set\n");
+	// 	return (1);
+	// }
 	ft_wich_cd(data, data->cmds);
 	return (1);
 }
 
 int	ft_exec_built_in(t_token *token, t_commands *cmds, t_data *data)
 {
+	if (!cmds->name)
+		return (0);
 	if (ft_strncmp(cmds->name, "cd", 3) == 0)
 		return (ft_exec_cd(data));
 	if (ft_strncmp(cmds->name, "echo", 5) == 0)
@@ -44,9 +50,15 @@ int	ft_exec_built_in(t_token *token, t_commands *cmds, t_data *data)
 	if (ft_strncmp(cmds->name, "env", 4) == 0)
 		return (ft_env(data), 1);
 	if (ft_strncmp(cmds->name, "pwd", 4) == 0)
+	{
+		dprintf(2, "																		debug4\n");
 		return (ft_pwd(data), 1);
+	}
 	if (ft_strncmp(cmds->name, "exit", 5) == 0)
+	{
+		dprintf(2, "exit\n");
 		ft_exit(token, cmds, data);
+	}
 	return (0);
 }
 

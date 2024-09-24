@@ -10,8 +10,6 @@ static int	ft_redir_output(t_data *data, t_commands *cmds, int i)
 		perror(cmds->redirections[i]);
 		return (-1);
 	}
-	if (!cmds->name)
-		ft_close(cmds->outfile_fd, data, cmds, 1);
 	return (0);
 }
 
@@ -95,6 +93,8 @@ int	ft_redir_or_append(t_data *data, t_commands *cmds)
 			ft_append(data, cmds, cmds->redirections[i], 1);
 		else if (cmds->redirections[i][0] == '-')
 		{
+			//printf("minishell: %s: ambiguous redirect\n", cmds->redirections[i]);
+			//ft_close(cmds->infile_fd, data, cmds, 0);
 			if (handle_heredoc(data, cmds, cmds->redirections[i] + 1) == 2)
 				return (-1);
 		}

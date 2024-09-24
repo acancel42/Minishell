@@ -70,8 +70,13 @@ void	ft_close(int fd, t_data *data, t_commands *cmds, int flag)
 
 void	close_files(t_commands *cmds, t_data *data)
 {
-	if (cmds->outfile_fd != 1 && cmds->outfile_fd != -1)
+	if (cmds->outfile_fd != 1 && cmds->outfile_fd != 0 && cmds->outfile_fd != -1)
 		ft_close(cmds->outfile_fd, data, cmds, 1);
-	if (cmds->infile_fd != 0 && cmds->infile_fd != -1)
+	if (cmds->infile_fd != 0 && cmds->infile_fd != 1 && cmds->infile_fd != -1)
 		ft_close(cmds->infile_fd, data, cmds, 0);
+	// if (cmds->next)
+	// {
+	// 	if (cmds->next->infile_fd != 0 && cmds->next->infile_fd != 1 && cmds->next->infile_fd != -1)
+	// 		ft_close(cmds->next->infile_fd, data, cmds, 0);
+	// }
 }
