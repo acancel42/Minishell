@@ -4,7 +4,7 @@ IFLAG = -I inc -I$(LIBFT_DIR)
 
 NAME = minishell
 
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror
 
 CLEAN = rm -rf
 
