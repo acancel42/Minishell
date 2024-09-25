@@ -46,14 +46,14 @@ void	print_cmds(t_commands *cmds) // dprintf for pipes debug !
 	{
 		j = -1;
 		i = -1;
-		dprintf(2, "command : '%s'\n", cmds->name);
-		dprintf(2, "args 0 : '%s'\n", cmds->args[0]);
+		ft_dprintf("command : '%s'\n", cmds->name);
+		ft_dprintf(2, "args 0 : '%s'\n", cmds->args[0]);
 		while (cmds->args[++i])
-			dprintf(2, "args : '%s'\n", cmds->args[i]);
+			ft_dprintf("args : '%s'\n", cmds->args[i]);
 		while (cmds->redirections[++j])
-			dprintf(2, "redir : '%s'\n", cmds->redirections[j]);
-		dprintf(2, "path : '%s'\n", cmds->path);
-		dprintf(2, "%c", '\n');
+			ft_dprintf("redir : '%s'\n", cmds->redirections[j]);
+		ft_dprintf("path : '%s'\n", cmds->path);
+		ft_dprintf("%c", '\n');
 		cmds = cmds->next;
 	}
 }
