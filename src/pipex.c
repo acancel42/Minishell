@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:58:12 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 22:52:37 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 23:29:07 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ static void	exec_child(t_commands *head, int *fd_pipe, \
 
 int	cmd_not_found(t_commands *cmds, t_data *data)
 {
-	printf("%s: command not found\n", cmds->name);
 	ft_close(cmds->infile_fd, data, cmds, 0);
 	data->last_error_status = 127;
 	return (0);
