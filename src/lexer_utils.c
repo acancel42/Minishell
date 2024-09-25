@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:57:38 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:57:39 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/26 00:11:34 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ char	*find_env_var(char *name, char **env)
 	len = ft_strlen(name);
 	while (env[i])
 	{
-		if (strncmp(env[i], name, len) == 0 && env[i][len] == '=')
+		if (ft_strncmp(env[i], name, len) == 0 && env[i][len] == '=')
 			return (&env[i][len + 1]);
 		i++;
 	}

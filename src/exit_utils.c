@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:56:38 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 22:54:24 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/26 00:12:13 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	exit_minishell(t_token **token, t_commands **cmds, t_data *data)
 			ft_free_tab(data->export);
 		free(data);
 	}
-	clear_history();
+	rl_clear_history();
 	printf(RED"%s\n"RESET, "exit");
 	return ;
 }
