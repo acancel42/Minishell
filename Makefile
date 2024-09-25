@@ -4,7 +4,7 @@ IFLAG = -I inc -I$(LIBFT_DIR)
 
 NAME = minishell
 
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror
 
 CLEAN = rm -rf
 
@@ -75,4 +75,13 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: clean fclean re FORCE
+debug: $(OBJS) .objects/src/debug.o
+	@$(CC) $(OBJS) .objects/src/debug.o -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
+	@echo "\033[0;32mCompiled with debug flags\033[0m"
+.objects/src/debug.o: src/debug.c inc/minishell.h inc/lexer.h $(LIBFT)
+	@mkdir -p $(@D)
+	@echo "Compiling debug.c"
+	@$(CC) $(CFLAGS) $(IFLAG) -g3 -c -o $@ $<
+
+.PHONY: clean fclean re FORCE debug
+
