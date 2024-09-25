@@ -6,7 +6,7 @@ static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 	{
 		data->last_error_status = 2;
 		printf("syntax error\n");
-		free_data(data, &cmds);
+		free_data(data, &cmds, &token);
 		return (-1);
 	}
 	if (cmds->name && ft_is_built_in(cmds) && data->index_max == 0 \
@@ -14,13 +14,13 @@ static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 	{
 		if (ft_exec_built_in(token, cmds, data) == 1)
 			data->last_error_status = 0;
-		free_data(data, &cmds);
+		free_data(data, &cmds, &token);
 		return (-1);
 	}
 	data->pflag = 0;
 	if (ft_pathfinder(data) == 0)
 	{
-		free_data(data, &cmds);
+		free_data(data, &cmds, &token);
 		return (-1);
 	}
 	if (cmds->next != NULL)
@@ -37,23 +37,23 @@ void	ft_routine(t_token *token, t_commands *cmds, t_data *data)
 	cmds = NULL;
 	if (ft_data_init(data, &cmds) == -1)
 	{
-		free_data(data, &cmds);
+		free_data(data, &cmds, &token);
 		return ;
 	}
 	if (lexer_init(&token, data) == -1)
 	{
-		free_data(data, &cmds);
+		free_data(data, &cmds, &token);
 		return ;
 	}
 	init_cmd(&cmds, token, data);
 	if (fill_cmd(&cmds, token, data) == 2)
 	{
-		free_data(data, &cmds);
+		free_data(data, &cmds, &token);
 		return ;
 	}
 	data->cmds = cmds;
 	data->token = token;
 	if (ft_exec(cmds, token, data) == -1)
 		return ;
-	free_data(data, &cmds);
+	free_data(data, &cmds, &token);
 }

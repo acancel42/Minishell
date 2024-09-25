@@ -10,18 +10,23 @@ void	ft_free_tab(char **arr)
 	free(arr);
 }
 
-void	free_data(t_data *data, t_commands **cmds)
+void	free_data(t_data *data, t_commands **cmds, t_token **token)
 {
-	if (*cmds)
-		ft_cmdsclear(cmds);
-	if (data->token)
-		ft_tokenclear(&data->token);
-	if (data->line)
-		free(data->line);
-	if (data->user)
-		free(data->user);
-	data->index_max = 0;
-	data->pflag = 0;
+	if (cmds)
+		if (*cmds)
+			ft_cmdsclear(cmds);
+	if (token)
+		if (*token)
+			ft_tokenclear(token);
+	if (data)
+	{
+		if (data->line)
+			free(data->line);
+		if (data->user)
+			free(data->user);
+		data->index_max = 0;
+		data->pflag = 0;
+	}
 }
 
 void	free_monitoring(char *host, char *username, char *pwd)
@@ -39,7 +44,7 @@ void	free_child(t_data *data, t_commands **cmds)
 {
 	int	exit_status;
 
-	free_data(data, cmds);
+	free_data(data, cmds, &data->token);
 	if (data->home)
 		free(data->home);
 	if (data->export)

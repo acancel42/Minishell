@@ -212,7 +212,8 @@ void	handle_word(t_commands **cmds, t_token **token, t_data *data, int *i)
 	free(temp2);
 }
 
-static char	*handle_rword_utils(t_token **token, t_data *data, char *temp2, int j)
+static char	*handle_rword_utils(t_token **token, t_data *data, \
+								char *temp2, int j)
 {
 	char	*temp;
 	char	*temp3;
