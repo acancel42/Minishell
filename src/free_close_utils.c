@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_close_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/25 08:56:58 by acancel           #+#    #+#             */
+/*   Updated: 2024/09/25 09:01:28 by acancel          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	ft_free_tab(char **arr)
@@ -40,29 +52,12 @@ void	free_monitoring(char *host, char *username, char *pwd)
 	return ;
 }
 
-void	free_child(t_data *data, t_commands **cmds)
-{
-	int	exit_status;
-
-	free_data(data, cmds, &data->token);
-	if (data->home)
-		free(data->home);
-	if (data->export)
-		ft_free_tab(data->export);
-	if (data->my_env)
-		ft_free_tab(data->my_env);
-	exit_status = data->last_error_status;
-	free(data);
-	exit(exit_status);
-}
-
 void	ft_close(int fd, t_data *data, t_commands *cmds, int flag)
 {
 	if (fd > 1)
 	{
 		if (close(fd) == -1)
 		{
-			dprintf(2, "close file descriptor %d failed\n", fd);
 			perror("Error fd ");
 			ft_exit(data->token, cmds, data);
 		}

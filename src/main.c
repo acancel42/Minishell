@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/25 08:57:47 by acancel           #+#    #+#             */
+/*   Updated: 2024/09/25 08:57:48 by acancel          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	g_sigint = 0;
@@ -31,6 +43,9 @@ int	main(int argc, char **argv, char **env)
 	g_sigint = 0;
 	data = ft_init_shell(env);
 	while (1)
+	{
+		ft_signalhandle();
 		ft_routine(token, cmds, data);
+	}
 	return (0);
 }

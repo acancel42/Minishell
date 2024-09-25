@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/25 08:58:22 by acancel           #+#    #+#             */
+/*   Updated: 2024/09/25 08:58:23 by acancel          ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
@@ -25,13 +37,12 @@ static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 	}
 	if (cmds->next != NULL)
 		data->pflag = 1;
-	exec_cmd(data, cmds);
+	exec_cmds(data, cmds);
 	return (0);
 }
 
 void	ft_routine(t_token *token, t_commands *cmds, t_data *data)
 {
-	ft_signalhandle();
 	ft_is_env_op(data);
 	token = NULL;
 	cmds = NULL;
@@ -48,6 +59,7 @@ void	ft_routine(t_token *token, t_commands *cmds, t_data *data)
 	init_cmd(&cmds, token, data);
 	if (fill_cmd(&cmds, token, data) == 2)
 	{
+		data->last_error_status = 2;
 		free_data(data, &cmds, &token);
 		return ;
 	}
