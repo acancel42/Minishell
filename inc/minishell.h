@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:55:49 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 09:48:49 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 22:37:28 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include "lexer.h"
-# define RED "\033[1;91m\033[1m"
-# define BLUE "\033[1;96m\033[1m"
-# define RESET "\033[0m"
+# define RED "\001\033[1;91m\033[1m\002"
+# define BLUE "\001\033[1;96m\033[1m\002"
+# define RESET "\001\033[0m\002"
 
 typedef struct s_commands
 {
@@ -80,6 +80,7 @@ char		*find_env_var(char *name, char **env);
 char		*ft_strjoin_name(char *s1, char *s2, char c1, char c2);
 char		*generate_random_name(t_data *data, t_commands *cmds);
 char		*get_user(t_data *data);
+int			cmd_not_found(t_commands *cmds, t_data *data);
 int			cmd_path(t_data *data);
 int			count_type_until_pipe(t_token *token, t_token_types type, int flag);
 int			do_nothing(void);
@@ -89,7 +90,7 @@ int			ft_append(t_data *data, t_commands *cmds, char *file, int flag);
 int			ft_assign_value(char **name, char **value, \
 							char **dest, t_data *data);
 int			ft_cd(char *path, t_data *data, t_commands *cmds);
-int			ft_data_init(t_data *data, t_commands **cmds);
+int			ft_data_init(t_data *data);
 int			ft_echo(t_commands *cmds);
 int			ft_env(t_data *data);
 int			ft_envcmp(char *env, char *variable);
@@ -126,6 +127,7 @@ int			lexer_init(t_token **token, t_data *data);
 int			oredir_handle(char *line, int *i);
 int			pipe_handle(char *line, int *i);
 int			prelexer_check(t_data *data);
+int			skip_quoted(char quote, char *line, int i);
 int			token_init(char *src, int i, t_token **token, t_data *data);
 t_commands	*ft_cmdnew(int flag);
 t_data		*ft_init_shell(char **env);

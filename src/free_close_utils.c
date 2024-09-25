@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:56:58 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 09:01:28 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 22:54:43 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	ft_close(int fd, t_data *data, t_commands *cmds, int flag)
 		if (close(fd) == -1)
 		{
 			perror("Error fd ");
+			data->last_error_status = 1;
 			ft_exit(data->token, cmds, data);
 		}
 		if (flag == 0)

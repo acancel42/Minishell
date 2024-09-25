@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:56:23 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:56:24 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 11:28:10 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,8 @@ t_data	*ft_init_shell(char **env)
 	return (data);
 }
 
-int	ft_data_init(t_data *data, t_commands **cmds)
+int	ft_data_init(t_data *data)
 {
-	(void)cmds;
 	data->user = get_user(data);
 	get_color(data, BLUE);
 	data->line = readline(data->user);

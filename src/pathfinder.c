@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:58:08 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:58:09 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 22:48:22 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static void	cmd_path_util(t_data *data)
 	if (data->cmds->path)
 		free(data->cmds->path);
 	data->cmds->path = NULL;
+	data->last_error_status = 127;
 	printf("%s: command not found\n", data->cmds->name);
 }
 

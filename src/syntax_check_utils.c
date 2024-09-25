@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:58:31 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:58:32 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 21:27:26 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,14 @@ int	is_redir_or_pipe(t_data *data, int i)
 			return (2);
 	}
 	return (0);
+}
+
+int	skip_quoted(char quote, char *line, int i)
+{
+	i++;
+	while (line[i] && line[i] != quote)
+		i++;
+	if (line[i] == quote)
+		i++;
+	return (i);
 }

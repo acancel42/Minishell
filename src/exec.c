@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:56:28 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:56:29 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 22:52:27 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static void	ft_builtin_or_exec(t_data *data, t_commands *cmds, t_commands *head)
 			ft_putendl_fd("execve failed", 2);
 		free_child(data, &head);
 	}
+	free_child(data, &head);
 }
 
 static int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
@@ -59,6 +60,9 @@ static int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 			return (0);
 		}
 	}
+	if (cmds->name && ft_is_built_in(cmds) == 0 && cmds->path == NULL)
+		return (cmd_not_found(cmds, data));
+	data->last_error_status = 0;
 	ft_wait_signal();
 	data->pid = fork();
 	if (data->pid == -1)
@@ -75,12 +79,6 @@ static int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 
 static void	ft_exec_loop(t_data *data, t_commands *cmds, t_commands *temp)
 {
-	if (temp->name && ft_is_built_in(temp) == 0 && temp->path == NULL)
-	{
-		ft_close(temp->infile_fd, data, temp, 0);
-		data->last_error_status = 127;
-		return ;
-	}
 	if (data->pflag != 0)
 	{
 		if (temp->index >= data->index_max)

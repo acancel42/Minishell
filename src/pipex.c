@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:58:12 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:58:13 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 22:52:37 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,14 @@ static void	exec_child(t_commands *head, int *fd_pipe, \
 	free_child(data, &head);
 }
 
+int	cmd_not_found(t_commands *cmds, t_data *data)
+{
+	printf("%s: command not found\n", cmds->name);
+	ft_close(cmds->infile_fd, data, cmds, 0);
+	data->last_error_status = 127;
+	return (0);
+}
+
 int	ft_pipe(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
 {
 	int		fd_pipe[2];
@@ -72,6 +80,9 @@ int	ft_pipe(t_commands *head, t_commands *cmds, t_data *data, t_token *token)
 			return (0);
 		}
 	}
+	if (cmds->name && ft_is_built_in(cmds) == 0 && cmds->path == NULL)
+		return (cmd_not_found(cmds, data));
+	data->last_error_status = 0;
 	ft_wait_signal();
 	data->pid = fork();
 	if (data->pid == -1)

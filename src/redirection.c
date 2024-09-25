@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:58:17 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:58:18 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 22:56:55 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	ft_redir_output(t_data *data, t_commands *cmds, int i)
 	if (cmds->outfile_fd == -1)
 	{
 		perror(cmds->redirections[i]);
+		data->last_error_status = 1;
 		return (-1);
 	}
 	return (0);
@@ -32,6 +33,7 @@ static int	ft_redir_input(t_commands *cmds, t_data *data, int i)
 	if (cmds->infile_fd == -1)
 	{
 		perror(cmds->redirections[i]);
+		data->last_error_status = 1;
 		return (-1);
 	}
 	return (0);
@@ -82,6 +84,7 @@ int	ft_append(t_data *data, t_commands *cmds, char *file, int flag)
 	if (cmds->outfile_fd == -1)
 	{
 		perror(temp);
+		data->last_error_status = 1;
 		free(temp);
 		return (-1);
 	}

@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:58:36 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:58:37 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 21:27:33 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,11 @@ int	prelexer_check(t_data *data)
 	{
 		if (ft_iswspace(data->line[i]) == 0)
 			wspace = 1;
-		if (is_redir_or_pipe(data, i) == 2)
+		if (data->line[i] == '"')
+			i = skip_quoted('"', data->line, i);
+		else if (data->line[i] == '\'')
+			i = skip_quoted('\'', data->line, i);
+		else if (is_redir_or_pipe(data, i) == 2)
 			return (2);
 		else
 			i++;

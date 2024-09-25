@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:58:22 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:58:23 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/25 11:28:30 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	ft_routine(t_token *token, t_commands *cmds, t_data *data)
 	ft_is_env_op(data);
 	token = NULL;
 	cmds = NULL;
-	if (ft_data_init(data, &cmds) == -1)
+	if (ft_data_init(data) == -1)
 	{
 		free_data(data, &cmds, &token);
 		return ;
