@@ -90,11 +90,6 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 			return (0);
 		}
 	}
-	// if (!cmds->name)
-	// {
-	// 	close_files(cmds, data);
-	// 	return (0);
-	// }
 	ft_wait_signal();
 	data->pid = fork();
 	if (data->pid == -1)
@@ -121,6 +116,13 @@ void	exec_cmd(t_data *data, t_commands *cmds)
 	temp = cmds;
 	while (temp)
 	{
+		if (temp->name && ft_is_built_in(temp) == 0 && temp->path == NULL)
+		{
+			ft_close(temp->infile_fd, data, temp, 0);
+			data->last_error_status = 127;
+			temp = temp->next;
+			continue ;
+		}
 		if (data->pflag != 0)
 		{
 			if (temp->index >= data->index_max)
@@ -137,5 +139,6 @@ void	exec_cmd(t_data *data, t_commands *cmds)
 	waitpid(data->pid, &status, 0);
 	while (wait(0) != -1)
 		;
-	data->last_error_status = WEXITSTATUS(status);
+	if (data->last_error_status != 127 && data->last_error_status != 130)
+		data->last_error_status = WEXITSTATUS(status);
 }

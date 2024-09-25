@@ -9,7 +9,7 @@ int	handle_double_quote(char *src, t_token **token, t_data *data)
 	i = 0;
 	if (src[i] == '"' && src[i + 1] == '\0')
 	{
-		printf("syntax error\n");
+		printf("syntax error4\n");
 		return (-1);
 	}
 	if (src[i] == '"' && src[i + 1] == '"')
@@ -54,7 +54,7 @@ int	handle_double_quote(char *src, t_token **token, t_data *data)
 	}
 	if (src[i] != '"')
 	{
-		printf("syntax error\n");
+		printf("syntax error5\n");
 		return (-1);
 	}
 	else if (!ft_iswspace(src[++i]) && !ft_isoperator(src[i]))
@@ -71,7 +71,7 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 	i = 0;
 	if (src[i] == '\'' && src[i + 1] == '\0')
 	{
-		printf("syntax error\n");
+		printf("syntax error6\n");
 		return (-1);
 	}
 	if (src[i] == '\'' && src[i + 1] == '\'')
@@ -119,7 +119,7 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 	}
 	if (src[i] != '\'')
 	{
-		printf("syntax error\n");
+		printf("syntax error7\n");
 		return(-1);
 	}
 	else if (!ft_iswspace(src[++i]) && !ft_isoperator(src[i]))

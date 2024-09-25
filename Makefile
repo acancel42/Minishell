@@ -8,6 +8,11 @@ CFLAGS = -Wall -Wextra -Werror -g3
 
 CLEAN = rm -rf
 
+#OBJS = $(SRCS:%.c=.objects/%.o)
+#SRCS =
+
+#SRCS = $(wildcard src/*.c)
+
 SRCS =								\
 		src/built-in_echo.c			\
 		src/built-in_pwd_cd.c		\
@@ -67,13 +72,4 @@ fclean: clean
 
 re: fclean all
 
-debug: $(OBJS) .objects/src/debug.o
-	@$(CC) $(OBJS) .objects/src/debug.o -L$(LIBFT_DIR) -lft -lreadline -o $(NAME)
-	@echo "\033[0;32mCompiled with debug flags\033[0m"
-
-.objects/src/debug.o: src/debug.c inc/minishell.h inc/lexer.h $(LIBFT)
-	@mkdir -p $(@D)
-	@echo "Compiling debug.c"
-	@$(CC) $(CFLAGS) $(IFLAG) -c -o $@ $<
-
-.PHONY: clean fclean re FORCE debug
+.PHONY: clean fclean re FORCE

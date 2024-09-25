@@ -5,7 +5,7 @@ static int	ft_exec(t_commands *cmds, t_token *token, t_data *data)
 	if (!cmds->name && !cmds->redirections[0])
 	{
 		data->last_error_status = 2;
-		printf("syntax error\n");
+		printf("syntax error1\n");
 		free_data(data, &cmds);
 		return (-1);
 	}

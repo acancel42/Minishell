@@ -21,7 +21,7 @@ int	oredir_handle(char *line, int *i)
 	}
 	if (op_count > 2 || multiple_op > 0 || is_word == 0)
 	{
-		printf("syntax error\n");
+		printf("syntax error3\n");
 		return (2);
 	}
 	return (0);
@@ -48,7 +48,7 @@ int	iredir_handle(char *line, int *i)
 	}
 	if (op_count > 2 || multiple_op > 0 || is_word == 0)
 	{
-		printf("syntax error\n");
+		printf("syntax error8\n");
 		return (2);
 	}
 	return (0);
@@ -58,7 +58,7 @@ int	op_counter(char *line, int *i, int *is_word, int *multi_op)
 {
 	while (ft_iswspace(line[*i]))
 		(*i)++;
-	if (ft_isalnum(line[*i]) || line[*i] == '_')
+	if (line[*i] && (ft_isalnum(line[*i]) || (line[*i +1] && (line[*i] == '"' && line[*i + 1] == '"'))|| line[*i] == '_'))
 	{
 		(*is_word)++;
 		return (1);
@@ -94,7 +94,7 @@ int	pipe_handle(char *line, int *i)
 	}
 	if (line[0] == '|' || op_count > 1 || multiple_op > 0 || is_word == 0)
 	{
-		printf("syntax error\n");
+		printf("syntax error9\n");
 		return (2);
 	}
 	return (0);

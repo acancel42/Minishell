@@ -26,11 +26,6 @@ static void	ft_wich_cd(t_data *data, t_commands *cmds)
 
 int	ft_exec_cd(t_data *data)
 {
-	// if (data->is_home == false)
-	// {
-	// 	printf("cd: HOME not set\n");
-	// 	return (1);
-	// }
 	ft_wich_cd(data, data->cmds);
 	return (1);
 }
@@ -50,15 +45,9 @@ int	ft_exec_built_in(t_token *token, t_commands *cmds, t_data *data)
 	if (ft_strncmp(cmds->name, "env", 4) == 0)
 		return (ft_env(data), 1);
 	if (ft_strncmp(cmds->name, "pwd", 4) == 0)
-	{
-		dprintf(2, "																		debug4\n");
 		return (ft_pwd(data), 1);
-	}
 	if (ft_strncmp(cmds->name, "exit", 5) == 0)
-	{
-		dprintf(2, "exit\n");
 		ft_exit(token, cmds, data);
-	}
 	return (0);
 }
 

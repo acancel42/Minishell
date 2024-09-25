@@ -74,9 +74,4 @@ void	close_files(t_commands *cmds, t_data *data)
 		ft_close(cmds->outfile_fd, data, cmds, 1);
 	if (cmds->infile_fd != 0 && cmds->infile_fd != 1 && cmds->infile_fd != -1)
 		ft_close(cmds->infile_fd, data, cmds, 0);
-	// if (cmds->next)
-	// {
-	// 	if (cmds->next->infile_fd != 0 && cmds->next->infile_fd != 1 && cmds->next->infile_fd != -1)
-	// 		ft_close(cmds->next->infile_fd, data, cmds, 0);
-	// }
 }

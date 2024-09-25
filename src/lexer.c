@@ -372,7 +372,7 @@ int	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 	if ((*token)->type == T_HEREDOC && \
 		ft_is_variable((*token)->next->value) == 1)
 	{
-		printf("syntax error\n");
+		printf("syntax error2\n");
 		return (2);
 	}
 	redir_type = ft_strdup((*token)->value);

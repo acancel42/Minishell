@@ -10,26 +10,9 @@ int	get_pwd(char **pwd)
 
 int	ft_pwd(t_data *data)
 {
-	dprintf(1,"'%s'\n", find_env_var("PWD", data->my_env));
-	dprintf(2, "																		debug5\n");
+	dprintf(1,"%s\n", find_env_var("PWD", data->my_env));
 	return (0);
 }
-
-// int	ft_pwd(void)
-// {
-// 	char	*pwd;
-
-// 	pwd = NULL;
-// 	if (get_pwd(&pwd) == 0)
-// 	{
-// 		if (pwd == NULL)
-// 			return (-2);
-// 		printf("%s\n", pwd);
-// 		return (0);
-// 	}
-// 	free(pwd);
-// 	return (-2);
-// }
 
 static int	ft_get_oldpwd(t_data *data)
 {
@@ -37,7 +20,7 @@ static int	ft_get_oldpwd(t_data *data)
 	char	*oldpwd;
 
 	i = 0;
-	while (ft_strncmp(data->my_env[i], "OLDPWD=", 7))
+	while (data->my_env[i] && ft_strncmp(data->my_env[i], "OLDPWD=", 7))
 		i++;
 	get_pwd(&oldpwd);
 	free(data->my_env[i]);

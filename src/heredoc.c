@@ -80,5 +80,7 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 	free(name);
 	ret = g_sigint;
 	g_sigint = 0;
+	if (ret == 2)
+		data->last_error_status = 130;
 	return (ret);
 }
