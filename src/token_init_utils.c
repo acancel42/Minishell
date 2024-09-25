@@ -105,6 +105,8 @@ int	handle_else(char *src, t_token **token, t_data *data)
 	{
 		c = src[i];
 		temp->value = ft_charjoin(temp->value, c);
+		if (!temp->value)
+			ft_exit(*token, NULL, data);
 		i++;
 	}
 	if (!ft_iswspace(src[i]) && !ft_isoperator(src[i]))

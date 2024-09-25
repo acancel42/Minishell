@@ -25,6 +25,14 @@ void	build_path(t_data *data, char *s1, \
 	return ;
 }
 
+static void	cmd_path_util(t_data *data)
+{
+	if (data->cmds->path)
+		free(data->cmds->path);
+	data->cmds->path = NULL;
+	printf("%s: command not found\n", data->cmds->name);
+}
+
 int	cmd_path(t_data *data)
 {
 	char	**all_paths;
@@ -48,10 +56,7 @@ int	cmd_path(t_data *data)
 	ft_free_tab(all_paths);
 	if (data->cmds->path == NULL || ft_strncmp(data->cmds->name, "", 1) == 0)
 	{
-		if (data->cmds->path)
-			free(data->cmds->path);
-		data->cmds->path = NULL;
-		printf("%s: command not found\n", data->cmds->name);
+		cmd_path_util(data);
 		return (2);
 	}
 	return (1);

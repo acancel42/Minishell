@@ -145,116 +145,6 @@ int	expand_variables(char **dest, char *src, t_data *data)
 	return (data->exp.i);
 }
 
-// int	expand_variables(char **dest, char *src, t_data *data)
-// {
-// 	int		start;
-// 	int		end;
-// 	char	*name;
-// 	char	*value;
-// 	char	*temp;
-// 	int		i;
-// 	bool	is_itoa;
-
-// 	(*dest) = ft_strdup(src);
-// 	if (!(*dest))
-// 		return (-1);
-// 	i = 0;
-// 	end = 0;
-// 	is_itoa = false;
-// 	if (ft_strncmp((*dest), "$", 1) == 0 && ft_strlen((*dest)) == 1)
-// 		return (i);
-// 	while ((*dest) && (*dest)[i])
-// 	{
-// 		if ((*dest)[i] == '$')
-// 		{
-// 			start = i;
-// 			end = i + 1;
-// 			i++;
-// 			if ((*dest)[i] == '?')
-// 			{
-// 				name = NULL;
-// 				value = ft_itoa(data->last_error_status);
-// 				if (!value)
-// 					return (-1);
-// 				end++;
-// 				is_itoa = true;
-// 			}
-// 			else
-// 			{
-// 				if (ft_isdigit((*dest)[i]))
-// 				{
-// 					name = ft_strndup((*dest) + start + 1, 1);
-// 					if (!name)
-// 						return (-1);
-// 					i++;
-// 					end++;
-// 				}
-// 				else if ((*dest)[i] == '$')
-// 				{
-// 					name = ft_strndup((*dest) + start + 1, 1);
-// 					if (!name)
-// 						return (-1);
-// 					i++;
-// 					end++;
-// 				}
-// 				else
-// 				{
-// 					while (ft_isalnum((*dest)[i++]) && (*dest)[i - 1] != '$')
-// 						end++;
-// 					name = ft_strndup((*dest) + (start + 1), end - start - 1);
-// 					if (!name)
-// 						return (-1);
-// 				}
-// 				value = find_env_var(name, data->my_env);
-// 			}
-// 			if (value)
-// 			{
-// 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
-// 							ft_strlen(value) + 1);
-// 				if (!temp)
-// 					return (-1);
-// 				ft_strncpy(temp, (*dest), start);
-// 				ft_strcpy(temp + start, value);
-// 				i = start + ft_strlen(value);
-// 				ft_strcpy(temp + start + ft_strlen(value), (*dest) + end);
-// 				free((*dest));
-// 				(*dest) = ft_strdup(temp);
-// 				if (!(*dest))
-// 					return (-1);
-// 			}
-// 			else
-// 			{
-// 				i = start;
-// 				temp = malloc(ft_strlen((*dest)) - ft_strlen(name) + \
-// 						ft_strlen(value) + 1);
-// 				ft_strncpy(temp, (*dest), start);
-// 				ft_strcpy(temp + start, (*dest) + end);
-// 				free((*dest));
-// 				(*dest) = ft_strdup(temp);
-// 				if (!(*dest))
-// 					return (-1);
-// 				if (!(*dest)[0])
-// 				{
-// 					free(temp);
-// 					free(name);
-// 					break ;
-// 				}
-// 			}
-// 			free(temp);
-// 			free(name);
-// 			if (is_itoa == true)
-// 			{
-// 				is_itoa = false;
-// 				free(value);
-// 			}
-// 		}
-// 		else
-// 			i++;
-// 	}
-// 	return (i);
-// }
-
-
 static char	*handle_w_utils(t_token **token, t_data *data, char *temp2, int j)
 {
 	char	*temp;
@@ -329,6 +219,8 @@ static char	*handle_rword_utils(t_token **token, t_data *data, char *temp2, int 
 
 	temp = ft_strdup(temp2);
 	free (temp2);
+	if (!temp)
+		ft_exit(*token, data->cmds, data);
 	while ((*token)->next && (*token)->is_separated == 1)
 	{
 		if (ft_strncmp((*token)->value, "$", 2) == 0 && \
@@ -341,12 +233,15 @@ static char	*handle_rword_utils(t_token **token, t_data *data, char *temp2, int 
 		{
 			temp3 = ft_strdup((*token)->value);
 			if (!temp3)
+			{
+				free(temp);
 				ft_exit(*token, data->cmds, data);
+			}
 		}
 		temp = ft_strjoin(temp, temp3, 1);
+		free(temp3);
 		if (!temp)
 			ft_exit(*token, data->cmds, data);
-		free(temp3);
 	}
 	return (temp);
 }
@@ -372,7 +267,7 @@ int	handle_rword(t_commands **cmds, t_token **token, t_data *data, int *k)
 	if ((*token)->type == T_HEREDOC && \
 		ft_is_variable((*token)->next->value) == 1)
 	{
-		printf("syntax error2\n");
+		printf("syntax error\n");
 		return (2);
 	}
 	redir_type = ft_strdup((*token)->value);

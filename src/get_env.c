@@ -1,24 +1,9 @@
 #include "minishell.h"
 
-static void	ft_empty_env(t_data *data)
+static void	fill_empty_env(t_data *data, char *buf)
 {
-	size_t	i;
-	char	*buf;
 	char	*temp;
 
-	buf = NULL;
-	i = 0;
-	data->my_env = ft_calloc(5, sizeof(char *));
-	data->export = ft_calloc(5, sizeof(char *));
-	if (!data->my_env || !data->export)
-	{
-		if (data->my_env)
-			ft_free_tab(data->my_env);
-		exit(EXIT_FAILURE);
-	}
-	buf = getcwd(NULL, 0);
-	if (!buf)
-		ft_exit(NULL, NULL, data);
 	temp = ft_strjoin("PWD=", buf, 0);
 	free(buf);
 	if (!temp)
@@ -36,6 +21,27 @@ static void	ft_empty_env(t_data *data)
 	data->my_env[3] = ft_strdup("PATH=/usr/bin/");
 	if (!data->my_env[3])
 		ft_exit(NULL, NULL, data);
+}
+
+static void	ft_empty_env(t_data *data)
+{
+	size_t	i;
+	char	*buf;
+
+	buf = NULL;
+	i = 0;
+	data->my_env = ft_calloc(5, sizeof(char *));
+	data->export = ft_calloc(5, sizeof(char *));
+	if (!data->my_env || !data->export)
+	{
+		if (data->my_env)
+			ft_free_tab(data->my_env);
+		exit(EXIT_FAILURE);
+	}
+	buf = getcwd(NULL, 0);
+	if (!buf)
+		ft_exit(NULL, NULL, data);
+	fill_empty_env(data, buf);
 }
 
 void	ft_get_env(t_data *data, char **env)

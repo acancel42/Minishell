@@ -9,7 +9,7 @@ int	handle_double_quote(char *src, t_token **token, t_data *data)
 	i = 0;
 	if (src[i] == '"' && src[i + 1] == '\0')
 	{
-		printf("syntax error4\n");
+		printf("syntax error\n");
 		return (-1);
 	}
 	if (src[i] == '"' && src[i + 1] == '"')
@@ -50,11 +50,13 @@ int	handle_double_quote(char *src, t_token **token, t_data *data)
 	{
 		c = src[i];
 		temp->value = ft_charjoin(temp->value, c);
+		if (!temp->value)
+			ft_exit(*token, NULL, data);
 		i++;
 	}
 	if (src[i] != '"')
 	{
-		printf("syntax error5\n");
+		printf("syntax error\n");
 		return (-1);
 	}
 	else if (!ft_iswspace(src[++i]) && !ft_isoperator(src[i]))
@@ -71,7 +73,7 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 	i = 0;
 	if (src[i] == '\'' && src[i + 1] == '\0')
 	{
-		printf("syntax error6\n");
+		printf("syntax error\n");
 		return (-1);
 	}
 	if (src[i] == '\'' && src[i + 1] == '\'')
@@ -115,16 +117,30 @@ int	handle_single_quote(char *src, t_token **token, t_data *data)
 	{
 		c = src[i];
 		temp->value = ft_charjoin(temp->value, c);
+		if (!temp->value)
+			ft_exit(*token, NULL, data);
 		i++;
 	}
 	if (src[i] != '\'')
 	{
-		printf("syntax error7\n");
-		return(-1);
+		printf("syntax error\n");
+		return (-1);
 	}
 	else if (!ft_iswspace(src[++i]) && !ft_isoperator(src[i]))
 		temp->is_separated = 1;
 	return (i);
+}
+
+static void	handle_unquoted(char *src, t_token **token, t_data *data, int *i)
+{
+	if (src[*i] == '>')
+		*i += handle_output(src + *i, token, data);
+	else if (src[*i] == '<')
+		*i += handle_input(src + *i, token, data);
+	else if (src[*i] == '|')
+		*i += handle_pipe(token, data);
+	else
+		*i += handle_else(src + *i, token, data);
 }
 
 int	token_init(char *src, int i, t_token **token, t_data *data)
@@ -151,13 +167,7 @@ int	token_init(char *src, int i, t_token **token, t_data *data)
 		else
 			i += j;
 	}
-	else if (src[i] == '>')
-		i += handle_output(src + i, token, data);
-	else if (src[i] == '<')
-		i += handle_input(src + i, token, data);
-	else if (src[i] == '|')
-		i += handle_pipe(token, data);
 	else
-		i += handle_else(src + i, token, data);
+		handle_unquoted(src, token, data, &i);
 	return (i);
 }

@@ -1,5 +1,12 @@
 #include "minishell.h"
 
+void	grn_loop(unsigned char *c)
+{
+	*c = *c % 74 + 48;
+	if (*c >= 58 && *c <= 63)
+		*c = *c + 10;
+}
+
 char	*generate_random_name(t_data *data, t_commands *cmds)
 {
 	int				fd;
@@ -12,19 +19,20 @@ char	*generate_random_name(t_data *data, t_commands *cmds)
 	if (!name)
 		ft_exit(data->token, data->cmds, data);
 	fd = open("/dev/urandom", O_RDONLY);
-	read(fd, name, 8);
+	if (fd == -1)
+		perror("/dev/urandom");
+	if (read(fd, name, 8) == 1)
+		perror("read");
 	while (name[i] && name[i] != '\0')
 	{
-		name[i] = name[i] % 74 + 48;
-		if (name[i] >= 58 && name[i] <= 63)
-			name[i] = name[i] + 10;
+		grn_loop(&name[i]);
 		i++;
 	}
 	ft_close(fd, data, cmds, 2);
 	res = ft_strjoin("/tmp/", (char *)name, 0);
 	free(name);
 	if (!res)
-		return (NULL);
+		ft_exit(data->token, cmds, data);
 	return (res);
 }
 
@@ -52,11 +60,21 @@ int	ft_write_heredoc(char *line, t_commands *cmds, char *name, char *delimiter)
 	return (ret);
 }
 
+int	handle_heredoc_return(t_data *data)
+{
+	int	ret;
+
+	ret = g_sigint;
+	g_sigint = 0;
+	if (ret == 2)
+		data->last_error_status = 130;
+	return (ret);
+}
+
 int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 {
 	char	*name;
 	char	*line;
-	int		ret;
 
 	line = NULL;
 	ft_close(cmds->infile_fd, data, cmds, 0);
@@ -78,9 +96,5 @@ int	handle_heredoc(t_data *data, t_commands *cmds, char *delimiter)
 		perror(name);
 	unlink(name);
 	free(name);
-	ret = g_sigint;
-	g_sigint = 0;
-	if (ret == 2)
-		data->last_error_status = 130;
-	return (ret);
+	return (handle_heredoc_return(data));
 }

@@ -61,6 +61,7 @@ void	ft_export_loop(char **args, t_data *data, int *i)
 	if (check_arg(args[*i]))
 	{
 		write(1, "not a valid identifier\n", 24);
+		data->last_error_status = 1;
 		(*i)++;
 		return ;
 	}

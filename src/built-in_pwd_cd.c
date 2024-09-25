@@ -10,7 +10,7 @@ int	get_pwd(char **pwd)
 
 int	ft_pwd(t_data *data)
 {
-	dprintf(1,"%s\n", find_env_var("PWD", data->my_env));
+	printf("%s\n", find_env_var("PWD", data->my_env));
 	return (0);
 }
 
@@ -41,13 +41,17 @@ int	ft_cd(char *path, t_data *data, t_commands *cmds)
 	if (chdir(path) == -1)
 	{
 		printf("cd: %s: No such file or directory\n", path);
+		data->last_error_status = 1;
 		return (-2);
 	}
 	i = 0;
 	while (ft_strncmp(data->my_env[i], "PWD=", 4))
 		i++;
 	if (get_pwd(&pwd) == -2)
+	{
+		data->last_error_status = 1;
 		printf("getcwd: cannot access parent directories\n");
+	}
 	free(data->my_env[i]);
 	data->my_env[i] = ft_strjoin("PWD=", pwd, 0);
 	free(pwd);

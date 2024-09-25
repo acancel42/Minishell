@@ -59,8 +59,6 @@ typedef struct s_data
 	t_token		*token;
 }				t_data;
 
-
-
 extern int	g_sigint;
 
 char		**tab_dup(char **env);

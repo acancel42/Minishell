@@ -8,11 +8,6 @@ CFLAGS = -Wall -Wextra -Werror -g3
 
 CLEAN = rm -rf
 
-#OBJS = $(SRCS:%.c=.objects/%.o)
-#SRCS =
-
-#SRCS = $(wildcard src/*.c)
-
 SRCS =								\
 		src/built-in_echo.c			\
 		src/built-in_pwd_cd.c		\

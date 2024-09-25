@@ -1,5 +1,19 @@
 #include "minishell.h"
 
+void	ft_dup2(t_data *data, t_commands *cmds)
+{
+	if (cmds->infile_fd != STDIN_FILENO)
+	{
+		if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
+			ft_exec_error(data->token, cmds, data, 2);
+	}
+	if (cmds->outfile_fd != STDOUT_FILENO)
+	{
+		if (dup2(cmds->outfile_fd, STDOUT_FILENO) == -1)
+			ft_exec_error(data->token, cmds, data, 2);
+	}
+}
+
 static void	exec_child(t_commands *head, int *fd_pipe, \
 						t_data *data, t_commands *cmds)
 {
@@ -8,10 +22,7 @@ static void	exec_child(t_commands *head, int *fd_pipe, \
 
 	ret = 0;
 	ft_signalhandle_in_child();
-	if (dup2(cmds->outfile_fd, STDOUT_FILENO) == -1)
-		ft_exec_error(data->token, cmds, data, 2);
-	if (dup2(cmds->infile_fd, STDIN_FILENO) == -1)
-		ft_exec_error(data->token, cmds, data, 2);
+	ft_dup2(data, cmds);
 	close_files(cmds, data);
 	if (ft_exec_built_in(data->token, cmds, data) == 1)
 	{
@@ -107,6 +118,25 @@ int	ft_exec_cmd(t_commands *head, t_commands *cmds, \
 	return (0);
 }
 
+void	ft_exec_loop(t_data *data, t_commands *cmds, t_commands *temp)
+{
+	if (temp->name && ft_is_built_in(temp) == 0 && temp->path == NULL)
+	{
+		ft_close(temp->infile_fd, data, temp, 0);
+		data->last_error_status = 127;
+		return ;
+	}
+	if (data->pflag != 0)
+	{
+		if (temp->index >= data->index_max)
+			ft_exec_cmd(cmds, temp, data, data->token);
+		else
+			ft_pipe(cmds, temp, data, data->token);
+	}
+	else
+		ft_exec_cmd(cmds, temp, data, data->token);
+}
+
 void	exec_cmd(t_data *data, t_commands *cmds)
 {
 	t_commands	*temp;
@@ -116,22 +146,7 @@ void	exec_cmd(t_data *data, t_commands *cmds)
 	temp = cmds;
 	while (temp)
 	{
-		if (temp->name && ft_is_built_in(temp) == 0 && temp->path == NULL)
-		{
-			ft_close(temp->infile_fd, data, temp, 0);
-			data->last_error_status = 127;
-			temp = temp->next;
-			continue ;
-		}
-		if (data->pflag != 0)
-		{
-			if (temp->index >= data->index_max)
-				ft_exec_cmd(cmds, temp, data, data->token);
-			else
-				ft_pipe(cmds, temp, data, data->token);
-		}
-		else
-			ft_exec_cmd(cmds, temp, data, data->token);
+		ft_exec_loop(data, cmds, temp);
 		if (g_sigint == 2)
 			break ;
 		temp = temp->next;

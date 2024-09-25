@@ -9,6 +9,11 @@ t_token	*ft_toknew(char content, t_token_types type)
 		return (NULL);
 	new->next = NULL;
 	new->value = ft_chardup(content);
+	if (!new->value)
+	{
+		free(new);
+		return (NULL);
+	}
 	new->type = type;
 	new->is_separated = 0;
 	return (new);

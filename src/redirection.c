@@ -34,11 +34,11 @@ int	ft_wich_redir(t_data *data, t_commands *cmds, int i)
 	redir_type = cmds->redirections[i][0];
 	temp = ft_strdup(cmds->redirections[i] + 1);
 	if (!temp)
-		return (-1);
+		ft_exit(data->token, cmds, data);
 	free(cmds->redirections[i]);
 	cmds->redirections[i] = ft_strdup(temp);
 	if (!cmds->redirections[i])
-		return (-1);
+		ft_exit(data->token, cmds, data);
 	if (temp)
 		free(temp);
 	if (redir_type == '>')
@@ -63,7 +63,7 @@ int	ft_append(t_data *data, t_commands *cmds, char *file, int flag)
 	{
 		temp = ft_strdup(file + 1);
 		if (!temp)
-			ft_exit(data->token, data->cmds, data);
+			ft_exit(data->token, cmds, data);
 	}
 	ft_close(cmds->outfile_fd, data, cmds, 1);
 	cmds->outfile_fd = open(temp, O_WRONLY | O_APPEND | O_CREAT, 0644);

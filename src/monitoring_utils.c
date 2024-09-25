@@ -42,6 +42,8 @@ void	get_color(t_data *data, char *color)
 	free(data->user);
 	data->user = ft_strdup(prompt);
 	free(prompt);
+	if (!data->user)
+		ft_exit(NULL, NULL, data);
 }
 
 void	ft_exit_monitoring(char *host, char *user, char *pwd, t_data *data)

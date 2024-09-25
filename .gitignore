@@ -8,6 +8,7 @@
 *.obj
 *.elf
 *.txt
+.objects
 
 # Linker output
 *.ilk
@@ -38,6 +39,7 @@
 *.x86_64
 *.hex
 minishell
+debug
 
 # Debug files
 *.dSYM/
