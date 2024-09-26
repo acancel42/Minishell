@@ -6,7 +6,7 @@
 /*   By: acancel <acancel@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 08:56:13 by acancel           #+#    #+#             */
-/*   Updated: 2024/09/25 08:56:14 by acancel          ###   ########lyon.fr   */
+/*   Updated: 2024/09/26 02:41:17 by acancel          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,11 @@ int	ft_pwd(t_data *data)
 
 static int	ft_get_oldpwd(t_data *data)
 {
-	int		i;
-	char	*oldpwd;
 
-	i = 0;
-	while (data->my_env[i] && ft_strncmp(data->my_env[i], "OLDPWD=", 7))
-		i++;
-	get_pwd(&oldpwd);
-	free(data->my_env[i]);
-	data->my_env[i] = ft_strjoin("OLDPWD=", oldpwd, 0);
-	if (!data->my_env[i])
-		return (-1);
-	free(oldpwd);
+	if (find_env_var("OLDPWD", data->my_env))
+		tab_replace(data->my_env, find_env_var("PWD", data->my_env));
+	else
+		tab_join(data->my_env, find_env_var("PWD", data->my_env));
 	return (0);
 }
 
